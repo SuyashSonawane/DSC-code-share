@@ -81,7 +81,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: "",
+    path: "**",
     redirectTo: "/notices/tabs/all",
     pathMatch: "full"
   }

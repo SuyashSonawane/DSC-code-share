@@ -23,6 +23,11 @@ const routes: Routes = [
   {
     path: "mynotices",
     loadChildren: "./mynotices/mynotices.module#MynoticesPageModule"
+  },
+  {
+    path: "**",
+    redirectTo: "/notices/tabs/all",
+    pathMatch: "full"
   }
 ];
 
