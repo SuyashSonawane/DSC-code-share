@@ -5,5 +5,33 @@
 </ion-header>
 
 <ion-content>
+  <ion-list margin >
+    <ion-list-header>Notice Options</ion-list-header>
+      <ion-item>
+          <ion-label position="floating">Title</ion-label>
+          <ion-input [(ngModel)]="title"></ion-input>
+        </ion-item>
+      <ion-item>
+          <ion-label position="floating">Notice</ion-label>
+          <ion-input [(ngModel)]="notice"></ion-input>
+        </ion-item>
+      <ion-item>
+          <ion-label position="floating">Division</ion-label>
+          <ion-input [(ngModel)]="division"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label> {{Department}}</ion-label>
+          <ion-label>{{Year}} </ion-label>
+          <ion-label>{{category}} </ion-label>
+          <ion-button (click)="openPicker()">
+            Open Picker
+          </ion-button>
+        </ion-item>
+  </ion-list>
+  <div class="simple">
 
+    <ion-button (click)="submit()">
+      Add Notice
+    </ion-button>
+  </div>
 </ion-content>
