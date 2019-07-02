@@ -1,6 +1,8 @@
 import { NgModule } from "@angular/core";
 import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
 
+import { AuthGuard } from "./auth/auth.guard";
+
 const routes: Routes = [
   { path: "", redirectTo: "notices", pathMatch: "full" },
   {
@@ -9,25 +11,31 @@ const routes: Routes = [
   },
   {
     path: "notices",
-    loadChildren: "./notices/notices.module#NoticesPageModule"
+    loadChildren: "./notices/notices.module#NoticesPageModule",
+    canLoad: [AuthGuard]
   },
   {
     path: "starrednotices",
     loadChildren:
-      "./starrednotices/starrednotices.module#StarrednoticesPageModule"
+      "./starrednotices/starrednotices.module#StarrednoticesPageModule",
+    canLoad: [AuthGuard]
   },
   {
     path: "unseennotices",
-    loadChildren: "./unseennotices/unseennotices.module#UnseennoticesPageModule"
+    loadChildren:
+      "./unseennotices/unseennotices.module#UnseennoticesPageModule",
+    canLoad: [AuthGuard]
   },
   {
     path: "mynotices",
-    loadChildren: "./mynotices/mynotices.module#MynoticesPageModule"
+    loadChildren: "./mynotices/mynotices.module#MynoticesPageModule",
+    canLoad: [AuthGuard]
   },
   {
     path: "**",
     redirectTo: "/notices/tabs/all",
-    pathMatch: "full"
+    pathMatch: "full",
+    canLoad: [AuthGuard]
   }
 ];
 

@@ -1,5 +1,5 @@
 <ion-app>
-  <ion-menu side="start" menuId="mainMenu">
+  <ion-menu side="start" menuId="mainMenu" (ionWillOpen)="openMenu()">
     <ion-header>
       <ion-toolbar>
         <ion-title>
@@ -12,11 +12,11 @@
       <ion-list>
         <ion-item-group>
           <ion-avatar class="ion-margin-start ion-margin-top">
-            <ion-img src="https://bit.ly/2XGdV48"></ion-img>
+            <ion-img [src]="userPhotoUrl"></ion-img>
           </ion-avatar>
           <ion-item lines="none">
             <ion-label>
-              @userName
+              {{ loadedUser?.Email }}
             </ion-label>
           </ion-item>
         </ion-item-group>
@@ -62,7 +62,7 @@
             </ion-item>
           </ion-menu-toggle>
           <ion-menu-toggle menu="mainMenu">
-            <ion-item lines="none">
+            <ion-item lines="none" (click)="onSignout()">
               <ion-icon name="log-out" slot="start"></ion-icon>
               <ion-label>Signout</ion-label>
             </ion-item>
