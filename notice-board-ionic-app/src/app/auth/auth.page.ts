@@ -33,7 +33,7 @@ export class AuthPage implements OnInit {
           user.uid,
           user.metadata.creationTime,
           user.metadata.lastSignInTime,
-          user.isNewUser,
+          null,
           user.photoURL,
           user.phoneNumber
         );
