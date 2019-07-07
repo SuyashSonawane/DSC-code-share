@@ -10,3 +10,13 @@ export class UserData {
     public PhoneNumber?: string
   ) {}
 }
+export class LoginUserData {
+  constructor(
+    public name: string,
+    public rollno: string,
+    public erpId: string,
+    public div: string,
+    public department: string,
+    public year: string
+  ) {}
+}

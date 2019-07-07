@@ -12,21 +12,12 @@ import { environment } from "../environments/environment";
 
 // imports
 
-import { FirebaseUIModule, firebase, firebaseui } from "firebaseui-angular";
 import { AngularFireModule } from "@angular/fire";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { DataproviderService } from "./dataprovider.service";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireStorageModule } from "@angular/fire/storage";
 import { AngularFireFunctionsModule } from "@angular/fire/functions";
-
-const firebaseUiAuthConfig: firebaseui.auth.Config = {
-  signInFlow: "popup",
-  signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
-  tosUrl: "/",
-  privacyPolicyUrl: "/",
-  credentialHelper: firebaseui.auth.CredentialHelper.NONE
-};
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,9 +28,8 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
-    FirebaseUIModule.forRoot(firebaseUiAuthConfig),
     AngularFirestoreModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
     AngularFireFunctionsModule
   ],
   providers: [
