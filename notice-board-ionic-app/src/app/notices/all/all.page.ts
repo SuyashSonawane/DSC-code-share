@@ -14,7 +14,7 @@ export class AllPage implements OnInit {
   ngOnInit() {
     this.DataService.getNotices().subscribe(d => {
       this.notices = d;
-      // console.log(this.notices);
+      // //console.log(this.notices);
     });
   }
 }
