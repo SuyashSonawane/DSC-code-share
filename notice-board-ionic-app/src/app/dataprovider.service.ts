@@ -5,6 +5,7 @@ import {
   AngularFirestoreDocument
 } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
+import { LoginUserData } from "./user.model";
 @Injectable({
   providedIn: "root"
 })
@@ -42,6 +43,10 @@ export class DataproviderService {
   getToken() {
     return this.fcmToken;
   }
+  addUser() {
+    this.afs.collection("users").add({ name: "asas" });
+  }
+
   getCategoryNotices(name) {
     return this.afs
       .collection("notices", ref => {
