@@ -17,6 +17,7 @@ import { AngularFireModule } from "@angular/fire";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { DataproviderService } from "./dataprovider.service";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
+import { AngularFireFunctionsModule } from "@angular/fire/functions";
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: "popup",
@@ -36,7 +37,8 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     FirebaseUIModule.forRoot(firebaseUiAuthConfig),
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    AngularFireFunctionsModule
   ],
   providers: [
     StatusBar,
