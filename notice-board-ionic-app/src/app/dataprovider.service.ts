@@ -12,11 +12,13 @@ export class DataproviderService {
   noticeCollection: AngularFirestoreCollection<any>;
   notices: Observable<any>;
 
-  constructor(private afs: AngularFirestore) {
-    this.notices = this.afs.collection("notices").valueChanges();
-  }
+  constructor(private afs: AngularFirestore) {}
   getNotices() {
-    return this.notices;
+    return this.afs
+      .collection("notices", ref => {
+        return ref.orderBy("ts", "desc");
+      })
+      .valueChanges();
   }
   addNotice(body, title, division, year, department, category) {
     let notice = {
@@ -32,5 +34,12 @@ export class DataproviderService {
       ts: Date.now()
     };
     this.afs.collection("notices").add(notice);
+  }
+  getCategoryNotices(name) {
+    return this.afs
+      .collection("notices", ref => {
+        return ref.where("category", "==", name).orderBy("ts", "desc");
+      })
+      .valueChanges();
   }
 }
