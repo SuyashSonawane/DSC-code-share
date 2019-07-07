@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { Platform } from "@ionic/angular";
+import { AngularFireFunctions } from "@angular/fire/functions";
 import {
   Capacitor,
   Plugins,
@@ -13,6 +14,7 @@ import {
 import { AuthService } from "./auth/auth.service";
 import { UserService } from "./user.service";
 import { UserData } from "./user.model";
+import { DataproviderService } from "./dataprovider.service";
 
 // Capacitor plugins
 
@@ -30,7 +32,9 @@ export class AppComponent {
     private platform: Platform,
     private authService: AuthService,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private DataService: DataproviderService,
+    private func: AngularFireFunctions
   ) {
     this.initializeApp();
   }
@@ -58,7 +62,14 @@ export class AppComponent {
       PushNotifications.addListener(
         "registration",
         (token: PushNotificationToken) => {
-          alert("Push registration success, token: " + token.value);
+          this.DataService.setToken(token.value);
+          this.func
+            .httpsCallable("unsubscribeFromTopic")({
+              token: token.value,
+              topic: "discount"
+            })
+            .subscribe();
+          // alert("Push registration success, token: " + token.value);
         }
       );
 

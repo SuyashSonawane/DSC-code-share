@@ -11,6 +11,7 @@ import { Observable } from "rxjs";
 export class DataproviderService {
   noticeCollection: AngularFirestoreCollection<any>;
   notices: Observable<any>;
+  fcmToken;
 
   constructor(private afs: AngularFirestore) {}
   getNotices() {
@@ -34,6 +35,12 @@ export class DataproviderService {
       ts: Date.now()
     };
     this.afs.collection("notices").add(notice);
+  }
+  setToken(t) {
+    this.fcmToken = t;
+  }
+  getToken() {
+    return this.fcmToken;
   }
   getCategoryNotices(name) {
     return this.afs
