@@ -1,5 +1,6 @@
 {
   "projects": {
-    "staging": "notice-board-ionic-app"
+    "staging": "notice-board-ionic-app",
+    "default": "notice-board-ionic-app"
   }
 }
