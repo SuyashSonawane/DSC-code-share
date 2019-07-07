@@ -20,15 +20,15 @@ export class DataproviderService {
       })
       .valueChanges();
   }
-  addNotice(body, title, division, year, department, category) {
+  addNotice(body, title, division, year, department, category, url) {
     let notice = {
       body,
       title,
       division,
       year,
       department,
-      image: `http://lorempixel.com/400/200/technics/?${Date.now()}`,
-      thumbnail: `http://lorempixel.com/400/200/technics/?${Date.now()}`,
+      image: url,
+      thumbnail: url,
       author: "DEVS",
       category,
       ts: Date.now()

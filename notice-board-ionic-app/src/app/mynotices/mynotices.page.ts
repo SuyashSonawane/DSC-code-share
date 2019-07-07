@@ -2,6 +2,20 @@ import { Component, OnInit } from "@angular/core";
 import { PickerController } from "@ionic/angular";
 import { DataproviderService } from "../dataprovider.service";
 import { Router } from "@angular/router";
+import {
+  AngularFirestoreDocument,
+  AngularFirestoreCollection,
+  AngularFirestore
+} from "@angular/fire/firestore";
+import { AngularFireStorage } from "@angular/fire/storage";
+
+import {
+  Capacitor,
+  Plugins,
+  CameraSource,
+  CameraResultType
+} from "@capacitor/core";
+import * as firebase from "firebase";
 
 @Component({
   selector: "app-mynotices",
@@ -15,11 +29,15 @@ export class MynoticesPage implements OnInit {
   public notice = "";
   public division = "";
   public category = "All";
+  selectedImage: string;
+  url;
 
   constructor(
     private pickerController: PickerController,
     private DataService: DataproviderService,
-    private router: Router
+    private router: Router,
+    private afs: AngularFirestore,
+    private storage: AngularFireStorage
   ) {}
   async openPicker() {
     let opts = {
@@ -92,7 +110,8 @@ export class MynoticesPage implements OnInit {
       this.division,
       this.Year,
       this.Department,
-      this.category
+      this.category,
+      this.url
     );
     this.Department = "Department";
     this.Year = "Year";
@@ -101,6 +120,30 @@ export class MynoticesPage implements OnInit {
     this.division = "";
     this.category = "All";
     this.router.navigate(["/"]);
+  }
+
+  takePhoto() {
+    if (Capacitor.isPluginAvailable("Camera")) {
+      Plugins.Camera.getPhoto({
+        quality: 30,
+        source: CameraSource.Prompt,
+        resultType: CameraResultType.DataUrl
+      })
+        .then(image => {
+          this.selectedImage = image.dataUrl;
+          firebase
+            .storage()
+            .ref("images")
+            .child(this.afs.createId())
+            .putString(image.dataUrl, "data_url")
+            .then(snap => {
+              snap.ref.getDownloadURL().then(url => {
+                this.url = url;
+              });
+            });
+        })
+        .catch(err => console.log(err));
+    }
   }
 
   ngOnInit() {}
