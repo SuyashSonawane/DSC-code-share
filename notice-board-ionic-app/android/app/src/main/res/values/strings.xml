@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Notice Board</string>
+    <string name="title_activity_main">Notice Board</string>
+    <string name="package_name">com.devscollab.noticeboard</string>
+    <string name="fileprovider_authority">com.devscollab.noticeboard.fileprovider</string>
+    <string name="custom_url_scheme">com.devscollab.noticeboard</string>
+</resources>
