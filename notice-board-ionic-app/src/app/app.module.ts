@@ -17,6 +17,7 @@ import { AngularFireModule } from "@angular/fire";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { DataproviderService } from "./dataprovider.service";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
+import { AngularFireStorageModule } from "@angular/fire/storage";
 import { AngularFireFunctionsModule } from "@angular/fire/functions";
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
@@ -38,6 +39,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     AngularFireAuthModule,
     FirebaseUIModule.forRoot(firebaseUiAuthConfig),
     AngularFirestoreModule,
+    AngularFireStorageModule
     AngularFireFunctionsModule
   ],
   providers: [

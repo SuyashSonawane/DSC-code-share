@@ -27,6 +27,13 @@
             Open Picker
           </ion-button>
         </ion-item>
+        <ion-item>
+          <ion-label>Take a photo</ion-label>
+          <ion-button (click)="takePhoto()">
+            Open Photo
+          </ion-button>
+          <ion-img [src]="selectedImage" *ngIf="selectedImage"></ion-img>
+        </ion-item>
   </ion-list>
   <div class="simple">
 
