@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "629272626360",
+    "firebase_url": "https://notice-board-ionic-app.firebaseio.com",
+    "project_id": "notice-board-ionic-app",
+    "storage_bucket": "notice-board-ionic-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:629272626360:android:4e6cfe552348b971",
+        "android_client_info": {
+          "package_name": "com.devscollab.noticeboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "629272626360-k2tk527rs3udsjj9jn1ec72dhd56ju40.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMehRri7b0AWA3udhYhWct_kZThOPwnyo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "629272626360-k2tk527rs3udsjj9jn1ec72dhd56ju40.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
