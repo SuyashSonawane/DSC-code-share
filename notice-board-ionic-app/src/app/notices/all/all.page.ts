@@ -8,7 +8,6 @@ import { DataproviderService } from "src/app/dataprovider.service";
 })
 export class AllPage implements OnInit {
   notices;
-
   constructor(private DataService: DataproviderService) {}
 
   ngOnInit() {
