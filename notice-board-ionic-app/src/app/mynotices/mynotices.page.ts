@@ -112,7 +112,7 @@ export class MynoticesPage implements OnInit {
 
   async submit() {
     const loading = await this.loadingController.create({
-      message: "Uploading Notice please wait .."
+      message: "Uploading Notice  .."
     });
     await loading.present();
     this.counter = 0;
@@ -153,7 +153,7 @@ export class MynoticesPage implements OnInit {
   takePhoto() {
     if (Capacitor.isPluginAvailable("Camera")) {
       Plugins.Camera.getPhoto({
-        quality: 30,
+        quality: 50,
         source: CameraSource.Prompt,
         resultType: CameraResultType.DataUrl
       })
