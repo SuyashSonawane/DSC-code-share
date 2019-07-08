@@ -1,7 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { PickerController } from "@ionic/angular";
 import { DataproviderService } from "../dataprovider.service";
+import { AlertController } from "@ionic/angular";
 import { Router } from "@angular/router";
+import { LoadingController } from "@ionic/angular";
 import {
   AngularFirestoreDocument,
   AngularFirestoreCollection,
@@ -31,13 +33,18 @@ export class MynoticesPage implements OnInit {
   public category = "All";
   selectedImage: string;
   url;
+  public images: Array<string> = [];
+  public urls: Array<string> = [];
+  counter: number;
 
   constructor(
     private pickerController: PickerController,
     private DataService: DataproviderService,
     private router: Router,
     private afs: AngularFirestore,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    public alertController: AlertController,
+    public loadingController: LoadingController
   ) {}
   async openPicker() {
     let opts = {
@@ -103,23 +110,44 @@ export class MynoticesPage implements OnInit {
     });
   }
 
-  submit() {
-    this.DataService.addNotice(
-      this.notice,
-      this.title,
-      this.division,
-      this.Year,
-      this.Department,
-      this.category,
-      this.url
-    );
-    this.Department = "Department";
-    this.Year = "Year";
-    this.title = "";
-    this.notice = "";
-    this.division = "";
-    this.category = "All";
-    this.router.navigate(["/"]);
+  async submit() {
+    const loading = await this.loadingController.create({
+      message: "Uploading Notice please wait .."
+    });
+    await loading.present();
+    this.counter = 0;
+    this.images.forEach(image => {
+      firebase
+        .storage()
+        .ref(`images/${this.Department}`)
+        .child(this.afs.createId())
+        .putString(image, "data_url")
+        .then(snap => {
+          snap.ref.getDownloadURL().then(url => {
+            this.urls.push(url);
+            this.counter++;
+            if (this.counter === this.images.length) {
+              this.DataService.addNotice(
+                this.notice,
+                this.title,
+                this.division,
+                this.Year,
+                this.Department,
+                this.category,
+                this.urls
+              );
+              loading.dismiss();
+              this.Department = "Department";
+              this.Year = "Year";
+              this.title = "";
+              this.notice = "";
+              this.division = "";
+              this.category = "All";
+              this.router.navigate(["/"]);
+            }
+          });
+        });
+    });
   }
 
   takePhoto() {
@@ -131,19 +159,31 @@ export class MynoticesPage implements OnInit {
       })
         .then(image => {
           this.selectedImage = image.dataUrl;
-          firebase
-            .storage()
-            .ref("images")
-            .child(this.afs.createId())
-            .putString(image.dataUrl, "data_url")
-            .then(snap => {
-              snap.ref.getDownloadURL().then(url => {
-                this.url = url;
-              });
-            });
+          this.images.push(image.dataUrl);
         })
         .catch(err => console.log(err));
     }
+  }
+  async remove(index: number) {
+    const alert = await this.alertController.create({
+      header: "Alert",
+      subHeader: "Delete Alert",
+      message: "Are you sure to delete the image",
+      buttons: [
+        {
+          text: "Yes",
+          handler: () => {
+            if (index > -1) {
+              this.images.splice(index, 1);
+            }
+          }
+        },
+        {
+          text: "No"
+        }
+      ]
+    });
+    await alert.present();
   }
 
   ngOnInit() {}
