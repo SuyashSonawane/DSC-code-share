@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { DataproviderService } from "src/app/dataprovider.service";
+import { DataproviderService } from "../../dataprovider.service";
+import { BackPressService } from "../../back-press.service";
 
 @Component({
   selector: "app-news",
@@ -8,7 +9,10 @@ import { DataproviderService } from "src/app/dataprovider.service";
 })
 export class NewsPage implements OnInit {
   notices: unknown[];
-  constructor(private DataService: DataproviderService) {}
+  constructor(
+    private DataService: DataproviderService,
+    private backPressService: BackPressService
+  ) {}
 
   ngOnInit() {
     this.DataService.getCategoryNotices("News").subscribe(d => {
@@ -16,4 +20,8 @@ export class NewsPage implements OnInit {
       //console.log(this.notices);
     });
   }
+
+  ionViewDidEnter() {}
+
+  ionViewDidLeave() {}
 }

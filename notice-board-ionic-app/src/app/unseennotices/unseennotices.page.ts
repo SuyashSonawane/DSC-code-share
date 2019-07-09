@@ -1,15 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
+import { BackPressService } from "../back-press.service";
 
 @Component({
-  selector: 'app-unseennotices',
-  templateUrl: './unseennotices.page.html',
-  styleUrls: ['./unseennotices.page.scss'],
+  selector: "app-unseennotices",
+  templateUrl: "./unseennotices.page.html",
+  styleUrls: ["./unseennotices.page.scss"]
 })
 export class UnseennoticesPage implements OnInit {
+  constructor(private backPressService: BackPressService) {}
 
-  constructor() { }
+  ngOnInit() {}
 
-  ngOnInit() {
+  ionViewDidEnter() {
+    this.backPressService.stopBackPressListener();
   }
 
+  ionViewWillLeave() {
+    this.backPressService.startBackPressListener();
+  }
 }
