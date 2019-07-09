@@ -21,15 +21,22 @@ export class DataproviderService {
       })
       .valueChanges();
   }
-  addNotice(body, title, division, year, department, category, url) {
+  addNotice(
+    body,
+    title,
+    division,
+    year,
+    department,
+    category,
+    urls: Array<string>
+  ) {
     let notice = {
       body,
       title,
       division,
       year,
       department,
-      image: url,
-      thumbnail: url,
+      urls,
       author: "DEVS",
       category,
       ts: Date.now()
