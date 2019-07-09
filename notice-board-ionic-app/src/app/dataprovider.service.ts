@@ -5,7 +5,6 @@ import {
   AngularFirestoreDocument
 } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
-import { LoginUserData } from "./user.model";
 @Injectable({
   providedIn: "root"
 })

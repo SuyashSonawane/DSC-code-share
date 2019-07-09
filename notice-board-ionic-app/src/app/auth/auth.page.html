@@ -23,6 +23,13 @@
           <ion-label position="floating">Division</ion-label>
           <ion-input [(ngModel)]="division" placeholder="eg. B"></ion-input>
       </ion-item>
+      <ion-item (click)="openPicker()">
+        <ion-label> {{department}}</ion-label>
+        <ion-label>{{year}} </ion-label>
+        <ion-button >
+          Open Picker
+        </ion-button>
+      </ion-item>
       <ion-item>
           <ion-label position="floating">Password</ion-label>
           <ion-input [(ngModel)]="password"  type="password"></ion-input>
@@ -31,13 +38,6 @@
           <ion-label position="floating">Confirm Password</ion-label>
           <ion-input [(ngModel)]="confirm_password"  type="password"></ion-input>
       </ion-item>
-        <ion-item (click)="openPicker()">
-          <ion-label> {{department}}</ion-label>
-          <ion-label>{{year}} </ion-label>
-          <ion-button >
-            Open Picker
-          </ion-button>
-        </ion-item>
   </ion-list>
   <div class="simple" >
     <ion-button (click)="submit()">

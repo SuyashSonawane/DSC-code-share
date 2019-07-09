@@ -9,7 +9,6 @@ import {
   FirebaseUISignInFailure,
   FirebaseUISignInSuccessWithAuthResult
 } from "firebaseui-angular";
-import { LoginUserData } from "../user.model";
 import { DataproviderService } from "../dataprovider.service";
 @Component({
   selector: "app-auth",
@@ -26,8 +25,6 @@ export class AuthPage implements OnInit {
   public email = "";
   public password = "";
   public confirm_password = "";
-
-  user: LoginUserData;
 
   constructor(
     private authService: AuthService,
@@ -58,26 +55,6 @@ export class AuthPage implements OnInit {
     });
   }
 
-  successCallback(signInSuccessData: FirebaseUISignInSuccessWithAuthResult) {
-    const user = signInSuccessData.authResult.user;
-    this.userService.setUserData(
-      user.displayName,
-      user.email,
-      user.uid,
-      user.metadata.creationTime,
-      user.metadata.lastSignInTime,
-      signInSuccessData.authResult.additionalUserInfo.isNewUser,
-      user.photoURL,
-      user.phoneNumber
-    );
-
-    this.authService.signin();
-    this.router.navigateByUrl("/notices/tabs/all");
-  }
-
-  errorCallback(errorData: FirebaseUISignInFailure) {
-    console.log("Failure", errorData);
-  }
   async openPicker() {
     let opts = {
       buttons: [
@@ -133,8 +110,8 @@ export class AuthPage implements OnInit {
     // this.user.erpId = this.erpId;
     // this.user.rollno = this.rollno;
     // this.user.year = this.year;
+    // this.dataProvider.addUser(this.user);
     this.authService.signin();
     this.router.navigateByUrl("/notices/tabs/all");
-    // this.dataProvider.addUser(this.user);
   }
 }
