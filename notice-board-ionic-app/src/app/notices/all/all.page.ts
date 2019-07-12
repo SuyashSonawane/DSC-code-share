@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { DataproviderService } from "src/app/dataprovider.service";
+import { DataproviderService } from "../../dataprovider.service";
+import { BackPressService } from "../../back-press.service";
 
 @Component({
   selector: "app-all",
@@ -8,7 +9,11 @@ import { DataproviderService } from "src/app/dataprovider.service";
 })
 export class AllPage implements OnInit {
   notices;
-  constructor(private DataService: DataproviderService) {}
+
+  constructor(
+    private DataService: DataproviderService,
+    private backPressService: BackPressService
+  ) {}
 
   ngOnInit() {
     this.DataService.getNotices().subscribe(d => {
@@ -16,4 +21,8 @@ export class AllPage implements OnInit {
       // //console.log(this.notices);
     });
   }
+
+  ionViewDidEnter() {}
+
+  ionViewDidLeave() {}
 }

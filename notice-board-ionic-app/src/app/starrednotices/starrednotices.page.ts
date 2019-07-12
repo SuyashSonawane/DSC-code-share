@@ -1,15 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
+import { BackPressService } from "../back-press.service";
 
 @Component({
-  selector: 'app-starrednotices',
-  templateUrl: './starrednotices.page.html',
-  styleUrls: ['./starrednotices.page.scss'],
+  selector: "app-starrednotices",
+  templateUrl: "./starrednotices.page.html",
+  styleUrls: ["./starrednotices.page.scss"]
 })
 export class StarrednoticesPage implements OnInit {
+  constructor(private backPressService: BackPressService) {}
 
-  constructor() { }
+  ngOnInit() {}
 
-  ngOnInit() {
+  ionViewDidEnter() {
+    this.backPressService.stopBackPressListener();
   }
 
+  ionViewWillLeave() {
+    this.backPressService.startBackPressListener();
+  }
 }

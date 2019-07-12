@@ -5,7 +5,6 @@ import {
   AngularFirestoreDocument
 } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
-import { LoginUserData } from "./user.model";
 @Injectable({
   providedIn: "root"
 })
@@ -15,6 +14,7 @@ export class DataproviderService {
   fcmToken;
 
   constructor(private afs: AngularFirestore) {}
+
   getNotices() {
     return this.afs
       .collection("notices", ref => {
@@ -22,6 +22,7 @@ export class DataproviderService {
       })
       .valueChanges();
   }
+
   addNotice(
     body,
     title,
@@ -44,14 +45,48 @@ export class DataproviderService {
     };
     this.afs.collection("notices").add(notice);
   }
+
   setToken(t) {
     this.fcmToken = t;
   }
+
   getToken() {
     return this.fcmToken;
   }
-  addUser() {
-    this.afs.collection("users").add({ name: "asas" });
+
+  addUser(newUser) {
+    let localDocId;
+    this.afs
+      .collection("users")
+      .add(newUser)
+      .then(ref => {
+        // console.log(ref.id);
+        localDocId = ref.id;
+      })
+      .then(() => {
+        this.afs
+          .collection("users")
+          .doc(localDocId)
+          .update({ docId: localDocId });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  updateUser(newuserData, passDocId) {
+    this.afs
+      .collection("users")
+      .doc(passDocId)
+      .update(newuserData);
+  }
+
+  getUserObservable(uid: string) {
+    return this.afs
+      .collection("users", ref => {
+        return ref.where("uid", "==", uid);
+      })
+      .valueChanges();
   }
 
   getCategoryNotices(name) {

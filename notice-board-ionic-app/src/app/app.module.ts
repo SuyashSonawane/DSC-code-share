@@ -19,6 +19,16 @@ import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireStorageModule } from "@angular/fire/storage";
 import { AngularFireFunctionsModule } from "@angular/fire/functions";
 
+import { FirebaseUIModule, firebase, firebaseui } from "firebaseui-angular";
+
+const firebaseUiAuthConfig: firebaseui.auth.Config = {
+  signInFlow: "popup",
+  signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
+  // tosUrl: '<your-tos-link>',
+  // privacyPolicyUrl: '<your-privacyPolicyUrl-link>',
+  credentialHelper: firebaseui.auth.CredentialHelper.NONE
+};
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -30,7 +40,8 @@ import { AngularFireFunctionsModule } from "@angular/fire/functions";
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
-    AngularFireFunctionsModule
+    AngularFireFunctionsModule,
+    FirebaseUIModule.forRoot(firebaseUiAuthConfig)
   ],
   providers: [
     StatusBar,

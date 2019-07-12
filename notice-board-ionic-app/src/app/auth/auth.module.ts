@@ -7,6 +7,8 @@ import { IonicModule } from "@ionic/angular";
 
 import { AuthPage } from "./auth.page";
 
+import { FirebaseUIModule, firebase, firebaseui } from "firebaseui-angular";
+
 const routes: Routes = [
   {
     path: "",
@@ -19,7 +21,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    FirebaseUIModule
   ],
   declarations: [AuthPage]
 })

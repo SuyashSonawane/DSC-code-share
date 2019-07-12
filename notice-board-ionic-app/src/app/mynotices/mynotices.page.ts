@@ -18,6 +18,7 @@ import {
   CameraResultType
 } from "@capacitor/core";
 import * as firebase from "firebase";
+import { BackPressService } from "../back-press.service";
 
 @Component({
   selector: "app-mynotices",
@@ -44,8 +45,18 @@ export class MynoticesPage implements OnInit {
     private afs: AngularFirestore,
     private storage: AngularFireStorage,
     public alertController: AlertController,
-    public loadingController: LoadingController
+    public loadingController: LoadingController,
+    private backPressService: BackPressService
   ) {}
+
+  ionViewDidEnter() {
+    this.backPressService.stopBackPressListener();
+  }
+
+  ionViewWillLeave() {
+    this.backPressService.startBackPressListener();
+  }
+
   async openPicker() {
     let opts = {
       buttons: [
