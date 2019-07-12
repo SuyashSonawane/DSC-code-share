@@ -26,7 +26,7 @@ exports.subscribeToTopic = functions.https.onCall(
 
     const notification = {
       title: 'New Notice Added',
-      body: notice.body
+      body: `Title: ${notice.title}, Notice: ${notice.body}`
     };
 
     const payload= {
@@ -47,8 +47,8 @@ exports.subscribeToTopic = functions.https.onCall(
             // ]
           }
         },
-        topic: 'discounts'
+        topic: 'all'
       };
 
-    return admin.messaging().send(payload);
+    admin.messaging().send(payload).then(res=>console.log(res));
   });
