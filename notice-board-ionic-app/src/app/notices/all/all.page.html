@@ -13,7 +13,7 @@
       <ion-card-subtitle>{{notice.ts | date}} <br> {{notice.author}}</ion-card-subtitle>
       <ion-card-title>{{notice.title}}</ion-card-title>
     </ion-card-header>  
-    <ion-img *ngFor="let image of notice.urls" [src]="notice.urls[0] " class="ion-padding-bottom" height="300px"></ion-img>
+    <ion-img *ngFor="let image of notice.urls" [src]="image " class="ion-padding-bottom" height="300px"></ion-img>
     <ion-card-content>
       {{notice.body}}
     </ion-card-content>

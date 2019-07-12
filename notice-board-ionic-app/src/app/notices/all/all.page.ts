@@ -1,6 +1,15 @@
 import { Component, OnInit } from "@angular/core";
 import { DataproviderService } from "../../dataprovider.service";
 import { BackPressService } from "../../back-press.service";
+import { AngularFireFunctions } from "@angular/fire/functions";
+import {
+  Capacitor,
+  Plugins,
+  PushNotification,
+  PushNotificationToken,
+  PushNotificationActionPerformed
+} from "@capacitor/core";
+const { PushNotifications } = Plugins;
 
 @Component({
   selector: "app-all",
@@ -12,7 +21,8 @@ export class AllPage implements OnInit {
 
   constructor(
     private DataService: DataproviderService,
-    private backPressService: BackPressService
+    private backPressService: BackPressService,
+    private func: AngularFireFunctions
   ) {}
 
   ngOnInit() {
@@ -20,6 +30,46 @@ export class AllPage implements OnInit {
       this.notices = d;
       // //console.log(this.notices);
     });
+    console.log("Initializing HomePage");
+
+    // Register with Apple / Google to receive push via APNS/FCM
+    PushNotifications.register();
+
+    // On succcess, we should be able to receive notifications
+    PushNotifications.addListener(
+      "registration",
+      (token: PushNotificationToken) => {
+        this.DataService.setToken(token.value);
+        this.func
+          .httpsCallable("subscribeToTopic")({
+            token: token.value,
+            topic: "all"
+          })
+          .subscribe(d => console.log(d));
+        // alert("Push registration success, token: " + token.value);
+      }
+    );
+
+    // Some issue with our setup and push will not work
+    PushNotifications.addListener("registrationError", (error: any) => {
+      alert("Error on registration: " + JSON.stringify(error));
+    });
+
+    // Show us the notification payload if the app is open on our device
+    PushNotifications.addListener(
+      "pushNotificationReceived",
+      (notification: PushNotification) => {
+        alert("Push received: " + JSON.stringify(notification));
+      }
+    );
+
+    // Method called when tapping on a notification
+    PushNotifications.addListener(
+      "pushNotificationActionPerformed",
+      (notification: PushNotificationActionPerformed) => {
+        alert("Push action performed: " + JSON.stringify(notification));
+      }
+    );
   }
 
   ionViewDidEnter() {}
