@@ -8,14 +8,14 @@
 </ion-header>
 
 <ion-content *ngIf="notices">
-  <ion-card *ngFor="let notice of notices">
+  <ion-card *ngFor="let notice of notices" (click)="onNoticeClick(notice?.noticeId)">
     <ion-card-header>
-      <ion-card-subtitle>{{notice.ts | date}} <br> {{notice.author}}</ion-card-subtitle>
-      <ion-card-title>{{notice.title}}</ion-card-title>
+      <ion-card-subtitle>{{notice?.ts | date}} <br> {{notice?.author}}</ion-card-subtitle>
+      <ion-card-title>{{notice?.title}}</ion-card-title>
     </ion-card-header>  
     <ion-img *ngFor="let image of notice.urls" [src]="notice.urls[0] " class="ion-padding-bottom" height="300px"></ion-img>
     <ion-card-content>
-      {{notice.body}}
+      {{notice?.body}}
     </ion-card-content>
   </ion-card>
 </ion-content>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { DataproviderService } from "../../dataprovider.service";
 import { BackPressService } from "../../back-press.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-all",
@@ -12,7 +13,7 @@ export class AllPage implements OnInit {
 
   constructor(
     private DataService: DataproviderService,
-    private backPressService: BackPressService
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -25,4 +26,8 @@ export class AllPage implements OnInit {
   ionViewDidEnter() {}
 
   ionViewDidLeave() {}
+
+  onNoticeClick = noticeId => {
+    this.router.navigateByUrl(`/notices/tabs/all/${noticeId}`);
+  };
 }

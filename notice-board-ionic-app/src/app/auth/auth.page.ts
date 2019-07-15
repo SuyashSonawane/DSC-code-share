@@ -32,7 +32,6 @@ export class AuthPage implements OnInit {
     private userService: UserService,
     private dataProvider: DataproviderService,
     private menuCtrl: MenuController,
-    // private platform: Platform,
     private backPressService: BackPressService
   ) {}
 
@@ -41,7 +40,7 @@ export class AuthPage implements OnInit {
   }
 
   ionViewDidEnter() {
-    console.log("Auth did enter");
+    // console.log("Auth did enter");
     this.backPressService.startBackPressListener();
   }
 

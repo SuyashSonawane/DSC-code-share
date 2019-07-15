@@ -1,9 +1,17 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>detailed</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="mainMenu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ selectedNotice?.title }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-slides [options]="sliderOpts">
+    <ion-slide *ngFor="let img of selectedNotice?.urls">
+      <ion-img [src]="img" tappable (click)="openPreview(img)"></ion-img>
+    </ion-slide>
+  </ion-slides>
+  <!-- <ion-img [src]="selectedNotice?.urls[0]"></ion-img> -->
 </ion-content>

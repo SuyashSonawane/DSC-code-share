@@ -23,6 +23,14 @@ export class DataproviderService {
       .valueChanges();
   }
 
+  getNoticeByData(noticeId) {
+    return this.afs
+      .collection("notices", ref => {
+        return ref.where("noticeId", "==", noticeId);
+      })
+      .valueChanges();
+  }
+
   addNotice(
     body,
     title,
@@ -43,7 +51,22 @@ export class DataproviderService {
       category,
       ts: Date.now()
     };
-    this.afs.collection("notices").add(notice);
+    let localNoticeId;
+    this.afs
+      .collection("notices")
+      .add(notice)
+      .then(ref => {
+        localNoticeId = ref.id;
+      })
+      .then(() => {
+        this.afs
+          .collection("notices")
+          .doc(localNoticeId)
+          .update({ noticeId: localNoticeId });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   setToken(t) {
