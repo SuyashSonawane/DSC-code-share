@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { DataproviderService } from "../../dataprovider.service";
 import { BackPressService } from "../../back-press.service";
+import { Router } from "@angular/router";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import {
   Capacitor,
@@ -21,6 +22,7 @@ export class AllPage implements OnInit {
 
   constructor(
     private DataService: DataproviderService,
+    private router: Router,
     private backPressService: BackPressService,
     private func: AngularFireFunctions
   ) {}
@@ -30,7 +32,7 @@ export class AllPage implements OnInit {
       this.notices = d;
       // //console.log(this.notices);
     });
-    console.log("Initializing HomePage");
+    // console.log("Initializing HomePage");
 
     // Register with Apple / Google to receive push via APNS/FCM
     PushNotifications.register();
@@ -75,4 +77,8 @@ export class AllPage implements OnInit {
   ionViewDidEnter() {}
 
   ionViewDidLeave() {}
+
+  onNoticeClick = noticeId => {
+    this.router.navigateByUrl(`/notices/tabs/all/${noticeId}`);
+  };
 }

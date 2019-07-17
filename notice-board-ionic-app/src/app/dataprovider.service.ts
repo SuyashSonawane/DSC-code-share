@@ -15,10 +15,26 @@ export class DataproviderService {
 
   constructor(private afs: AngularFirestore) {}
 
+  getCurrentUserData(uid) {
+    return this.afs
+      .collection("users", ref => {
+        return ref.where("uid", "==", uid);
+      })
+      .valueChanges();
+  }
+
   getNotices() {
     return this.afs
       .collection("notices", ref => {
         return ref.orderBy("ts", "desc");
+      })
+      .valueChanges();
+  }
+
+  getNoticeByData(noticeId) {
+    return this.afs
+      .collection("notices", ref => {
+        return ref.where("noticeId", "==", noticeId);
       })
       .valueChanges();
   }
@@ -43,7 +59,22 @@ export class DataproviderService {
       category,
       ts: Date.now()
     };
-    this.afs.collection("notices").add(notice);
+    let localNoticeId;
+    this.afs
+      .collection("notices")
+      .add(notice)
+      .then(ref => {
+        localNoticeId = ref.id;
+      })
+      .then(() => {
+        this.afs
+          .collection("notices")
+          .doc(localNoticeId)
+          .update({ noticeId: localNoticeId });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   setToken(t) {

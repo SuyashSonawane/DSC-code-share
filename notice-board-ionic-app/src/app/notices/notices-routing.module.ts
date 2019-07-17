@@ -85,6 +85,7 @@ const routes: Routes = [
     redirectTo: "/notices/tabs/all",
     pathMatch: "full"
   }
+  // { path: 'image-modal', loadChildren: './detailed/image-modal/image-modal.module#ImageModalPageModule' }
 ];
 
 @NgModule({

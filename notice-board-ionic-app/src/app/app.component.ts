@@ -53,6 +53,6 @@ export class AppComponent {
 
   onSignout() {
     this.authService.signout();
-    this.router.navigateByUrl("/auth");
+    this.router.navigate(["/auth"]);
   }
 }

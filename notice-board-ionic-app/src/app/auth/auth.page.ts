@@ -7,6 +7,8 @@ import { PickerController, MenuController, Platform } from "@ionic/angular";
 import { UserService } from "../user.service";
 import { DataproviderService } from "../dataprovider.service";
 import { BackPressService } from "../back-press.service";
+
+import { LoadingController } from "@ionic/angular";
 @Component({
   selector: "app-auth",
   templateUrl: "./auth.page.html",
@@ -32,8 +34,8 @@ export class AuthPage implements OnInit {
     private userService: UserService,
     private dataProvider: DataproviderService,
     private menuCtrl: MenuController,
-    // private platform: Platform,
-    private backPressService: BackPressService
+    private backPressService: BackPressService,
+    public loadingController: LoadingController
   ) {}
 
   ionViewWillEnter() {
@@ -41,7 +43,7 @@ export class AuthPage implements OnInit {
   }
 
   ionViewDidEnter() {
-    console.log("Auth did enter");
+    // console.log("Auth did enter");
     this.backPressService.startBackPressListener();
   }
 
@@ -51,6 +53,12 @@ export class AuthPage implements OnInit {
   }
 
   ngOnInit() {
+    // const loading = await this.loadingController.create({
+    //   message: "Authenticating User"
+    // });
+
+    // await loading.present();
+
     this.afAuth.user.subscribe(data => {
       if (data) {
         const user = data;
@@ -64,6 +72,7 @@ export class AuthPage implements OnInit {
           user.photoURL,
           user.phoneNumber
         );
+
         let localData;
         this.dataProvider
           .getUserObservable(user.uid) //event.authResult.user.uid
