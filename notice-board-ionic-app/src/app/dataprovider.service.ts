@@ -15,6 +15,14 @@ export class DataproviderService {
 
   constructor(private afs: AngularFirestore) {}
 
+  getCurrentUserData(uid) {
+    return this.afs
+      .collection("users", ref => {
+        return ref.where("uid", "==", uid);
+      })
+      .valueChanges();
+  }
+
   getNotices() {
     return this.afs
       .collection("notices", ref => {

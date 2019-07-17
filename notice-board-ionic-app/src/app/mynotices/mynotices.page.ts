@@ -164,7 +164,7 @@ export class MynoticesPage implements OnInit {
   takePhoto() {
     if (Capacitor.isPluginAvailable("Camera")) {
       Plugins.Camera.getPhoto({
-        quality: 50,
+        quality: 20,
         source: CameraSource.Prompt,
         resultType: CameraResultType.DataUrl
       })

@@ -13,9 +13,10 @@
       <ion-card-subtitle>{{notice?.ts | date}} <br> {{notice?.author}}</ion-card-subtitle>
       <ion-card-title>{{notice?.title}}</ion-card-title>
     </ion-card-header>  
-    <ion-img *ngFor="let image of notice.urls" [src]="notice.urls[0] " class="ion-padding-bottom" height="300px"></ion-img>
+    <ion-img [src]="notice?.urls[0]" class="ion-padding-bottom" height="300px"></ion-img>
     <ion-card-content>
-      {{notice?.body}}
+      {{ (notice?.body.length>120)? (notice?.body | slice:0:120)+'...':(notice?.body)}}
+      <ion-label color="primary" class="read-more" *ngIf="notice?.body.length>120">Read More</ion-label>
     </ion-card-content>
   </ion-card>
 </ion-content>

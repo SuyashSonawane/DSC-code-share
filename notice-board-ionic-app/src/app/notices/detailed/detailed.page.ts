@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
 import { BackPressService } from "../../back-press.service";
@@ -13,10 +13,15 @@ import { ImageModalPage } from "./image-modal/image-modal.page";
 })
 export class DetailedPage implements OnInit {
   selectedNotice;
+
   sliderOpts = {
-    zoom: true,
+    zoom: false,
     slidesPerView: 1,
-    centeredSlides: true
+    centeredSlides: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: true
+    }
   };
 
   constructor(
@@ -37,6 +42,7 @@ export class DetailedPage implements OnInit {
         .getNoticeByData(ParamMap.get("noticeId"))
         .subscribe(data => {
           this.selectedNotice = data[0];
+          // console.log(this.selectedNotice);
         });
     });
   }
