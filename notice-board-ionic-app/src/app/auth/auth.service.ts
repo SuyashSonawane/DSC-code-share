@@ -8,7 +8,7 @@ import { UserService } from "../user.service";
   providedIn: "root"
 })
 export class AuthService {
-  private _userIsAuthenticated = false;
+  private _userIsAuthenticated: boolean;
 
   constructor(private afAuth: AngularFireAuth, private router: Router) {}
 

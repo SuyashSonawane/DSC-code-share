@@ -1,41 +1,60 @@
-
-
 <ion-content padding>
-    <firebase-ui
-      (signInSuccessWithAuthResult)="successCallback($event)"
-      (signInFailure)="errorCallback($event)"
-    ></firebase-ui>
-  
-  <ion-list margin *ngIf="showUserSignupForm">
-    <ion-list-header>Enter the following details to activate the account</ion-list-header>
+  <firebase-ui (signInSuccessWithAuthResult)="successCallback($event)" (signInFailure)="errorCallback($event)">
+  </firebase-ui>
+
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+
+    <ion-list margin *ngIf="showUserSignupForm">
+
+      <ion-list-header>Enter the following details to activate the account</ion-list-header>
+
       <ion-item>
-          <ion-label position="floating">Roll No.</ion-label>
-          <ion-input [(ngModel)]="rollno" placeholder="eg. SECOBXXX"></ion-input>
-        </ion-item>
-      <ion-item>
-          <ion-label position="floating">ERP Id</ion-label>
-          <ion-input [(ngModel)]="erpId" placeholder="eg. 18021011M14930"></ion-input>
-        </ion-item>
-      <ion-item>
-          <ion-label position="floating">Division</ion-label>
-          <ion-input [(ngModel)]="division" placeholder="eg. B"></ion-input>
+        <ion-label position="floating">Roll No.</ion-label>
+        <ion-input type="text" placeholder="eg. SECOBXXX" ngModel name="rollNo" required #rollNoCtrl="ngModel">
+        </ion-input>
       </ion-item>
+      <ion-item lines="none" *ngIf="!rollNoCtrl.valid && rollNoCtrl.touched">
+        <ion-label color="danger">Invalid Roll No</ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">ERP Id</ion-label>
+        <ion-input type="text" placeholder="eg. 18021011M14930" ngModel name="erpId" required #erpIdCtrl="ngModel">
+        </ion-input>
+      </ion-item>
+      <ion-item lines="none" *ngIf="!erpIdCtrl.valid && erpIdCtrl.touched">
+        <ion-label color="danger">Invalid ERP ID</ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Division</ion-label>
+        <ion-input placeholder="eg. B" ngModel name="division" required maxlength="1" #divCtrl="ngModel"></ion-input>
+      </ion-item>
+      <ion-item lines="none" *ngIf="!divCtrl.valid && divCtrl.touched">
+        <ion-label color="danger">Invalid Division</ion-label>
+      </ion-item>
+
       <ion-item (click)="openPicker()">
         <ion-label> {{department}}</ion-label>
         <ion-label>{{year}} </ion-label>
-        <ion-button >
+        <ion-button>
           Open Picker
         </ion-button>
       </ion-item>
-  </ion-list>
-  <div class="simple" *ngIf="showUserSignupForm">
-    <ion-button (click)="submit()">
-      Submit
-    </ion-button>
-  </div>
-  <div class="simple" *ngIf="showUserSignupForm">
-    <ion-button (click)="changeAccount()">
-      Use Different Account
-    </ion-button>
-  </div>
+
+    </ion-list>
+
+    <div class="simple" *ngIf="showUserSignupForm">
+      <ion-button color="primary" fill="clear" (click)="changeAccount()">
+        Change Account
+      </ion-button>
+    </div>
+
+    <div class="simple" *ngIf="showUserSignupForm">
+      <ion-button type="submit" [disabled]="!f.valid">
+        Submit
+      </ion-button>
+    </div>
+
+  </form>
 </ion-content>

@@ -9,6 +9,8 @@ import { DataproviderService } from "../dataprovider.service";
 import { BackPressService } from "../back-press.service";
 
 import { LoadingController } from "@ionic/angular";
+import { NgForm, FormGroup } from "@angular/forms";
+import { LocalStorageService } from "../local-storage.service";
 @Component({
   selector: "app-auth",
   templateUrl: "./auth.page.html",
@@ -18,13 +20,11 @@ export class AuthPage implements OnInit {
   showUserSignupForm = false;
   isUserValidated = false;
   isNewUser;
-  // backButtonSubscription;
+
+  form: FormGroup;
 
   public department = "Department";
   public year = "Year";
-  public rollno = "";
-  public division = "";
-  public erpId = "";
 
   constructor(
     private authService: AuthService,
@@ -35,7 +35,8 @@ export class AuthPage implements OnInit {
     private dataProvider: DataproviderService,
     private menuCtrl: MenuController,
     private backPressService: BackPressService,
-    public loadingController: LoadingController
+    private loadingController: LoadingController,
+    private localStorageService: LocalStorageService
   ) {}
 
   ionViewWillEnter() {
@@ -51,56 +52,75 @@ export class AuthPage implements OnInit {
     this.menuCtrl.enable(true);
     // this.backButtonSubscription.unsubscribe();
   }
-
-  ngOnInit() {
-    // const loading = await this.loadingController.create({
-    //   message: "Authenticating User"
+  async ngOnInit() {
+    
+    // this.form = new FormGroup({
+    //   rollNo,
+    //   erpId,
+    //   div
     // });
 
-    // await loading.present();
+    const loading = await this.loadingController.create({
+      message: "Authenticating User"
+    });
 
-    this.afAuth.user.subscribe(data => {
-      if (data) {
-        const user = data;
-        this.userService.setUserData(
-          user.displayName,
-          user.email,
-          user.uid,
-          user.metadata.creationTime,
-          user.metadata.lastSignInTime,
-          null,
-          user.photoURL,
-          user.phoneNumber
-        );
+    this.localStorageService.getIsUserValidated().then(res => {
+      if (res.value === "true" && ) {
+        this.showUserSignupForm = false;
+        this.authService.signin();
+        this.router.navigateByUrl("/notices/tabs/all");
+      } else {
+        this.afAuth.user.subscribe(data => {
+          if (data) {
+            const user = data;
+            this.userService.setUserData(
+              user.displayName,
+              user.email,
+              user.uid,
+              user.metadata.creationTime,
+              user.metadata.lastSignInTime,
+              null,
+              user.photoURL,
+              user.phoneNumber
+            );
 
-        let localData;
-        this.dataProvider
-          .getUserObservable(user.uid) //event.authResult.user.uid
-          .subscribe(data => {
-            if (data) {
-              localData = data[0];
-              if (localData) this.isUserValidated = localData.isUserValidated;
+            let localData;
+            loading.present();
+            this.dataProvider
+              .getUserObservable(user.uid) //event.authResult.user.uid
+              .subscribe(data => {
+                if (data) {
+                  localData = data[0];
+                  if (localData)
+                    this.isUserValidated = localData.isUserValidated;
+                  if (this.isUserValidated) {
+                    this.showUserSignupForm = false;
+                    loading.dismiss();
+                    this.authService.signin();
+                    this.router.navigateByUrl("/notices/tabs/all");
+                  } else {
+                    this.showUserSignupForm = true;
+                    loading.dismiss();
+                  }
+                }
+              });
+            if (!this.isNewUser) {
               if (this.isUserValidated) {
                 this.showUserSignupForm = false;
+                loading.dismiss();
                 this.authService.signin();
                 this.router.navigateByUrl("/notices/tabs/all");
               } else {
                 this.showUserSignupForm = true;
+                loading.dismiss();
               }
             }
-          });
-        if (!this.isNewUser) {
-          if (this.isUserValidated) {
-            this.showUserSignupForm = false;
-            this.authService.signin();
-            this.router.navigateByUrl("/notices/tabs/all");
           } else {
-            this.showUserSignupForm = true;
+            loading.dismiss();
+            this.authService.signout();
+            this.showUserSignupForm = false;
           }
-        }
-      } else {
-        this.authService.signout();
-        this.showUserSignupForm = false;
+        });
       }
     });
   }
@@ -151,39 +171,40 @@ export class AuthPage implements OnInit {
     });
   }
 
-  submit() {
-    if (this.rollno == "") {
-      alert("Roll Number is mandatory");
-    } else if (this.erpId == "") {
-      alert("ErpId is mandatory");
-    } else if (this.division == "") {
-      alert("Division is mandatory");
-    } else if (this.department == "Department") {
-      alert("Department is mandatory");
-    } else if (this.year == "Year") {
-      alert("Year is mandatory");
-    } else {
-      let newUser = {
-        rollNumber: this.rollno,
-        erpId: this.erpId,
-        division: this.division,
-        department: this.department,
-        year: this.year,
-        isUserValidated: true
-      };
+  authenticateUser(rollNo, erpId, division) {
+    let newUser = {
+      rollNumber: rollNo,
+      erpId: erpId,
+      division: division,
+      department: this.department,
+      year: this.year,
+      isUserValidated: true
+    };
 
-      let localData;
-      let passDocId;
-      this.dataProvider
-        .getUserObservable(this.userService.getUser().Uid)
-        .subscribe(data => {
-          localData = data[0];
-          passDocId = localData.docId;
-          this.dataProvider.updateUser(newUser, passDocId);
-          this.authService.signin();
-          this.router.navigateByUrl("/notices/tabs/all");
-        });
+    this.localStorageService.setIsUserValidated(true);
+
+    let localData;
+    let passDocId;
+    this.dataProvider
+      .getUserObservable(this.userService.getUser().Uid)
+      .subscribe(data => {
+        localData = data[0];
+        passDocId = localData.docId;
+        this.dataProvider.updateUser(newUser, passDocId);
+        this.authService.signin();
+        this.router.navigateByUrl("/notices/tabs/all");
+      });
+  }
+
+  onSubmit(form: NgForm) {
+    if (!form.valid) {
+      return;
     }
+    const rollNo = form.value.rollNo;
+    const erpId = form.value.erpId;
+    const division = form.value.division;
+
+    this.authenticateUser(rollNo, erpId, division);
   }
 
   successCallback = event => {
@@ -198,17 +219,26 @@ export class AuthPage implements OnInit {
         isUserValidated: false
       };
 
+      this.localStorageService.setIsUserValidated(false);
+
       this.dataProvider.addUser(newUser);
     } else {
-      this.showUserSignupForm = true;
-      let localData;
-      this.dataProvider
-        .getUserObservable(event.authResult.user.uid) //event.authResult.user.uid
-        .subscribe(data => {
-          localData = data;
-          this.isUserValidated = localData.isUserValidated;
-          this.showUserSignupForm = false;
-        });
+      this.localStorageService.getIsUserValidated().then(res => {
+        if (res.value === "false") {
+          this.showUserSignupForm = true;
+          this.isUserValidated = false;
+        }
+      });
+
+      //
+      // let localData;
+      // this.dataProvider
+      //   .getUserObservable(event.authResult.user.uid) //event.authResult.user.uid
+      //   .subscribe(data => {
+      //     localData = data;
+      //     this.isUserValidated = localData.isUserValidated;
+      //     this.showUserSignupForm = false;
+      //   });
     }
   };
 
