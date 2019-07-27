@@ -1,0 +1,15 @@
+.container{
+    display: flex;
+    flex-direction: row
+}
+.left{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    max-width: 100px;
+    margin: 10px;
+    ion-img{
+        height: 90%;
+
+    }
+}

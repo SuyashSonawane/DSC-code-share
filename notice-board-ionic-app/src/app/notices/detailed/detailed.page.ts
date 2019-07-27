@@ -3,7 +3,11 @@ import { ActivatedRoute } from "@angular/router";
 
 import { BackPressService } from "../../back-press.service";
 import { DataproviderService } from "../../dataprovider.service";
-import { NavController, ModalController } from "@ionic/angular";
+import {
+  NavController,
+  ModalController,
+  LoadingController
+} from "@ionic/angular";
 import { ImageModalPage } from "./image-modal/image-modal.page";
 
 @Component({
@@ -13,6 +17,7 @@ import { ImageModalPage } from "./image-modal/image-modal.page";
 })
 export class DetailedPage implements OnInit {
   selectedNotice;
+  loading;
 
   sliderOpts = {
     zoom: false,
@@ -23,16 +28,29 @@ export class DetailedPage implements OnInit {
       disableOnInteraction: true
     }
   };
-
   constructor(
     private backPressService: BackPressService,
     private dataService: DataproviderService,
     private activatedRoute: ActivatedRoute,
     private navCtrl: NavController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+
+    public loadingController: LoadingController
   ) {}
 
+  async _loading() {
+    if (this.selectedNotice.type === "image") {
+      this.loading = await this.loadingController.create({
+        message: "Loading notice .."
+      });
+      await this.loading.present();
+    }
+  }
+  loaded() {
+    this.loading.dismiss();
+  }
   ngOnInit() {
+    this._loading();
     this.activatedRoute.paramMap.subscribe(ParamMap => {
       if (!ParamMap.has("noticeId")) {
         this.navCtrl.navigateBack("notices/tabs/all");

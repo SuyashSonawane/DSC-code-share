@@ -15,6 +15,7 @@ import { BackPressService } from "../../back-press.service";
 import { LocalStorageService } from "../../local-storage.service";
 import { UserData } from "src/app/user.model";
 import { LoadingController } from "@ionic/angular";
+import { Platform } from "@ionic/angular";
 
 const { PushNotifications } = Plugins;
 
@@ -28,6 +29,7 @@ export class AllPage implements OnInit {
   loadedUser: UserData;
 
   constructor(
+    public plt: Platform,
     private DataService: DataproviderService,
     private router: Router,
     private backPressService: BackPressService,
@@ -64,11 +66,13 @@ export class AllPage implements OnInit {
 
     this.DataService.getNotices().subscribe(d => {
       this.notices = d;
-      console.log(d);
+      // console.log(d);
     });
     // console.log("Initializing HomePage");
 
     // Register with Apple / Google to receive push via APNS/FCM
+    if (this.plt.is("ios") || this.plt.is("android")) {
+    }
     PushNotifications.register();
 
     // On succcess, we should be able to receive notifications
