@@ -81,15 +81,20 @@ export class AuthPage implements OnInit {
                   .getCurrentUserData(localUser.uId)
                   .subscribe(data => {
                     let localData: any = data[0];
-                    this.localStorageService
-                      .setIsUserValidated(
-                        localData.email,
-                        localData.isUserValidated
-                      )
-                      .then(() => {
-                        this.authService.signin();
-                        loader1.dismiss();
-                      });
+                    if (localData) {
+                      this.localStorageService
+                        .setIsUserValidated(
+                          localData.email,
+                          localData.isUserValidated
+                        )
+                        .then(() => {
+                          loader1.dismiss();
+                          this.authService.signin();
+                        });
+                    } else {
+                      loader1.dismiss();
+                      this.authService.signin();
+                    }
                   });
               });
             } else {
@@ -121,32 +126,40 @@ export class AuthPage implements OnInit {
       phoneNumber: user.phoneNumber,
       photoUrl: user.photoURL
     };
-    this.localStorageService.setLocalUser(localUser);
+    this.localStorageService.setLocalUser(localUser).then(() => {
+      this.authService.checkUserAuth();
 
-    this.authService.checkUserAuth();
+      if (signInSuccessData.authResult.additionalUserInfo.isNewUser) {
+        this.localStorageService.setIsUserValidated(
+          signInSuccessData.authResult.user.email,
+          "false"
+        );
 
-    if (signInSuccessData.authResult.additionalUserInfo.isNewUser) {
-      this.localStorageService.setIsUserValidated(
-        signInSuccessData.authResult.user.email,
-        "false"
-      );
-
-      this.dataProviderService.addUser(localUser);
-    } else {
-      // console.log(localUser.uId);
-      this.dataProviderService
-        .getCurrentUserData(localUser.uId)
-        .subscribe(data => {
-          let localData: any = data[0];
-          // console.log(data[0]);
-          this.localStorageService
-            .setIsUserValidated(localData.email, localData.isUserValidated)
-            .then(() => {
-              // console.log(`not new user ${localData.isUserValidated}`);
-              this.authService.signin();
-            });
+        this.dataProviderService.addUser(localUser).then(docId => {
+          if (docId) {
+            this.dataProviderService
+              .updateUser({ isUserValidated: false }, docId)
+              .then(val => {
+                // console.log("user updated");
+                this.authService.signin();
+              });
+          }
         });
-    }
+      } else {
+        this.dataProviderService
+          .getCurrentUserData(localUser.uId)
+          .subscribe(data => {
+            let localData: any = data[0];
+            // console.log(data[0]);
+            this.localStorageService
+              .setIsUserValidated(localData.email, localData.isUserValidated)
+              .then(() => {
+                // console.log(`not new user ${localData.isUserValidated}`);
+                this.authService.signin();
+              });
+          });
+      }
+    });
   }
 
   errorCallback(errorData: FirebaseUISignInFailure) {}
