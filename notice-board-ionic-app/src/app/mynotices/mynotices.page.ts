@@ -59,6 +59,7 @@ export class MynoticesPage implements OnInit {
   ionViewWillLeave() {
     this.backPressService.startBackPressListener();
   }
+
   onFileChange(event) {
     let reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {

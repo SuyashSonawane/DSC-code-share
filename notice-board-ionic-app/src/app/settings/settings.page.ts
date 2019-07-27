@@ -3,11 +3,11 @@ import { Component, OnInit } from "@angular/core";
 import { BackPressService } from "../back-press.service";
 
 @Component({
-  selector: "app-starrednotices",
-  templateUrl: "./starrednotices.page.html",
-  styleUrls: ["./starrednotices.page.scss"]
+  selector: "app-settings",
+  templateUrl: "./settings.page.html",
+  styleUrls: ["./settings.page.scss"]
 })
-export class StarrednoticesPage implements OnInit {
+export class SettingsPage implements OnInit {
   constructor(private backPressService: BackPressService) {}
 
   ngOnInit() {}

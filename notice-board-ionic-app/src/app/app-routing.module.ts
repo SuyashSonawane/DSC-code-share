@@ -37,6 +37,16 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: "about-us",
+    loadChildren: "./about-us/about-us.module#AboutUsPageModule",
+    canLoad: [AuthGuard]
+  },
+  {
+    path: "settings",
+    loadChildren: "./settings/settings.module#SettingsPageModule",
+    canLoad: [AuthGuard]
+  },
+  {
     path: "**",
     redirectTo: "/notices/tabs/all",
     pathMatch: "full",
