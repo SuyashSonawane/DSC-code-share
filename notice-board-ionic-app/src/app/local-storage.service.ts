@@ -9,16 +9,19 @@ const { Storage } = Plugins;
 export class LocalStorageService {
   constructor() {}
 
-  async setIsUserValidated(email: string, val: string) {
+  async setIsUserValidated(email: string, val: boolean) {
     await Storage.set({
-      key: email,
-      value: val
+      key: "isUserValidated",
+      value: JSON.stringify({
+        email: email,
+        value: val
+      })
     });
   }
 
   async getIsUserValidated(email: string) {
-    const val = await Storage.get({ key: email });
-    return val;
+    const ret = await Storage.get({ key: "isUserValidated" });
+    return ret.value;
   }
 
   async setLocalUser(user) {
