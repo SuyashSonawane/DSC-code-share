@@ -14,6 +14,7 @@ import { AuthService } from "./auth.service";
 import { UserData } from "../user.model";
 import { UserService } from "../user.service";
 import { LocalStorageService } from "../local-storage.service";
+import { DataproviderService } from "../dataprovider.service";
 
 const { Storage } = Plugins;
 
@@ -33,7 +34,8 @@ export class AuthPage implements OnInit {
     private authService: AuthService,
     private localStorageService: LocalStorageService,
     private afAuth: AngularFireAuth,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private dataProviderService: DataproviderService
   ) {}
 
   ionViewWillEnter() {
@@ -65,8 +67,36 @@ export class AuthPage implements OnInit {
         .then(() => {
           this.afAuth.authState.subscribe(user => {
             if (user) {
-              this.authService.signin();
-              loader1.dismiss();
+              const localUser: UserData = {
+                displayName: user.displayName,
+                email: user.email,
+                uId: user.uid,
+                creationTime: user.metadata.creationTime,
+                lastSignInTime: user.metadata.lastSignInTime,
+                phoneNumber: user.phoneNumber,
+                photoUrl: user.photoURL
+              };
+              this.localStorageService.setLocalUser(localUser).then(() => {
+                this.dataProviderService
+                  .getCurrentUserData(localUser.uId)
+                  .subscribe(data => {
+                    let localData: any = data[0];
+                    if (localData) {
+                      this.localStorageService
+                        .setIsUserValidated(
+                          localData.email,
+                          localData.isUserValidated
+                        )
+                        .then(() => {
+                          loader1.dismiss();
+                          this.authService.signin();
+                        });
+                    } else {
+                      loader1.dismiss();
+                      this.authService.signin();
+                    }
+                  });
+              });
             } else {
               loader1.dismiss();
             }
@@ -96,18 +126,40 @@ export class AuthPage implements OnInit {
       phoneNumber: user.phoneNumber,
       photoUrl: user.photoURL
     };
-    this.localStorageService.setLocalUser(localUser);
+    this.localStorageService.setLocalUser(localUser).then(() => {
+      this.authService.checkUserAuth();
 
-    this.authService.checkUserAuth();
+      if (signInSuccessData.authResult.additionalUserInfo.isNewUser) {
+        this.localStorageService.setIsUserValidated(
+          signInSuccessData.authResult.user.email,
+          "false"
+        );
 
-    if (signInSuccessData.authResult.additionalUserInfo.isNewUser) {
-      this.localStorageService.setIsUserValidated(
-        signInSuccessData.authResult.user.email,
-        "false"
-      );
-    } else {
-      this.authService.signin();
-    }
+        this.dataProviderService.addUser(localUser).then(docId => {
+          if (docId) {
+            this.dataProviderService
+              .updateUser({ isUserValidated: false }, docId)
+              .then(val => {
+                // console.log("user updated");
+                this.authService.signin();
+              });
+          }
+        });
+      } else {
+        this.dataProviderService
+          .getCurrentUserData(localUser.uId)
+          .subscribe(data => {
+            let localData: any = data[0];
+            // console.log(data[0]);
+            this.localStorageService
+              .setIsUserValidated(localData.email, localData.isUserValidated)
+              .then(() => {
+                // console.log(`not new user ${localData.isUserValidated}`);
+                this.authService.signin();
+              });
+          });
+      }
+    });
   }
 
   errorCallback(errorData: FirebaseUISignInFailure) {}

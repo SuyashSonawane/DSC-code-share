@@ -4,6 +4,8 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { LocalStorageService } from "../local-storage.service";
 import { UserData } from "../user.model";
 import { AuthService } from "../auth/auth.service";
+import { DataproviderService } from "../dataprovider.service";
+import { load } from "@angular/core/src/render3";
 
 @Component({
   selector: "app-validate-user",
@@ -15,7 +17,8 @@ export class ValidateUserPage implements OnInit {
 
   constructor(
     private localStorageService: LocalStorageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private dataProviderService: DataproviderService
   ) {}
 
   ngOnInit() {}
@@ -26,7 +29,18 @@ export class ValidateUserPage implements OnInit {
       this.localStorageService
         .setIsUserValidated(this.loadedUser.email, "true")
         .then(() => {
-          this.authService.signin();
+          // console.log(this.loadedUser);
+          this.dataProviderService
+            .getCurrentUserData(this.loadedUser.uId)
+            .subscribe(data => {
+              let localData: any = data[0];
+              if (localData) {
+                this.dataProviderService.updateUser(
+                  { isUserValidated: true },
+                  localData.docId
+                );
+              }
+            });
         });
     });
   }
