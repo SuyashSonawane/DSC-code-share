@@ -1,6 +1,9 @@
 import { Component, OnInit } from "@angular/core";
+import { Plugins } from "@capacitor/core";
 
 import { BackPressService } from "../back-press.service";
+
+const { Browser } = Plugins;
 
 @Component({
   selector: "app-about-us",

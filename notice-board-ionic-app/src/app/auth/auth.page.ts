@@ -26,7 +26,7 @@ const { Storage } = Plugins;
 export class AuthPage implements OnInit {
   showUserSignupForm = false;
   isUserValidated = false;
-  isNewUser;
+  isNewUser: boolean;
 
   constructor(
     private menuCtrl: MenuController,
@@ -76,27 +76,29 @@ export class AuthPage implements OnInit {
                 phoneNumber: user.phoneNumber,
                 photoUrl: user.photoURL
               };
-              this.localStorageService.setLocalUser(localUser).then(() => {
-                this.dataProviderService
-                  .getCurrentUserData(localUser.uId)
-                  .subscribe(data => {
-                    let localData: any = data[0];
-                    if (localData) {
-                      this.localStorageService
-                        .setIsUserValidated(
-                          localData.email,
-                          localData.isUserValidated
-                        )
-                        .then(() => {
-                          loader1.dismiss();
-                          this.authService.signin();
-                        });
-                    } else {
-                      loader1.dismiss();
-                      this.authService.signin();
-                    }
-                  });
-              });
+              if (!this.isNewUser) {
+                this.localStorageService.setLocalUser(localUser).then(() => {
+                  this.dataProviderService
+                    .getCurrentUserData(localUser.uId)
+                    .subscribe(data => {
+                      let localData: any = data[0];
+                      if (localData) {
+                        this.localStorageService
+                          .setIsUserValidated(
+                            localData.email,
+                            localData.isUserValidated
+                          )
+                          .then(() => {
+                            loader1.dismiss();
+                            this.authService.signin();
+                          });
+                      } else {
+                        loader1.dismiss();
+                        this.authService.signin();
+                      }
+                    });
+                });
+              }
             } else {
               loader1.dismiss();
             }
@@ -117,19 +119,46 @@ export class AuthPage implements OnInit {
 
   successCallback(signInSuccessData: FirebaseUISignInSuccessWithAuthResult) {
     let user = signInSuccessData.authResult.user;
-    const localUser: UserData = {
-      displayName: user.displayName,
-      email: user.email,
-      uId: user.uid,
-      creationTime: user.metadata.creationTime,
-      lastSignInTime: user.metadata.lastSignInTime,
-      phoneNumber: user.phoneNumber,
-      photoUrl: user.photoURL
-    };
+    let localUser: UserData;
+
+    if (signInSuccessData.authResult.additionalUserInfo.isNewUser) {
+      this.isNewUser = true;
+      localUser = {
+        displayName: user.displayName,
+        email: user.email,
+        uId: user.uid,
+        creationTime: user.metadata.creationTime,
+        lastSignInTime: user.metadata.lastSignInTime,
+        phoneNumber: user.phoneNumber,
+        photoUrl: "../assets/icon/photoUrl0.png"
+      };
+    } else {
+      this.isNewUser = false;
+      localUser = {
+        displayName: user.displayName,
+        email: user.email,
+        uId: user.uid,
+        creationTime: user.metadata.creationTime,
+        lastSignInTime: user.metadata.lastSignInTime,
+        phoneNumber: user.phoneNumber,
+        photoUrl: user.photoURL
+      };
+    }
+
     this.localStorageService.setLocalUser(localUser).then(() => {
       this.authService.checkUserAuth();
 
       if (signInSuccessData.authResult.additionalUserInfo.isNewUser) {
+        localUser = {
+          displayName: user.displayName,
+          email: user.email,
+          uId: user.uid,
+          creationTime: user.metadata.creationTime,
+          lastSignInTime: user.metadata.lastSignInTime,
+          phoneNumber: user.phoneNumber,
+          photoUrl: "../assets/icon/photoUrl0.png"
+        };
+
         this.localStorageService.setIsUserValidated(
           signInSuccessData.authResult.user.email,
           false

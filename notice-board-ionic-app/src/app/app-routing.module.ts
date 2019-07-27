@@ -51,7 +51,8 @@ const routes: Routes = [
     redirectTo: "/notices/tabs/all",
     pathMatch: "full",
     canLoad: [AuthGuard]
-  }
+  },
+  { path: 'feedback', loadChildren: './feedback/feedback.module#FeedbackPageModule' }
 ];
 
 @NgModule({
