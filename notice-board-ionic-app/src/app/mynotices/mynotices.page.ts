@@ -15,7 +15,8 @@ import {
   Capacitor,
   Plugins,
   CameraSource,
-  CameraResultType
+  CameraResultType,
+  Filesystem
 } from "@capacitor/core";
 import * as firebase from "firebase";
 import { BackPressService } from "../back-press.service";
@@ -37,6 +38,8 @@ export class MynoticesPage implements OnInit {
   public images: Array<string> = [];
   public urls: Array<string> = [];
   counter: number;
+  fileContent: any;
+  fileType: string = null;
 
   constructor(
     private pickerController: PickerController,
@@ -56,8 +59,19 @@ export class MynoticesPage implements OnInit {
   ionViewWillLeave() {
     this.backPressService.startBackPressListener();
   }
-
+  onFileChange(event) {
+    let reader = new FileReader();
+    if (event.target.files && event.target.files.length > 0) {
+      let file = event.target.files[0];
+      console.log(file);
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.fileContent = reader.result;
+      };
+    }
+  }
   async openPicker() {
+    console.log(this.fileType);
     let opts = {
       buttons: [
         // {
@@ -126,39 +140,70 @@ export class MynoticesPage implements OnInit {
       message: "Uploading Notice  .."
     });
     await loading.present();
-    this.counter = 0;
-    this.images.forEach(image => {
+    if (this.fileType === "i") {
+      this.counter = 0;
+      this.images.forEach(image => {
+        firebase
+          .storage()
+          .ref(`images/${this.Department}`)
+          .child(this.afs.createId())
+          .putString(image, "data_url")
+          .then(snap => {
+            snap.ref.getDownloadURL().then(url => {
+              this.urls.push(url);
+              this.counter++;
+              if (this.counter === this.images.length) {
+                this.DataService.addNotice(
+                  this.notice,
+                  this.title,
+                  this.division,
+                  this.Year,
+                  this.Department,
+                  this.category,
+                  this.urls,
+                  "image"
+                );
+                loading.dismiss();
+                this.Department = "Department";
+                this.Year = "Year";
+                this.title = "";
+                this.notice = "";
+                this.division = "";
+                this.category = "All";
+                this.router.navigate(["/"]);
+              }
+            });
+          });
+      });
+    }
+    if (this.fileType === "p") {
       firebase
         .storage()
-        .ref(`images/${this.Department}`)
-        .child(this.afs.createId())
-        .putString(image, "data_url")
+        .ref(`pdf/${this.afs.createId()}`)
+        .putString(this.fileContent, "data_url")
         .then(snap => {
           snap.ref.getDownloadURL().then(url => {
-            this.urls.push(url);
-            this.counter++;
-            if (this.counter === this.images.length) {
-              this.DataService.addNotice(
-                this.notice,
-                this.title,
-                this.division,
-                this.Year,
-                this.Department,
-                this.category,
-                this.urls
-              );
-              loading.dismiss();
-              this.Department = "Department";
-              this.Year = "Year";
-              this.title = "";
-              this.notice = "";
-              this.division = "";
-              this.category = "All";
-              this.router.navigate(["/"]);
-            }
+            this.DataService.addNotice(
+              this.notice,
+              this.title,
+              this.division,
+              this.Year,
+              this.Department,
+              this.category,
+              url,
+              "pdf"
+            );
+            loading.dismiss();
+            this.Department = "Department";
+            this.Year = "Year";
+            this.title = "";
+            this.notice = "";
+            this.division = "";
+            this.category = "All";
+            this.router.navigate(["/"]);
           });
         });
-    });
+    }
   }
 
   takePhoto() {

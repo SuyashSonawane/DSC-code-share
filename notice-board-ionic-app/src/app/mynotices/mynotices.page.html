@@ -29,16 +29,34 @@
           <ion-button (click)="openPicker()">
             Open Picker
           </ion-button>
-        </ion-item>
+        </ion-item>      
         <ion-item>
-          <ion-label>Take a photo</ion-label>
-          <ion-button (click)="takePhoto()">
-            Open Photo
-          </ion-button>
+          <ion-label>File Type</ion-label>
+          <ion-select placeholder="Select type" [(ngModel)]="fileType">
+            <ion-select-option value="p">PDF</ion-select-option>
+            <ion-select-option value="i">Image</ion-select-option>
+          </ion-select>
         </ion-item>
-        <ion-item  *ngFor="let image of images ;let i = index" >
-          <ion-img  [src]="image"(click)="remove(i)"></ion-img>
-        </ion-item>
+        <ion-item *ngIf="fileType && fileType==='i'">
+            <ion-label>Take a photo</ion-label>
+            <ion-button (click)="takePhoto()">
+              Open Photo
+            </ion-button>
+          </ion-item>
+          <div *ngIf="fileType && fileType==='i'">
+            <ion-item  *ngFor="let image of images ;let i = index">
+              <ion-img  [src]="image"(click)="remove(i)"></ion-img>
+            </ion-item>
+          </div>
+        <ion-item *ngIf="fileType && fileType==='p'">
+            <input type="file" id="avatar" (change)="onFileChange($event)" #fileInput>
+          </ion-item>
+          <div *ngIf="fileType && fileType==='p'">
+            <ion-item  *ngFor="let image of images ;let i = index">
+              <ion-img  [src]="image"(click)="remove(i)"></ion-img>
+            </ion-item>
+          </div>
+
   </ion-list>
   <div class="simple">
 
