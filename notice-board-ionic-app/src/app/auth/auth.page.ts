@@ -14,6 +14,7 @@ import { AuthService } from "./auth.service";
 import { UserData } from "../user.model";
 import { UserService } from "../user.service";
 import { LocalStorageService } from "../local-storage.service";
+import { DataproviderService } from "../dataprovider.service";
 
 const { Storage } = Plugins;
 
@@ -33,7 +34,8 @@ export class AuthPage implements OnInit {
     private authService: AuthService,
     private localStorageService: LocalStorageService,
     private afAuth: AngularFireAuth,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private dataProviderService: DataproviderService
   ) {}
 
   ionViewWillEnter() {
@@ -65,8 +67,31 @@ export class AuthPage implements OnInit {
         .then(() => {
           this.afAuth.authState.subscribe(user => {
             if (user) {
-              this.authService.signin();
-              loader1.dismiss();
+              const localUser: UserData = {
+                displayName: user.displayName,
+                email: user.email,
+                uId: user.uid,
+                creationTime: user.metadata.creationTime,
+                lastSignInTime: user.metadata.lastSignInTime,
+                phoneNumber: user.phoneNumber,
+                photoUrl: user.photoURL
+              };
+              this.localStorageService.setLocalUser(localUser).then(() => {
+                this.dataProviderService
+                  .getCurrentUserData(localUser.uId)
+                  .subscribe(data => {
+                    let localData: any = data[0];
+                    this.localStorageService
+                      .setIsUserValidated(
+                        localData.email,
+                        localData.isUserValidated
+                      )
+                      .then(() => {
+                        this.authService.signin();
+                        loader1.dismiss();
+                      });
+                  });
+              });
             } else {
               loader1.dismiss();
             }
@@ -105,8 +130,22 @@ export class AuthPage implements OnInit {
         signInSuccessData.authResult.user.email,
         "false"
       );
+
+      this.dataProviderService.addUser(localUser);
     } else {
-      this.authService.signin();
+      // console.log(localUser.uId);
+      this.dataProviderService
+        .getCurrentUserData(localUser.uId)
+        .subscribe(data => {
+          let localData: any = data[0];
+          // console.log(data[0]);
+          this.localStorageService
+            .setIsUserValidated(localData.email, localData.isUserValidated)
+            .then(() => {
+              // console.log(`not new user ${localData.isUserValidated}`);
+              this.authService.signin();
+            });
+        });
     }
   }
 
