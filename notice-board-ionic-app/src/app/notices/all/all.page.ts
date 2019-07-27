@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { AngularFireFunctions } from "@angular/fire/functions";
+
 import {
   Capacitor,
   Plugins,
@@ -63,7 +64,7 @@ export class AllPage implements OnInit {
 
     this.DataService.getNotices().subscribe(d => {
       this.notices = d;
-      // //console.log(this.notices);
+      console.log(d);
     });
     // console.log("Initializing HomePage");
 

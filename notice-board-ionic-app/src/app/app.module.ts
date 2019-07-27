@@ -12,7 +12,7 @@ import { environment } from "../environments/environment";
 
 // imports
 
-import { AngularFireModule } from "@angular/fire";
+import { AngularFireModule, FirebaseApp } from "@angular/fire";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { DataproviderService } from "./dataprovider.service";
 import { AngularFirestoreModule } from "@angular/fire/firestore";

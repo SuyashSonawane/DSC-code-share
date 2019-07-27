@@ -46,7 +46,8 @@ export class DataproviderService {
     year,
     department,
     category,
-    urls: Array<string>
+    urls: Array<string>,
+    type: string
   ) {
     let notice = {
       body,
@@ -57,7 +58,8 @@ export class DataproviderService {
       urls,
       author: "DEVS",
       category,
-      ts: Date.now()
+      ts: Date.now(),
+      type
     };
     let localNoticeId;
     this.afs
