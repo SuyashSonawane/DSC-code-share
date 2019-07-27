@@ -1,13 +1,13 @@
 export class UserData {
   constructor(
-    public DisplayName: string,
-    public Email: string,
-    public Uid: string,
-    public CreationTime: string,
-    public LastSignInTime: string,
-    public IsNewUser?: boolean,
-    public PhotoUrl?: string,
-    public PhoneNumber?: string
+    public displayName: string,
+    public email: string,
+    public uId: string,
+    public creationTime: string,
+    public lastSignInTime: string,
+    public isNewUser?: boolean,
+    public photoUrl?: string,
+    public phoneNumber?: string
   ) {}
 }
 export class LoginUserData {

@@ -10,6 +10,11 @@ const routes: Routes = [
     loadChildren: "./auth/auth.module#AuthPageModule"
   },
   {
+    path: "validate-user",
+    loadChildren: "./validate-user/validate-user.module#ValidateUserPageModule",
+    canLoad: [AuthGuard]
+  },
+  {
     path: "notices",
     loadChildren: "./notices/notices.module#NoticesPageModule",
     canLoad: [AuthGuard]

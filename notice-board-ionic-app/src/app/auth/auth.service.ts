@@ -1,28 +1,64 @@
 import { Injectable } from "@angular/core";
-import { Router } from "@angular/router";
 import { AngularFireAuth } from "@angular/fire/auth";
-import { FirebaseUISignInSuccessWithAuthResult } from "firebaseui-angular";
+import { Router } from "@angular/router";
+
+import { LocalStorageService } from "../local-storage.service";
 import { UserService } from "../user.service";
+import { UserData } from "../user.model";
 
 @Injectable({
   providedIn: "root"
 })
 export class AuthService {
-  private _userIsAuthenticated = false;
+  userAuthStatus: boolean;
+  loadedUser: UserData;
 
-  constructor(private afAuth: AngularFireAuth, private router: Router) {}
+  checkUserAuth() {
+    this.afAuth.authState.subscribe(data => {
+      if (data) {
+        this.userAuthStatus = true;
+      } else {
+        this.userAuthStatus = false;
+      }
+    });
+  }
 
-  get userIsAuthenticated() {
-    return this._userIsAuthenticated;
+  constructor(
+    private afAuth: AngularFireAuth,
+    private router: Router,
+    private localStorageService: LocalStorageService,
+    private userService: UserService
+  ) {}
+
+  get isAuthenticated(): boolean {
+    return this.userAuthStatus;
   }
 
   signin() {
-    this._userIsAuthenticated = true;
+    this.checkUserAuth();
+    this.localStorageService.getLocalUser().then(val => {
+      this.loadedUser = JSON.parse(val).user;
+      this.localStorageService
+        .getIsUserValidated(this.loadedUser.email)
+        .then(val => {
+          if (val.value !== "true") {
+            this.router.navigateByUrl("/validate-user");
+          } else {
+            this.router.navigateByUrl("/notices/tabs/all");
+          }
+        });
+    });
   }
 
   signout() {
-    this.afAuth.auth.signOut().then(() => {
-      this._userIsAuthenticated = false;
-    });
+    this.afAuth.auth
+      .signOut()
+      .then(() => {
+        this.localStorageService.deleteLocalUser().then(() => {
+          this.checkUserAuth();
+          this.router.navigateByUrl("/auth");
+        });
+      })
+      .catch(err => {});
   }
 }
