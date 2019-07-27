@@ -1,6 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { DataproviderService } from "../../dataprovider.service";
-import { BackPressService } from "../../back-press.service";
 import { Router } from "@angular/router";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import {
@@ -10,6 +8,13 @@ import {
   PushNotificationToken,
   PushNotificationActionPerformed
 } from "@capacitor/core";
+
+import { DataproviderService } from "../../dataprovider.service";
+import { BackPressService } from "../../back-press.service";
+import { LocalStorageService } from "../../local-storage.service";
+import { UserData } from "src/app/user.model";
+import { LoadingController } from "@ionic/angular";
+
 const { PushNotifications } = Plugins;
 
 @Component({
@@ -19,15 +24,43 @@ const { PushNotifications } = Plugins;
 })
 export class AllPage implements OnInit {
   notices;
+  loadedUser: UserData;
 
   constructor(
     private DataService: DataproviderService,
     private router: Router,
     private backPressService: BackPressService,
-    private func: AngularFireFunctions
+    private func: AngularFireFunctions,
+    private localStorageService: LocalStorageService,
+    private loadingCtrl: LoadingController
   ) {}
 
   ngOnInit() {
+    // const loader1 = await this.loadingCtrl.create({
+    //   message: "Checking if User is Validated"
+    // });
+
+    // loader1.present().then(() => {
+    //   this.localStorageService
+    //     .getLocalUser()
+    //     .then(val => {
+    //       this.loadedUser = JSON.parse(val).user;
+    //       this.localStorageService
+    //         .getIsUserValidated(this.loadedUser.email)
+    //         .then(val => {
+    //           if (val.value !== "true") {
+    //             loader1.dismiss();
+    //             this.router.navigateByUrl("/validate-user");
+    //           }
+    //         });
+    //     })
+    //     .catch(err => {
+    //       loader1.dismiss();
+    //       this.router.navigateByUrl("/validate-user");
+    //       console.log("err");
+    //     });
+    // });
+
     this.DataService.getNotices().subscribe(d => {
       this.notices = d;
       // //console.log(this.notices);

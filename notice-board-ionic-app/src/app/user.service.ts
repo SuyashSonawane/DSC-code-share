@@ -9,27 +9,17 @@ export class UserService {
 
   constructor() {}
 
-  setUserData(
-    displayName: string,
-    email: string,
-    uid: string,
-    creationTime: string,
-    lastSignInTime: string,
-    isNewUser,
-    photoUrl,
-    phoneNumber
-  ) {
+  setUser = user => {
     this.userData = {
-      DisplayName: displayName,
-      Email: email,
-      Uid: uid,
-      CreationTime: creationTime,
-      LastSignInTime: lastSignInTime,
-      IsNewUser: isNewUser,
-      PhotoUrl: photoUrl,
-      PhoneNumber: phoneNumber
+      displayName: user.displayName,
+      email: user.email,
+      uId: user.uid,
+      creationTime: user.creationTime,
+      lastSignInTime: user.lastSignInTime,
+      phoneNumber: user.phoneNumber,
+      photoUrl: user.photoURL
     };
-  }
+  };
 
   getUser() {
     return this.userData;

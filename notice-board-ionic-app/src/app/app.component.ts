@@ -13,6 +13,8 @@ import { AuthService } from "./auth/auth.service";
 import { UserService } from "./user.service";
 import { UserData } from "./user.model";
 import { DataproviderService } from "./dataprovider.service";
+import { LocalStorageService } from "./local-storage.service";
+import { doesNotReject } from "assert";
 
 // Capacitor plugins
 
@@ -29,18 +31,34 @@ export class AppComponent {
     private authService: AuthService,
     private router: Router,
     private userService: UserService,
-    private DataService: DataproviderService
+    private DataService: DataproviderService,
+    private localStorageService: LocalStorageService
   ) {
     this.initializeApp();
   }
 
   openMenu() {
-    this.loadedUser = this.userService.getUser();
-    this.userPhotoUrl = this.loadedUser.PhotoUrl;
-    if (this.userPhotoUrl == null) {
-      this.userPhotoUrl =
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2nL1Aa6emsOzwXP2GCOh4Akz4u36yHOMuWuhnicHGcaCCF678";
-    }
+    this.localStorageService
+      .getLocalUser()
+      .then(val => {
+        this.loadedUser = JSON.parse(val).user;
+        this.userPhotoUrl = this.loadedUser.photoUrl;
+        if (this.userPhotoUrl == null) {
+          this.userPhotoUrl =
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2nL1Aa6emsOzwXP2GCOh4Akz4u36yHOMuWuhnicHGcaCCF678";
+        }
+      })
+      .catch(err => {
+        this.loadedUser = {
+          displayName: "John Doe",
+          email: "johndoe@doe.com",
+          uId: "johndoeuid1234567890",
+          creationTime: "Tue 2019",
+          lastSignInTime: "Wed 2019"
+        };
+        this.userPhotoUrl =
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2nL1Aa6emsOzwXP2GCOh4Akz4u36yHOMuWuhnicHGcaCCF678";
+      });
   }
 
   initializeApp() {
