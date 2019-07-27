@@ -40,8 +40,9 @@ export class AuthService {
       this.loadedUser = JSON.parse(val).user;
       this.localStorageService
         .getIsUserValidated(this.loadedUser.email)
-        .then(val => {
-          if (val.value !== "true") {
+        .then(ret => {
+          alert(ret);
+          if (JSON.parse(ret).value !== true) {
             this.router.navigateByUrl("/validate-user");
           } else {
             this.router.navigateByUrl("/notices/tabs/all");

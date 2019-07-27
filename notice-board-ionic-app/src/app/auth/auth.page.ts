@@ -132,7 +132,7 @@ export class AuthPage implements OnInit {
       if (signInSuccessData.authResult.additionalUserInfo.isNewUser) {
         this.localStorageService.setIsUserValidated(
           signInSuccessData.authResult.user.email,
-          "false"
+          false
         );
 
         this.dataProviderService.addUser(localUser).then(docId => {

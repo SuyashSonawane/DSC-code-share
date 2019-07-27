@@ -6,6 +6,7 @@ import { UserData } from "../user.model";
 import { AuthService } from "../auth/auth.service";
 import { DataproviderService } from "../dataprovider.service";
 import { load } from "@angular/core/src/render3";
+import { LoadingController } from "@ionic/angular";
 
 @Component({
   selector: "app-validate-user",
@@ -18,31 +19,47 @@ export class ValidateUserPage implements OnInit {
   constructor(
     private localStorageService: LocalStorageService,
     private authService: AuthService,
-    private dataProviderService: DataproviderService
+    private dataProviderService: DataproviderService,
+    private loadingCtrl: LoadingController
   ) {}
 
   ngOnInit() {}
 
-  onSubmit() {
-    this.localStorageService.getLocalUser().then(val => {
-      this.loadedUser = JSON.parse(val).user;
-      this.localStorageService
-        .setIsUserValidated(this.loadedUser.email, "true")
-        .then(() => {
-          // console.log(this.loadedUser);
-          this.dataProviderService
-            .getCurrentUserData(this.loadedUser.uId)
-            .subscribe(data => {
-              let localData: any = data[0];
-              if (localData) {
-                this.dataProviderService.updateUser(
-                  { isUserValidated: true },
-                  localData.docId
-                );
-              }
+  async onSubmit() {
+    const loader1 = await this.loadingCtrl.create({
+      message: "Authenticating User"
+    });
+
+    loader1
+      .present()
+      .then(() => {
+        this.localStorageService.getLocalUser().then(val => {
+          this.loadedUser = JSON.parse(val).user;
+          this.localStorageService
+            .setIsUserValidated(this.loadedUser.email, true)
+            .then(() => {
+              // console.log(this.loadedUser);
+              this.dataProviderService
+                .getCurrentUserData(this.loadedUser.uId)
+                .subscribe(data => {
+                  let localData: any = data[0];
+                  if (localData) {
+                    this.dataProviderService.updateUser(
+                      { isUserValidated: true },
+                      localData.docId
+                    );
+                  }
+                });
+            })
+            .then(() => {
+              loader1.dismiss();
+              this.authService.signin();
             });
         });
-    });
+      })
+      .catch(err => {
+        loader1.dismiss();
+      });
   }
 }
 
