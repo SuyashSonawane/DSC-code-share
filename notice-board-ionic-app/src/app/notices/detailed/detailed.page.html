@@ -9,9 +9,9 @@
 
 <ion-content>
   <ion-card style="min-height: 80vh">
-    <ion-slides [options]="sliderOpts">
+    <ion-slides [options]="sliderOpts" *ngIf="selectedNotice.type==='image'">
       <ion-slide *ngFor="let img of selectedNotice?.urls">
-        <img [src]="img" tappable (click)="openPreview(img)">
+        <img [src]="img" tappable (click)="openPreview(img)" (load)="loaded()" (loadeddata)="loaded()">
       </ion-slide>
     </ion-slides>
     <ion-card-header>

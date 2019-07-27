@@ -63,7 +63,7 @@ export class MynoticesPage implements OnInit {
     let reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
       let file = event.target.files[0];
-      console.log(file);
+      // console.log(file);
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.fileContent = reader.result;

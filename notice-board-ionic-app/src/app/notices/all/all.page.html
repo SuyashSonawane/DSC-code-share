@@ -9,15 +9,32 @@
 
 <ion-content *ngIf="notices">
   <ion-card *ngFor="let notice of notices" (click)="onNoticeClick(notice?.noticeId)">
-    <ion-card-header>
+    <div class="container">
+      <div class="left">
+          <ion-img src="../assets/icon/image.png" *ngIf="notice?.type=='image'"></ion-img>
+          <ion-img src="../assets/icon/pdf.png" *ngIf="notice?.type=='pdf'"></ion-img>
+      </div>
+      <div class="right">
+          <ion-card-header>
+            <ion-card-subtitle>{{notice?.ts | date:'medium'}} <br> {{notice?.author}}</ion-card-subtitle>
+            <ion-card-title>{{notice?.title}}</ion-card-title>
+        </ion-card-header>  
+          <ion-card-content>
+              {{ (notice?.body.length>120)? (notice?.body | slice:0:120)+'...':(notice?.body)}}
+              <ion-label color="primary" class="read-more" *ngIf="notice?.body.length>120">Read More</ion-label>
+            </ion-card-content>
+      </div>
+    </div>
+    <!-- <ion-card-header>
       <ion-card-subtitle>{{notice?.ts | date}} <br> {{notice?.author}}</ion-card-subtitle>
       <ion-card-title>{{notice?.title}}</ion-card-title>
+      <ion-icon name="image" slot="end"></ion-icon>
     </ion-card-header>  
     <ion-img  *ngIf="notice?.type=='image'" [src]="notice?.urls[0]" class="ion-padding-bottom" height="300px"></ion-img>
     <ion-card-content>
       {{ (notice?.body.length>120)? (notice?.body | slice:0:120)+'...':(notice?.body)}}
       <ion-label color="primary" class="read-more" *ngIf="notice?.body.length>120">Read More</ion-label>
-    </ion-card-content>
+    </ion-card-content> -->
   </ion-card>
 </ion-content>
 <ion-content *ngIf="!notices">
