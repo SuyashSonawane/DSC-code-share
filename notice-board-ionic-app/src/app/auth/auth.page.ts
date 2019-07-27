@@ -76,29 +76,27 @@ export class AuthPage implements OnInit {
                 phoneNumber: user.phoneNumber,
                 photoUrl: user.photoURL
               };
-              if (!this.isNewUser) {
-                this.localStorageService.setLocalUser(localUser).then(() => {
-                  this.dataProviderService
-                    .getCurrentUserData(localUser.uId)
-                    .subscribe(data => {
-                      let localData: any = data[0];
-                      if (localData) {
-                        this.localStorageService
-                          .setIsUserValidated(
-                            localData.email,
-                            localData.isUserValidated
-                          )
-                          .then(() => {
-                            loader1.dismiss();
-                            this.authService.signin();
-                          });
-                      } else {
-                        loader1.dismiss();
-                        this.authService.signin();
-                      }
-                    });
-                });
-              }
+              this.localStorageService.setLocalUser(localUser).then(() => {
+                this.dataProviderService
+                  .getCurrentUserData(localUser.uId)
+                  .subscribe(data => {
+                    let localData: any = data[0];
+                    if (localData) {
+                      this.localStorageService
+                        .setIsUserValidated(
+                          localData.email,
+                          localData.isUserValidated
+                        )
+                        .then(() => {
+                          loader1.dismiss();
+                          this.authService.signin();
+                        });
+                    } else {
+                      loader1.dismiss();
+                      this.authService.signin();
+                    }
+                  });
+              });
             } else {
               loader1.dismiss();
             }
@@ -129,35 +127,11 @@ export class AuthPage implements OnInit {
         uId: user.uid,
         creationTime: user.metadata.creationTime,
         lastSignInTime: user.metadata.lastSignInTime,
-        phoneNumber: user.phoneNumber,
-        photoUrl: "../assets/icon/photoUrl0.png"
+        phoneNumber: user.phoneNumber
       };
-    } else {
-      this.isNewUser = false;
-      localUser = {
-        displayName: user.displayName,
-        email: user.email,
-        uId: user.uid,
-        creationTime: user.metadata.creationTime,
-        lastSignInTime: user.metadata.lastSignInTime,
-        phoneNumber: user.phoneNumber,
-        photoUrl: user.photoURL
-      };
-    }
 
-    this.localStorageService.setLocalUser(localUser).then(() => {
-      this.authService.checkUserAuth();
-
-      if (signInSuccessData.authResult.additionalUserInfo.isNewUser) {
-        localUser = {
-          displayName: user.displayName,
-          email: user.email,
-          uId: user.uid,
-          creationTime: user.metadata.creationTime,
-          lastSignInTime: user.metadata.lastSignInTime,
-          phoneNumber: user.phoneNumber,
-          photoUrl: "../assets/icon/photoUrl0.png"
-        };
+      this.localStorageService.setLocalUser(localUser).then(() => {
+        this.authService.checkUserAuth();
 
         this.localStorageService.setIsUserValidated(
           signInSuccessData.authResult.user.email,
@@ -174,7 +148,22 @@ export class AuthPage implements OnInit {
               });
           }
         });
-      } else {
+      });
+    } else {
+      this.isNewUser = false;
+      localUser = {
+        displayName: user.displayName,
+        email: user.email,
+        uId: user.uid,
+        creationTime: user.metadata.creationTime,
+        lastSignInTime: user.metadata.lastSignInTime,
+        phoneNumber: user.phoneNumber,
+        photoUrl: user.photoURL
+      };
+
+      this.localStorageService.setLocalUser(localUser).then(() => {
+        this.authService.checkUserAuth();
+
         this.dataProviderService
           .getCurrentUserData(localUser.uId)
           .subscribe(data => {
@@ -187,8 +176,8 @@ export class AuthPage implements OnInit {
                 this.authService.signin();
               });
           });
-      }
-    });
+      });
+    }
   }
 
   errorCallback(errorData: FirebaseUISignInFailure) {}

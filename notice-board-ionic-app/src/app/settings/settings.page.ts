@@ -4,6 +4,7 @@ import { AngularFireAuth } from "@angular/fire/auth";
 
 import { BackPressService } from "../back-press.service";
 import { LocalStorageService } from "../local-storage.service";
+import { DataproviderService } from "../dataprovider.service";
 
 @Component({
   selector: "app-settings",
@@ -22,23 +23,30 @@ export class SettingsPage implements OnInit {
   ngOnInit() {
     this.localStorageService.getLocalUser().then(val => {
       let localString: string = JSON.parse(val).user.photoUrl;
-      this.selectUrl = localString.charAt(localString.length - 5);
+      if (localString) {
+        this.selectUrl = localString.charAt(localString.length - 5);
+      } else {
+        this.selectUrl = "0";
+      }
     });
   }
 
   urlSelected = () => {
     let localPhotoUrl = `../assets/icon/photoUrl${this.selectUrl}.png`;
-    this.afAuth.auth.currentUser
-      .updateProfile({
-        photoURL: localPhotoUrl
+
+    this.localStorageService
+      .getLocalUser()
+      .then(val => {
+        let localUser: any = JSON.parse(val).user;
+        localUser.photoUrl = localPhotoUrl;
+        this.localStorageService.setLocalUser(localUser);
       })
       .then(() => {
-        this.localStorageService.getLocalUser().then(val => {
-          let localUser: any = JSON.parse(val).user;
-          localUser.photoUrl = localPhotoUrl;
-          this.localStorageService.setLocalUser(localUser);
+        this.afAuth.auth.currentUser.updateProfile({
+          photoURL: localPhotoUrl
         });
-      });
+      })
+      .catch(err => {});
   };
 
   ionViewDidEnter() {
