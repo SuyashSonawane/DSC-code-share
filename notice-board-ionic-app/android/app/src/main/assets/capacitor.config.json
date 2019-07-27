@@ -1,7 +1,0 @@
-{
-  "appId": "com.devscollab.noticeboard",
-  "appName": "Notice Board",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "www"
-}

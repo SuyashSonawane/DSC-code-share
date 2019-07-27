@@ -18,7 +18,7 @@ export class DataproviderService {
   getCurrentUserData(uid) {
     return this.afs
       .collection("users", ref => {
-        return ref.where("uid", "==", uid);
+        return ref.where("uId", "==", uid);
       })
       .valueChanges();
   }
@@ -89,7 +89,7 @@ export class DataproviderService {
 
   addUser(newUser) {
     let localDocId;
-    this.afs
+    return this.afs
       .collection("users")
       .add(newUser)
       .then(ref => {
@@ -102,16 +102,27 @@ export class DataproviderService {
           .doc(localDocId)
           .update({ docId: localDocId });
       })
+      .then(() => {
+        return localDocId;
+      })
       .catch(err => {
         console.log(err);
+        return localDocId;
       });
   }
 
   updateUser(newuserData, passDocId) {
-    this.afs
+    return this.afs
       .collection("users")
       .doc(passDocId)
-      .update(newuserData);
+      .update(newuserData)
+      .then(() => {
+        return true;
+      })
+      .catch(err => {
+        console.log(err);
+        return false;
+      });
   }
 
   getUserObservable(uid: string) {
