@@ -4,7 +4,9 @@ import {
   AngularFirestoreCollection,
   AngularFirestoreDocument
 } from "@angular/fire/firestore";
+import * as firebase from "firebase";
 import { Observable } from "rxjs";
+import { element } from "@angular/core/src/render3";
 @Injectable({
   providedIn: "root"
 })
@@ -38,7 +40,29 @@ export class DataproviderService {
       })
       .valueChanges();
   }
-
+  deleteNotice(noticeId, urls: Array<string>) {
+    // console.log(noticeId, urls);
+    let a = 0;
+    urls.forEach(element => {
+      // console.log(element);
+      firebase
+        .storage()
+        .refFromURL(element)
+        .delete()
+        .then(() => {
+          console.log("deleted file");
+          this.afs
+            .collection("notices")
+            .doc(noticeId)
+            .delete()
+            .then(() => (a = 1));
+        })
+        .catch(e => console.log(e));
+      if (a) {
+        return true;
+      }
+    });
+  }
   addNotice(
     body,
     title,
@@ -47,7 +71,8 @@ export class DataproviderService {
     department,
     category,
     urls: Array<string>,
-    type: string
+    type: string,
+    author
   ) {
     let notice = {
       body,
@@ -56,7 +81,7 @@ export class DataproviderService {
       year,
       department,
       urls,
-      author: "DEVS",
+      author,
       category,
       ts: Date.now(),
       type

@@ -8,20 +8,12 @@
 </ion-header>
 
 <ion-content>
-  <ion-card style="min-height: 80vh">
+  <ion-card>
     <ion-slides [options]="sliderOpts" *ngIf="selectedNotice?.type==='image'">
       <ion-slide *ngFor="let img of selectedNotice?.urls">
-        <img  [src]="img" tappable (click)="openPreview(img)" (load)="loaded()" (loadeddata)="loaded()">
+        <img [src]="img" tappable (click)="openPreview(img)" (load)="loaded()" (loadeddata)="loaded()">
       </ion-slide>
     </ion-slides>
-    <div  class="frame" *ngIf="selectedNotice?.type==='pdf'">
-        <!-- <iframe [src]="selectedNotice?.urls | safe" frameborder="0" type="application/pdf" height="100%" width="100%" (load)="loaded()"></iframe> -->
-        <pdf-viewer [src]="'http://collegecirculars.unipune.ac.in/sites/documents/Syllabus%202016/SPPU_SE_Computer_Engg_2015_Course_Syllabus-4-7-16.pdf'" 
-              [render-text]="true"
-              style="display: block;"
-              [external-link-target]="'blank'"
-  ></pdf-viewer>
-    </div>
     <ion-card-header>
       <ion-card-subtitle>
         <div class="main-container">
@@ -32,10 +24,10 @@
             {{ selectedNotice?.ts | date:"medium" }}
           </div>
         </div>
-      </ion-card-subtitle> 
+      </ion-card-subtitle>
       <ion-card-title>
         <ion-label class="custom-text">{{ selectedNotice?.title }}</ion-label>
-      </ion-card-title>   
+      </ion-card-title>
     </ion-card-header>
 
     <ion-card-content class="custom-text">
@@ -45,5 +37,31 @@
         <ion-label class="custom-text">- {{ selectedNotice?.author }}</ion-label>
       </ion-card-subtitle>
     </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="selectedNotice?.type==='pdf'">
+    <ion-item>
+      <ion-toggle [(ngModel)]="showPDFOptions"></ion-toggle> Show PDF options
+    </ion-item>
+    <ion-item lines="none" *ngIf="showPDFOptions" no-padding>
+      <ion-range min="0.5" max="2" color="secondary" [(ngModel)]="zoom">
+        <ion-label slot="start">0.1</ion-label>
+        <ion-label slot="end">2</ion-label>
+      </ion-range>
+    </ion-item>
+    <ion-item lines="none" *ngIf="showPDFOptions">
+      <ion-button slot="start" (click)="page=page-1" *ngIf="page>1">
+        <ion-icon name="arrow-dropleft"></ion-icon>
+      </ion-button>
+      <ion-label>{{page}}</ion-label>
+      <ion-button slot="end" (click)="page=page+1" *ngIf="page<max_pages">
+        <ion-icon name="arrow-dropright"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <div padding>
+      <!-- <iframe [src]="selectedNotice?.urls | safe" frameborder="0" type="application/pdf" height="100%" width="100%" (load)="loaded()"></iframe> -->
+      <pdf-viewer [page]="page" class="frame" [src]="selectedNotice?.urls" [original-size]="true" [fit-to-page]="false"
+        [show-all]="false" [zoom]="zoom" padding (after-load-complete)="callBackFn($event)" (error)="onError($event)">
+      </pdf-viewer>
+    </div>
   </ion-card>
 </ion-content>
