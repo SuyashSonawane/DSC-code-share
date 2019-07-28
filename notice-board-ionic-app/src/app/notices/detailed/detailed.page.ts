@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-
 import { BackPressService } from "../../back-press.service";
 import { DataproviderService } from "../../dataprovider.service";
 import {
@@ -39,18 +38,15 @@ export class DetailedPage implements OnInit {
   ) {}
 
   async _loading() {
-    if (this.selectedNotice.type === "image") {
-      this.loading = await this.loadingController.create({
-        message: "Loading notice .."
-      });
-      await this.loading.present();
-    }
+    this.loading = await this.loadingController.create({
+      message: "Loading notice .."
+    });
+    await this.loading.present();
   }
   loaded() {
-    this.loading.dismiss();
+    // if (this.loading) this.loading.dismiss();
   }
   ngOnInit() {
-    this._loading();
     this.activatedRoute.paramMap.subscribe(ParamMap => {
       if (!ParamMap.has("noticeId")) {
         this.navCtrl.navigateBack("notices/tabs/all");
@@ -60,6 +56,7 @@ export class DetailedPage implements OnInit {
         .getNoticeByData(ParamMap.get("noticeId"))
         .subscribe(data => {
           this.selectedNotice = data[0];
+          // this._loading();
           // console.log(this.selectedNotice);
         });
     });

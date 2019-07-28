@@ -9,11 +9,14 @@
 
 <ion-content>
   <ion-card style="min-height: 80vh">
-    <ion-slides [options]="sliderOpts" *ngIf="selectedNotice.type==='image'">
+    <ion-slides [options]="sliderOpts" *ngIf="selectedNotice?.type==='image'">
       <ion-slide *ngFor="let img of selectedNotice?.urls">
-        <img [src]="img" tappable (click)="openPreview(img)" (load)="loaded()" (loadeddata)="loaded()">
+        <img  [src]="img" tappable (click)="openPreview(img)" (load)="loaded()" (loadeddata)="loaded()">
       </ion-slide>
     </ion-slides>
+    <div  class="frame" *ngIf="selectedNotice?.type==='pdf'">
+        <iframe [src]="selectedNotice?.urls | safe" frameborder="0" type="application/pdf" height="100%" width="100%" (load)="loaded()"></iframe>
+    </div>
     <ion-card-header>
       <ion-card-subtitle>
         <div class="main-container">
@@ -21,7 +24,7 @@
             {{ selectedNotice?.year }} {{ selectedNotice?.department }} {{ selectedNotice?.division }}
           </div>
           <div class="last-container custom-text">
-            {{ selectedNotice?.ts | date }}
+            {{ selectedNotice?.ts | date:"medium" }}
           </div>
         </div>
       </ion-card-subtitle> 

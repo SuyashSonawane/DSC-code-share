@@ -1,15 +1,25 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { Routes, RouterModule } from "@angular/router";
 
-import { IonicModule } from '@ionic/angular';
+import { IonicModule } from "@ionic/angular";
 
-import { DetailedPage } from './detailed.page';
+import { DetailedPage } from "./detailed.page";
+import { Pipe, PipeTransform } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
+
+@Pipe({ name: "safe" })
+export class SafePipe implements PipeTransform {
+  constructor(private sanitizer: DomSanitizer) {}
+  transform(url) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+}
 
 const routes: Routes = [
   {
-    path: '',
+    path: "",
     component: DetailedPage
   }
 ];
@@ -21,6 +31,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [DetailedPage]
+  declarations: [DetailedPage, SafePipe]
 })
 export class DetailedPageModule {}
