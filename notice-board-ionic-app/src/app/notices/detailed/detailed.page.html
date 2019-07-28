@@ -15,7 +15,12 @@
       </ion-slide>
     </ion-slides>
     <div  class="frame" *ngIf="selectedNotice?.type==='pdf'">
-        <iframe [src]="selectedNotice?.urls | safe" frameborder="0" type="application/pdf" height="100%" width="100%" (load)="loaded()"></iframe>
+        <!-- <iframe [src]="selectedNotice?.urls | safe" frameborder="0" type="application/pdf" height="100%" width="100%" (load)="loaded()"></iframe> -->
+        <pdf-viewer [src]="'http://collegecirculars.unipune.ac.in/sites/documents/Syllabus%202016/SPPU_SE_Computer_Engg_2015_Course_Syllabus-4-7-16.pdf'" 
+              [render-text]="true"
+              style="display: block;"
+              [external-link-target]="'blank'"
+  ></pdf-viewer>
     </div>
     <ion-card-header>
       <ion-card-subtitle>
