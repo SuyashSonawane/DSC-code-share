@@ -1,12 +1,20 @@
 import { Component, OnInit } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
+import { LoadingController } from "@ionic/angular";
+import {
+  Validators,
+  FormBuilder,
+  FormGroup,
+  FormControl
+} from "@angular/forms";
 
 import { LocalStorageService } from "../local-storage.service";
 import { UserData } from "../user.model";
 import { AuthService } from "../auth/auth.service";
 import { DataproviderService } from "../dataprovider.service";
-import { load } from "@angular/core/src/render3";
-import { LoadingController } from "@ionic/angular";
+
+import { RollNoValidator } from "./validators/rollNo.validator";
+import { PhoneNoValidator } from "./validators/phoneNo.validator";
+import { ErpIdValidator } from "./validators/erpId.validator";
 
 @Component({
   selector: "app-validate-user",
@@ -25,44 +33,85 @@ export class ValidateUserPage implements OnInit {
 
   ngOnInit() {}
 
-  async onSubmit() {
-    const loader1 = await this.loadingCtrl.create({
-      message: "Authenticating User"
-    });
+  errorMessages = {
+    rollNo: [
+      { type: "required", message: "Roll Number is required" },
+      { type: "validRollNo", message: "Invalid Roll No" }
+    ],
+    erpId: [
+      { type: "required", message: "Erp Id is required" },
+      { type: "validErpId", message: "Invalid Erp Id" }
+    ],
+    div: [{ type: "required", message: "Division is required" }],
+    batch: [{ type: "required", message: "Batch is required" }],
+    phoneNo: [
+      { type: "required", message: "Phone Number is required" },
+      { type: "validPhoneNo", message: "Invalid Phone Number" }
+    ]
+  };
 
-    loader1
-      .present()
-      .then(() => {
-        this.localStorageService
-          .getLocalUser()
-          .then(val => {
-            this.loadedUser = JSON.parse(val).user;
-            this.localStorageService.setIsUserValidated(
-              this.loadedUser.email,
-              true
-            );
-          })
-          .then(() => {
-            this.dataProviderService
-              .getCurrentUserData(this.loadedUser.uId)
-              .subscribe(data => {
-                let localData: any = data[0];
-                if (localData) {
-                  this.dataProviderService.updateUser(
-                    { isUserValidated: true },
-                    localData.docId
-                  );
-                }
-              });
-          });
-      })
-      .then(() => {
-        loader1.dismiss();
-        this.authService.signin();
-      })
-      .catch(err => {
-        loader1.dismiss();
-      });
+  validateUserForm = new FormGroup({
+    rollNo: new FormControl(
+      "",
+      Validators.compose([
+        Validators.required,
+        Validators.minLength(6),
+        Validators.maxLength(8),
+        RollNoValidator.validRollNo
+      ])
+    ),
+    erpId: new FormControl(
+      "",
+      Validators.compose([Validators.required, ErpIdValidator.validErpId])
+    ),
+    div: new FormControl("", Validators.required),
+    batch: new FormControl("", Validators.required),
+    phoneNo: new FormControl(
+      "",
+      Validators.compose([Validators.required, PhoneNoValidator.validPhoneNo])
+    )
+  });
+
+  async onSubmit() {
+    console.log("Submit");
+
+    //   const loader1 = await this.loadingCtrl.create({
+    //     message: "Authenticating User"
+    //   });
+
+    //   loader1
+    //     .present()
+    //     .then(() => {
+    //       this.localStorageService
+    //         .getLocalUser()
+    //         .then(val => {
+    //           this.loadedUser = JSON.parse(val).user;
+    //           this.localStorageService.setIsUserValidated(
+    //             this.loadedUser.email,
+    //             true
+    //           );
+    //         })
+    //         .then(() => {
+    //           this.dataProviderService
+    //             .getCurrentUserData(this.loadedUser.uId)
+    //             .subscribe(data => {
+    //               let localData: any = data[0];
+    //               if (localData) {
+    //                 this.dataProviderService.updateUser(
+    //                   { isUserValidated: true },
+    //                   localData.docId
+    //                 );
+    //               }
+    //             });
+    //         });
+    //     })
+    //     .then(() => {
+    //       loader1.dismiss();
+    //       this.authService.signin();
+    //     })
+    //     .catch(err => {
+    //       loader1.dismiss();
+    //     });
   }
 }
 
