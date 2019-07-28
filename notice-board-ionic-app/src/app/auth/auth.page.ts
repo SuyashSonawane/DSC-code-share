@@ -26,7 +26,7 @@ const { Storage } = Plugins;
 export class AuthPage implements OnInit {
   showUserSignupForm = false;
   isUserValidated = false;
-  isNewUser;
+  isNewUser: boolean;
 
   constructor(
     private menuCtrl: MenuController,
@@ -117,19 +117,22 @@ export class AuthPage implements OnInit {
 
   successCallback(signInSuccessData: FirebaseUISignInSuccessWithAuthResult) {
     let user = signInSuccessData.authResult.user;
-    const localUser: UserData = {
-      displayName: user.displayName,
-      email: user.email,
-      uId: user.uid,
-      creationTime: user.metadata.creationTime,
-      lastSignInTime: user.metadata.lastSignInTime,
-      phoneNumber: user.phoneNumber,
-      photoUrl: user.photoURL
-    };
-    this.localStorageService.setLocalUser(localUser).then(() => {
-      this.authService.checkUserAuth();
+    let localUser: UserData;
 
-      if (signInSuccessData.authResult.additionalUserInfo.isNewUser) {
+    if (signInSuccessData.authResult.additionalUserInfo.isNewUser) {
+      this.isNewUser = true;
+      localUser = {
+        displayName: user.displayName,
+        email: user.email,
+        uId: user.uid,
+        creationTime: user.metadata.creationTime,
+        lastSignInTime: user.metadata.lastSignInTime,
+        phoneNumber: user.phoneNumber
+      };
+
+      this.localStorageService.setLocalUser(localUser).then(() => {
+        this.authService.checkUserAuth();
+
         this.localStorageService.setIsUserValidated(
           signInSuccessData.authResult.user.email,
           false
@@ -145,7 +148,22 @@ export class AuthPage implements OnInit {
               });
           }
         });
-      } else {
+      });
+    } else {
+      this.isNewUser = false;
+      localUser = {
+        displayName: user.displayName,
+        email: user.email,
+        uId: user.uid,
+        creationTime: user.metadata.creationTime,
+        lastSignInTime: user.metadata.lastSignInTime,
+        phoneNumber: user.phoneNumber,
+        photoUrl: user.photoURL
+      };
+
+      this.localStorageService.setLocalUser(localUser).then(() => {
+        this.authService.checkUserAuth();
+
         this.dataProviderService
           .getCurrentUserData(localUser.uId)
           .subscribe(data => {
@@ -158,8 +176,8 @@ export class AuthPage implements OnInit {
                 this.authService.signin();
               });
           });
-      }
-    });
+      });
+    }
   }
 
   errorCallback(errorData: FirebaseUISignInFailure) {}

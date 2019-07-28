@@ -44,8 +44,8 @@ export class AppComponent {
         this.loadedUser = JSON.parse(val).user;
         this.userPhotoUrl = this.loadedUser.photoUrl;
         if (this.userPhotoUrl == null) {
-          this.userPhotoUrl =
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2nL1Aa6emsOzwXP2GCOh4Akz4u36yHOMuWuhnicHGcaCCF678";
+          // Icon made by https://www.flaticon.com/authors/eucalyp from http://www.flaticon.com/
+          this.userPhotoUrl = "../assets/icon/photoUrl0.png";
         }
       })
       .catch(err => {
@@ -56,8 +56,7 @@ export class AppComponent {
           creationTime: "Tue 2019",
           lastSignInTime: "Wed 2019"
         };
-        this.userPhotoUrl =
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2nL1Aa6emsOzwXP2GCOh4Akz4u36yHOMuWuhnicHGcaCCF678";
+        this.userPhotoUrl = "../assets/icon/photoUrl0.png";
       });
   }
 

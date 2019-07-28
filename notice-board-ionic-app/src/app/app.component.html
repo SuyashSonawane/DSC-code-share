@@ -11,7 +11,7 @@
     <ion-content>
       <ion-list>
         <ion-item-group>
-          <ion-avatar class="ion-margin-start ion-margin-top">
+          <ion-avatar class="ion-margin-start ion-margin-top" slot="icon-only">
             <ion-img [src]="userPhotoUrl"></ion-img>
           </ion-avatar>
           <ion-item lines="none">
@@ -50,15 +50,21 @@
             <ion-label>Other</ion-label>
           </ion-item-divider>
           <ion-menu-toggle menu="mainMenu">
-            <ion-item lines="none">
+            <ion-item lines="none" routerLink="/about-us">
               <ion-icon name="information-circle" slot="start"></ion-icon>
               <ion-label>About Us</ion-label>
             </ion-item>
           </ion-menu-toggle>
           <ion-menu-toggle menu="mainMenu">
-            <ion-item lines="none">
+            <ion-item lines="none" routerLink="/settings">
               <ion-icon name="settings" slot="start"></ion-icon>
               <ion-label>Account Settings</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle menu="mainMenu">
+            <ion-item lines="none" routerLink="/feedback">
+              <ion-icon name="stats" slot="start"></ion-icon>
+              <ion-label>Feedback</ion-label>
             </ion-item>
           </ion-menu-toggle>
           <ion-item lines="none" (click)="onSignout()">

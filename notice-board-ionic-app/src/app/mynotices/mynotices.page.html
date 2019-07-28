@@ -1,61 +1,61 @@
 <ion-header>
   <ion-toolbar>
-      <ion-buttons slot="start">
-          <ion-back-button defaultHref="/"></ion-back-button>
-        </ion-buttons>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
     <ion-title>mynotices</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list margin >
+  <ion-list margin>
     <ion-list-header>Notice Options</ion-list-header>
-      <ion-item>
-          <ion-label position="floating">Title</ion-label>
-          <ion-input [(ngModel)]="title"></ion-input>
-        </ion-item>
-      <ion-item>
-          <ion-label position="floating">Notice</ion-label>
-          <ion-input [(ngModel)]="notice"></ion-input>
-        </ion-item>
-      <ion-item>
-          <ion-label position="floating">Division</ion-label>
-          <ion-input [(ngModel)]="division"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label> {{Department}}</ion-label>
-          <ion-label>{{Year}} </ion-label>
-          <ion-label>{{category}} </ion-label>
-          <ion-button (click)="openPicker()">
-            Open Picker
-          </ion-button>
-        </ion-item>      
-        <ion-item>
-          <ion-label>File Type</ion-label>
-          <ion-select placeholder="Select type" [(ngModel)]="fileType">
-            <ion-select-option value="p">PDF</ion-select-option>
-            <ion-select-option value="i">Image</ion-select-option>
-          </ion-select>
-        </ion-item>
-        <ion-item *ngIf="fileType && fileType==='i'">
-            <ion-label>Take a photo</ion-label>
-            <ion-button (click)="takePhoto()">
-              Open Photo
-            </ion-button>
-          </ion-item>
-          <div *ngIf="fileType && fileType==='i'">
-            <ion-item  *ngFor="let image of images ;let i = index">
-              <ion-img  [src]="image"(click)="remove(i)"></ion-img>
-            </ion-item>
-          </div>
-        <ion-item *ngIf="fileType && fileType==='p'">
-            <input type="file" id="avatar" (change)="onFileChange($event)" #fileInput accept="application/pdf">
-          </ion-item>
-          <div *ngIf="fileType && fileType==='p'">
-            <ion-item  *ngFor="let image of images ;let i = index">
-              <ion-img  [src]="image"(click)="remove(i)"></ion-img>
-            </ion-item>
-          </div>
+    <ion-item>
+      <ion-label position="floating">Title</ion-label>
+      <ion-input [(ngModel)]="title"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Notice</ion-label>
+      <ion-input [(ngModel)]="notice"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Division</ion-label>
+      <ion-input [(ngModel)]="division"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label> {{Department}}</ion-label>
+      <ion-label>{{Year}} </ion-label>
+      <ion-label>{{category}} </ion-label>
+      <ion-button (click)="openPicker()">
+        Open Picker
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>File Type</ion-label>
+      <ion-select placeholder="Select type" [(ngModel)]="fileType">
+        <ion-select-option value="p">PDF</ion-select-option>
+        <ion-select-option value="i">Image</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf="fileType && fileType==='i'">
+      <ion-label>Take a photo</ion-label>
+      <ion-button (click)="takePhoto()">
+        Open Photo
+      </ion-button>
+    </ion-item>
+    <div *ngIf="fileType && fileType==='i'">
+      <ion-item *ngFor="let image of images ;let i = index">
+        <ion-img [src]="image" (click)="remove(i)"></ion-img>
+      </ion-item>
+    </div>
+    <ion-item *ngIf="fileType && fileType==='p'">
+      <input type="file" id="avatar" (change)="onFileChange($event)" #fileInput accept="application/pdf">
+    </ion-item>
+    <div *ngIf="fileType && fileType==='p'">
+      <ion-item *ngFor="let image of images ;let i = index">
+        <ion-img [src]="image" (click)="remove(i)"></ion-img>
+      </ion-item>
+    </div>
 
   </ion-list>
   <div class="simple">

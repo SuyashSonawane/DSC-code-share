@@ -11,7 +11,7 @@ export class LocalStorageService {
 
   async setIsUserValidated(email: string, val: boolean) {
     await Storage.set({
-      key: "isUserValidated",
+      key: `isUserValidated${email}`,
       value: JSON.stringify({
         email: email,
         value: val
@@ -20,7 +20,7 @@ export class LocalStorageService {
   }
 
   async getIsUserValidated(email: string) {
-    const ret = await Storage.get({ key: "isUserValidated" });
+    const ret = await Storage.get({ key: `isUserValidated${email}` });
     return ret.value;
   }
 

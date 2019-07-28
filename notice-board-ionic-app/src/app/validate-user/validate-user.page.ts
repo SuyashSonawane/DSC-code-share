@@ -33,29 +33,32 @@ export class ValidateUserPage implements OnInit {
     loader1
       .present()
       .then(() => {
-        this.localStorageService.getLocalUser().then(val => {
-          this.loadedUser = JSON.parse(val).user;
-          this.localStorageService
-            .setIsUserValidated(this.loadedUser.email, true)
-            .then(() => {
-              // console.log(this.loadedUser);
-              this.dataProviderService
-                .getCurrentUserData(this.loadedUser.uId)
-                .subscribe(data => {
-                  let localData: any = data[0];
-                  if (localData) {
-                    this.dataProviderService.updateUser(
-                      { isUserValidated: true },
-                      localData.docId
-                    );
-                  }
-                });
-            })
-            .then(() => {
-              loader1.dismiss();
-              this.authService.signin();
-            });
-        });
+        this.localStorageService
+          .getLocalUser()
+          .then(val => {
+            this.loadedUser = JSON.parse(val).user;
+            this.localStorageService.setIsUserValidated(
+              this.loadedUser.email,
+              true
+            );
+          })
+          .then(() => {
+            this.dataProviderService
+              .getCurrentUserData(this.loadedUser.uId)
+              .subscribe(data => {
+                let localData: any = data[0];
+                if (localData) {
+                  this.dataProviderService.updateUser(
+                    { isUserValidated: true },
+                    localData.docId
+                  );
+                }
+              });
+          });
+      })
+      .then(() => {
+        loader1.dismiss();
+        this.authService.signin();
       })
       .catch(err => {
         loader1.dismiss();
