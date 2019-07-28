@@ -24,6 +24,21 @@ export class LocalStorageService {
     return ret.value;
   }
 
+  async setIsAdmin(email: string, val: boolean) {
+    await Storage.set({
+      key: `isAdmin${email}`,
+      value: JSON.stringify({
+        email: email,
+        value: val
+      })
+    });
+  }
+
+  async getIsAdmin(email: string) {
+    const ret = await Storage.get({ key: `isAdmin${email}` });
+    return ret.value;
+  }
+
   async setLocalUser(user) {
     await Storage.set({
       key: "user",

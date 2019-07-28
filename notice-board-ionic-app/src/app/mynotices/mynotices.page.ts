@@ -4,11 +4,7 @@ import { DataproviderService } from "../dataprovider.service";
 import { AlertController } from "@ionic/angular";
 import { Router } from "@angular/router";
 import { LoadingController } from "@ionic/angular";
-import {
-  AngularFirestoreDocument,
-  AngularFirestoreCollection,
-  AngularFirestore
-} from "@angular/fire/firestore";
+import { AngularFirestore } from "@angular/fire/firestore";
 import { AngularFireStorage } from "@angular/fire/storage";
 
 import {
@@ -20,6 +16,7 @@ import {
 } from "@capacitor/core";
 import * as firebase from "firebase";
 import { BackPressService } from "../back-press.service";
+import { LocalStorageService } from "../local-storage.service";
 
 @Component({
   selector: "app-mynotices",
@@ -40,6 +37,7 @@ export class MynoticesPage implements OnInit {
   counter: number;
   fileContent: any;
   fileType: string = null;
+  currentUser;
 
   constructor(
     private pickerController: PickerController,
@@ -49,7 +47,8 @@ export class MynoticesPage implements OnInit {
     private storage: AngularFireStorage,
     public alertController: AlertController,
     public loadingController: LoadingController,
-    private backPressService: BackPressService
+    private backPressService: BackPressService,
+    private localStorageService: LocalStorageService
   ) {}
 
   ionViewDidEnter() {
@@ -162,7 +161,8 @@ export class MynoticesPage implements OnInit {
                   this.Department,
                   this.category,
                   this.urls,
-                  "image"
+                  "image",
+                  this.currentUser.displayName
                 );
                 loading.dismiss();
                 this.Department = "Department";
@@ -192,7 +192,8 @@ export class MynoticesPage implements OnInit {
               this.Department,
               this.category,
               url,
-              "pdf"
+              "pdf",
+              this.currentUser.displayName
             );
             loading.dismiss();
             this.Department = "Department";
@@ -243,5 +244,10 @@ export class MynoticesPage implements OnInit {
     await alert.present();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.localStorageService.getLocalUser().then(val => {
+      this.currentUser = JSON.parse(val).user;
+      console.log(this.currentUser.displayName);
+    });
+  }
 }

@@ -8,6 +8,7 @@ import {
   LoadingController
 } from "@ionic/angular";
 import { ImageModalPage } from "./image-modal/image-modal.page";
+import { PDFDocumentProxy } from "ng2-pdf-viewer";
 
 @Component({
   selector: "app-detailed",
@@ -17,7 +18,10 @@ import { ImageModalPage } from "./image-modal/image-modal.page";
 export class DetailedPage implements OnInit {
   selectedNotice;
   loading;
-
+  zoom: number = 0.5;
+  showPDFOptions: boolean = true;
+  page = 1;
+  max_pages = 2;
   sliderOpts = {
     zoom: false,
     slidesPerView: 1,
@@ -36,7 +40,12 @@ export class DetailedPage implements OnInit {
 
     public loadingController: LoadingController
   ) {}
-
+  callBackFn(pdf: PDFDocumentProxy) {
+    // do anything with "pdf"
+    this.max_pages = pdf.numPages;
+    if (this.loading) this.loading.dismiss();
+    // console.log(pdf.numPages);
+  }
   async _loading() {
     this.loading = await this.loadingController.create({
       message: "Loading notice .."
@@ -44,7 +53,7 @@ export class DetailedPage implements OnInit {
     await this.loading.present();
   }
   loaded() {
-    // if (this.loading) this.loading.dismiss();
+    if (this.loading) this.loading.dismiss();
   }
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(ParamMap => {
@@ -56,12 +65,14 @@ export class DetailedPage implements OnInit {
         .getNoticeByData(ParamMap.get("noticeId"))
         .subscribe(data => {
           this.selectedNotice = data[0];
-          // this._loading();
+          this._loading();
           // console.log(this.selectedNotice);
         });
     });
   }
-
+  onError(error: any) {
+    // do anything
+  }
   ionViewDidEnter() {
     this.backPressService.stopBackPressListener();
   }
