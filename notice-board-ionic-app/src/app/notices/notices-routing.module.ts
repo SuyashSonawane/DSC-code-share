@@ -15,6 +15,10 @@ const routes: Routes = [
             loadChildren: "./academic/academic.module#AcademicPageModule"
           },
           {
+            path: "editnotice/:noticeId",
+            loadChildren: "./editnotice/editnotice.module#EditnoticePageModule"
+          },
+          {
             path: ":noticeId",
             loadChildren: "./detailed/detailed.module#DetailedPageModule"
           }
@@ -27,6 +31,10 @@ const routes: Routes = [
             path: "",
             loadChildren:
               "./scholarship/scholarship.module#ScholarshipPageModule"
+          },
+          {
+            path: "editnotice/:noticeId",
+            loadChildren: "./editnotice/editnotice.module#EditnoticePageModule"
           },
           {
             path: ":noticeId",
@@ -42,6 +50,10 @@ const routes: Routes = [
             loadChildren: "./all/all.module#AllPageModule"
           },
           {
+            path: "editnotice/:noticeId",
+            loadChildren: "./editnotice/editnotice.module#EditnoticePageModule"
+          },
+          {
             path: ":noticeId",
             loadChildren: "./detailed/detailed.module#DetailedPageModule"
           }
@@ -55,6 +67,10 @@ const routes: Routes = [
             loadChildren: "./news/news.module#NewsPageModule"
           },
           {
+            path: "editnotice/:noticeId",
+            loadChildren: "./editnotice/editnotice.module#EditnoticePageModule"
+          },
+          {
             path: ":noticeId",
             loadChildren: "./detailed/detailed.module#DetailedPageModule"
           }
@@ -66,6 +82,10 @@ const routes: Routes = [
           {
             path: "",
             loadChildren: "./other/other.module#OtherPageModule"
+          },
+          {
+            path: "editnotice/:noticeId",
+            loadChildren: "./editnotice/editnotice.module#EditnoticePageModule"
           },
           {
             path: ":noticeId",
@@ -85,6 +105,7 @@ const routes: Routes = [
     redirectTo: "/notices/tabs/all",
     pathMatch: "full"
   }
+
   // { path: 'image-modal', loadChildren: './detailed/image-modal/image-modal.module#ImageModalPageModule' }
 ];
 

@@ -14,7 +14,11 @@ import { DataproviderService } from "../../dataprovider.service";
 import { BackPressService } from "../../back-press.service";
 import { LocalStorageService } from "../../local-storage.service";
 import { UserData } from "src/app/user.model";
-import { LoadingController } from "@ionic/angular";
+import {
+  LoadingController,
+  AlertController,
+  ToastController
+} from "@ionic/angular";
 import { Platform } from "@ionic/angular";
 
 const { PushNotifications } = Plugins;
@@ -27,6 +31,7 @@ const { PushNotifications } = Plugins;
 export class AllPage implements OnInit {
   notices;
   loadedUser: UserData;
+  isAdmin: boolean = false;
 
   constructor(
     public plt: Platform,
@@ -35,9 +40,63 @@ export class AllPage implements OnInit {
     private backPressService: BackPressService,
     private func: AngularFireFunctions,
     private localStorageService: LocalStorageService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    public alertController: AlertController,
+    public toastController: ToastController
   ) {}
 
+  async openEdit(noticeId, title) {
+    const alert = await this.alertController.create({
+      header: "Confirm Edit",
+      message: `The notice <strong>${title}</strong>  will be <b class="delete">Edited<b>`,
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+          cssClass: "secondary"
+        },
+        {
+          text: "Edit",
+          handler: () => {
+            this.router.navigateByUrl(
+              `/notices/tabs/all/editnotice/${noticeId}`
+            );
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+  async delete(title, noticeId, urls) {
+    const alert = await this.alertController.create({
+      header: "Confirm Deletion",
+      message: `The notice <strong>${title}</strong>  will be <b class="delete">DELETED<b>`,
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+          cssClass: "secondary"
+        },
+        {
+          text: "Confirm",
+          handler: () => {
+            this.DataService.deleteNotice(noticeId, urls);
+            this.presentToast();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: "Notice Deleted",
+      duration: 2000
+    });
+    toast.present();
+  }
   ngOnInit() {
     // const loader1 = await this.loadingCtrl.create({
     //   message: "Checking if User is Validated"
@@ -63,6 +122,24 @@ export class AllPage implements OnInit {
     //       console.log("err");
     //     });
     // });
+
+    this.localStorageService.getLocalUser().then(userVal => {
+      let localUserVal: any = JSON.parse(userVal).user;
+      this.localStorageService
+        .getIsAdmin(localUserVal.email)
+        .then(isAdminVal => {
+          let localIsAdminVal: any = JSON.parse(isAdminVal).value;
+          if (localIsAdminVal) {
+            //IS ADMIN
+            this.isAdmin = true;
+            console.log("admin hu me");
+          } else {
+            //IS STUDENT
+            this.isAdmin = false;
+            console.log("student hu  me");
+          }
+        });
+    });
 
     this.DataService.getNotices().subscribe(d => {
       this.notices = d;
@@ -112,6 +189,20 @@ export class AllPage implements OnInit {
       .catch(err => {
         console.log(err);
       });
+  }
+
+  onAdminTrue() {
+    this.localStorageService.getLocalUser().then(val => {
+      let localUserData: any = JSON.parse(val).user;
+      this.localStorageService.setIsAdmin(localUserData.email, true);
+    });
+  }
+
+  onAdminFalse() {
+    this.localStorageService.getLocalUser().then(val => {
+      let localUserData: any = JSON.parse(val).user;
+      this.localStorageService.setIsAdmin(localUserData.email, false);
+    });
   }
 
   ionViewDidEnter() {}
