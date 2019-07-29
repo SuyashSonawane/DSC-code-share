@@ -31,18 +31,18 @@
               <ion-label>Add Notice</ion-label>
             </ion-item>
           </ion-menu-toggle>
-          <ion-menu-toggle menu="mainMenu">
-            <ion-item lines="none" routerLink="/starrednotices">
-              <ion-icon name="star" slot="start"></ion-icon>
-              <ion-label>Starred</ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-          <ion-menu-toggle menu="mainMenu">
-            <ion-item lines="none" routerLink="/unseennotices">
-              <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
-              <ion-label>Unseen</ion-label>
-            </ion-item>
-          </ion-menu-toggle>
+          <!-- <ion-menu-toggle menu="mainMenu"> -->
+          <ion-item lines="none" (click)="disabledPressed()" class="custom-disabled-class">
+            <ion-icon name="star" slot="start"></ion-icon>
+            <ion-label>Starred</ion-label>
+          </ion-item>
+          <!-- </ion-menu-toggle> -->
+          <!-- <ion-menu-toggle menu="mainMenu"> -->
+          <ion-item lines="none" (click)="disabledPressed()" class="custom-disabled-class">
+            <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+            <ion-label>Unseen</ion-label>
+          </ion-item>
+          <!-- </ion-menu-toggle> -->
         </ion-item-group>
 
         <ion-item-group>

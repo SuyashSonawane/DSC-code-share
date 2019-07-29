@@ -37,7 +37,7 @@ export class AppComponent {
   ) {
     this.initializeApp();
   }
-  async showToast() {
+  async disabledPressed() {
     const toast = await this.toastController.create({
       message: "Features coming soon!",
       duration: 3000,
@@ -53,6 +53,7 @@ export class AppComponent {
     });
     toast.present();
   }
+
   openMenu() {
     this.localStorageService
       .getLocalUser()
