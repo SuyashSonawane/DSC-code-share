@@ -68,7 +68,7 @@ export class AllPage implements OnInit {
 
     await alert.present();
   }
-  async delete(title, noticeId, urls) {
+  async delete(title, noticeId, urls, type) {
     const alert = await this.alertController.create({
       header: "Confirm Deletion",
       message: `The notice <strong>${title}</strong>  will be <b class="delete">DELETED<b>`,
@@ -81,7 +81,8 @@ export class AllPage implements OnInit {
         {
           text: "Confirm",
           handler: () => {
-            this.DataService.deleteNotice(noticeId, urls);
+            if (type === "pdf") this.DataService.deletePDF(noticeId, urls);
+            else this.DataService.deleteNotice(noticeId, urls);
             this.presentToast();
           }
         }
@@ -188,6 +189,13 @@ export class AllPage implements OnInit {
             alert("Push action performed: " + JSON.stringify(notification));
           }
         );
+        PushNotifications.createChannel({
+          description: "Notice Board Notifications",
+          id: "46",
+          importance: 5,
+          name: "Notice Board",
+          visibility: 1
+        });
       })
       .catch(err => {
         console.log(err);

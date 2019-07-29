@@ -20,6 +20,7 @@ export class DetailedPage implements OnInit {
   selectedNotice;
   loadedUser;
   loading;
+  _loaded: boolean = false;
   zoom: number = 0.5;
   showPDFOptions: boolean = true;
   page = 1;
@@ -56,6 +57,7 @@ export class DetailedPage implements OnInit {
   }
   loaded() {
     if (this.loading) this.loading.dismiss();
+    this._loaded = true;
   }
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(ParamMap => {
@@ -63,6 +65,7 @@ export class DetailedPage implements OnInit {
         this.navCtrl.navigateBack("notices/tabs/all");
         return;
       }
+      // if (!this._loaded) this._loading();    TODO: loder showing
       this.localStorageService.getLocalUser().then(val => {
         let localUser: any = JSON.parse(val).user;
         this.dataService.getCurrentUserData(localUser.uId).subscribe(data => {
@@ -74,7 +77,6 @@ export class DetailedPage implements OnInit {
         .getNoticeByData(ParamMap.get("noticeId"))
         .subscribe(data => {
           this.selectedNotice = data[0];
-          this._loading();
           // console.log(this.selectedNotice);
         });
     });
