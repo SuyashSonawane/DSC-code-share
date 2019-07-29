@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { Platform } from "@ionic/angular";
+import { Platform, ToastController } from "@ionic/angular";
 import {
   Capacitor,
   Plugins,
@@ -32,11 +32,27 @@ export class AppComponent {
     private router: Router,
     private userService: UserService,
     private DataService: DataproviderService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    public toastController: ToastController
   ) {
     this.initializeApp();
   }
-
+  async showToast() {
+    const toast = await this.toastController.create({
+      message: "Features coming soon!",
+      duration: 3000,
+      buttons: [
+        {
+          text: "OK",
+          role: "cancel",
+          handler: () => {
+            console.log("Cancel clicked");
+          }
+        }
+      ]
+    });
+    toast.present();
+  }
   openMenu() {
     this.localStorageService
       .getLocalUser()
