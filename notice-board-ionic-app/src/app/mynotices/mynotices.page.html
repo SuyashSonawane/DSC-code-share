@@ -50,8 +50,17 @@
       </ion-item>
       <ion-row>
         <ion-col style="font-weight: bolder">
+          <ion-label style="margin-right: 5px">Select all</ion-label>
+          <ion-checkbox name="all" #all (ionChange)="onAllChange($event, A, B, C, D, E, F, G, H, I, J, K, L)">
+          </ion-checkbox>
+        </ion-col>
+
+      </ion-row>
+
+      <ion-row>
+        <ion-col style="font-weight: bolder">
           <ion-label style="margin-right: 5px">A</ion-label>
-          <ion-checkbox name="A" #A (ionChange)="onDivChange($event, A1, A2, A3)"></ion-checkbox>
+          <ion-checkbox name="A" #A (ionChange)="onDivChange($event, A1, A2, A3, all)"></ion-checkbox>
         </ion-col>
         <ion-col>
           <ion-label style="margin-right: 5px">A1</ion-label>
@@ -73,7 +82,7 @@
       <ion-row>
         <ion-col style="font-weight: bolder">
           <ion-label style="margin-right: 5px">B</ion-label>
-          <ion-checkbox name="B" #B (ionChange)="onDivChange($event, B1, B2, B3)"></ion-checkbox>
+          <ion-checkbox name="B" #B (ionChange)="onDivChange($event, B1, B2, B3, all)"></ion-checkbox>
         </ion-col>
         <ion-col>
           <ion-label style="margin-right: 5px">B1</ion-label>
@@ -95,7 +104,7 @@
       <ion-row>
         <ion-col style="font-weight: bolder">
           <ion-label style="margin-right: 5px">C</ion-label>
-          <ion-checkbox name="C" #C (ionChange)="onDivChange($event, C1, C2, C3)"></ion-checkbox>
+          <ion-checkbox name="C" #C (ionChange)="onDivChange($event, C1, C2, C3, all)"></ion-checkbox>
         </ion-col>
         <ion-col>
           <ion-label style="margin-right: 5px">C1</ion-label>
@@ -117,7 +126,7 @@
       <ion-row>
         <ion-col style="font-weight: bolder">
           <ion-label style="margin-right: 5px">D</ion-label>
-          <ion-checkbox name="D" #D (ionChange)="onDivChange($event, D1, D2, D3)"></ion-checkbox>
+          <ion-checkbox name="D" #D (ionChange)="onDivChange($event, D1, D2, D3, all)"></ion-checkbox>
         </ion-col>
         <ion-col>
           <ion-label style="margin-right: 5px">D1</ion-label>
@@ -139,7 +148,7 @@
       <ion-row>
         <ion-col style="font-weight: bolder">
           <ion-label style="margin-right: 5px">E</ion-label>
-          <ion-checkbox name="E" #E (ionChange)="onDivChange($event, E1, E2, E3)"></ion-checkbox>
+          <ion-checkbox name="E" #E (ionChange)="onDivChange($event, E1, E2, E3, all)"></ion-checkbox>
         </ion-col>
         <ion-col>
           <ion-label style="margin-right: 5px">E1</ion-label>
@@ -161,7 +170,7 @@
       <ion-row>
         <ion-col style="font-weight: bolder">
           <ion-label style="margin-right: 5px">F</ion-label>
-          <ion-checkbox name="F" #F (ionChange)="onDivChange($event, F1, F2, F3)"></ion-checkbox>
+          <ion-checkbox name="F" #F (ionChange)="onDivChange($event, F1, F2, F3, all)"></ion-checkbox>
         </ion-col>
         <ion-col>
           <ion-label style="margin-right: 5px">F1</ion-label>
@@ -183,7 +192,7 @@
       <ion-row>
         <ion-col style="font-weight: bolder">
           <ion-label style="margin-right: 5px">G</ion-label>
-          <ion-checkbox name="G" #G (ionChange)="onDivChange($event, G1, G2, G3)"></ion-checkbox>
+          <ion-checkbox name="G" #G (ionChange)="onDivChange($event, G1, G2, G3, all)"></ion-checkbox>
         </ion-col>
         <ion-col>
           <ion-label style="margin-right: 5px">G1</ion-label>
@@ -205,7 +214,7 @@
       <ion-row>
         <ion-col style="font-weight: bolder">
           <ion-label style="margin-right: 5px">H</ion-label>
-          <ion-checkbox name="H" #H (ionChange)="onDivChange($event, H1, H2, H3)"></ion-checkbox>
+          <ion-checkbox name="H" #H (ionChange)="onDivChange($event, H1, H2, H3, all)"></ion-checkbox>
         </ion-col>
         <ion-col>
           <ion-label style="margin-right: 5px">H1</ion-label>
@@ -227,7 +236,7 @@
       <ion-row>
         <ion-col style="font-weight: bolder">
           <ion-label style="margin-right: 5px">I</ion-label>
-          <ion-checkbox name="I" #I (ionChange)="onDivChange($event, I1, I2, I3)"></ion-checkbox>
+          <ion-checkbox name="I" #I (ionChange)="onDivChange($event, I1, I2, I3, all)"></ion-checkbox>
         </ion-col>
         <ion-col>
           <ion-label style="margin-right: 5px">I1</ion-label>
@@ -249,7 +258,7 @@
       <ion-row>
         <ion-col style="font-weight: bolder">
           <ion-label style="margin-right: 5px">J</ion-label>
-          <ion-checkbox name="J" #J (ionChange)="onDivChange($event, J1, J2, J3)"></ion-checkbox>
+          <ion-checkbox name="J" #J (ionChange)="onDivChange($event, J1, J2, J3, all)"></ion-checkbox>
         </ion-col>
         <ion-col>
           <ion-label style="margin-right: 5px">J1</ion-label>
@@ -271,7 +280,7 @@
       <ion-row>
         <ion-col style="font-weight: bolder">
           <ion-label style="margin-right: 5px">K</ion-label>
-          <ion-checkbox name="K" #K (ionChange)="onDivChange($event, K1, K2, K3)"></ion-checkbox>
+          <ion-checkbox name="K" #K (ionChange)="onDivChange($event, K1, K2, K3, all)"></ion-checkbox>
         </ion-col>
         <ion-col>
           <ion-label style="margin-right: 5px">K1</ion-label>
@@ -293,7 +302,7 @@
       <ion-row>
         <ion-col style="font-weight: bolder">
           <ion-label style="margin-right: 5px">L</ion-label>
-          <ion-checkbox name="L" #L (ionChange)="onDivChange($event, L1, L2, L3)"></ion-checkbox>
+          <ion-checkbox name="L" #L (ionChange)="onDivChange($event, L1, L2, L3, all)"></ion-checkbox>
         </ion-col>
         <ion-col>
           <ion-label style="margin-right: 5px">L1</ion-label>
