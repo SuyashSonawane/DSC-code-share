@@ -32,6 +32,8 @@ export class AllPage implements OnInit {
   notices;
   loadedUser: UserData;
   isAdmin: boolean = false;
+  user;
+  subscribeArray: Array<string> = [];
 
   constructor(
     public plt: Platform,
@@ -98,60 +100,7 @@ export class AllPage implements OnInit {
     });
     toast.present();
   }
-  ngOnInit() {
-    // const loader1 = await this.loadingCtrl.create({
-    //   message: "Checking if User is Validated"
-    // });
-
-    // loader1.present().then(() => {
-    //   this.localStorageService
-    //     .getLocalUser()
-    //     .then(val => {
-    //       this.loadedUser = JSON.parse(val).user;
-    //       this.localStorageService
-    //         .getIsUserValidated(this.loadedUser.email)
-    //         .then(val => {
-    //           if (val.value !== "true") {
-    //             loader1.dismiss();
-    //             this.router.navigateByUrl("/validate-user");
-    //           }
-    //         });
-    //     })
-    //     .catch(err => {
-    //       loader1.dismiss();
-    //       this.router.navigateByUrl("/validate-user");
-    //       console.log("err");
-    //     });
-    // });
-
-    this.localStorageService.getLocalUser().then(userVal => {
-      let localUserVal: any = JSON.parse(userVal).user;
-      this.localStorageService
-        .getIsAdmin(localUserVal.email)
-        .then(isAdminVal => {
-          let localIsAdminVal: any;
-          if (JSON.parse(isAdminVal)) {
-            localIsAdminVal = JSON.parse(isAdminVal).value;
-          }
-          if (localIsAdminVal) {
-            //IS ADMIN
-            this.isAdmin = true;
-            console.log("admin hu me");
-          } else {
-            //IS STUDENT
-            this.isAdmin = false;
-            console.log("student hu  me");
-          }
-        });
-    });
-
-    this.DataService.getNotices().subscribe(d => {
-      this.notices = d;
-      // console.log(d);
-    });
-    // console.log("Initializing HomePage");
-
-    // Register with Apple / Google to receive push via APNS/FCM
+  subscribe() {
     PushNotifications.register()
       .then(() => {
         // On succcess, we should be able to receive notifications
@@ -159,13 +108,15 @@ export class AllPage implements OnInit {
           "registration",
           (token: PushNotificationToken) => {
             this.DataService.setToken(token.value);
-            this.func
-              .httpsCallable("subscribeToTopic")({
-                token: token.value,
-                topic: "all"
-              })
-              .subscribe(d => console.log(d));
-            // alert("Push registration success, token: " + token.value);
+            this.subscribeArray.forEach(element => {
+              this.func
+                .httpsCallable("subscribeToTopic")({
+                  token: token.value,
+                  topic: element
+                })
+                .subscribe(d => console.log(d));
+              // alert("Push registration success, token: " + token.value);
+            });
           }
         );
 
@@ -200,6 +151,76 @@ export class AllPage implements OnInit {
       .catch(err => {
         console.log(err);
       });
+  }
+  ngOnInit() {
+    // const loader1 = await this.loadingCtrl.create({
+    //   message: "Checking if User is Validated"
+    // });
+
+    // loader1.present().then(() => {
+    //   this.localStorageService
+    //     .getLocalUser()
+    //     .then(val => {
+    //       this.loadedUser = JSON.parse(val).user;
+    //       this.localStorageService
+    //         .getIsUserValidated(this.loadedUser.email)
+    //         .then(val => {
+    //           if (val.value !== "true") {
+    //             loader1.dismiss();
+    //             this.router.navigateByUrl("/validate-user");
+    //           }
+    //         });
+    //     })
+    //     .catch(err => {
+    //       loader1.dismiss();
+    //       this.router.navigateByUrl("/validate-user");
+    //       console.log("err");
+    //     });
+    // });
+
+    this.localStorageService.getLocalUser().then(userVal => {
+      let localUserVal: any = JSON.parse(userVal).user;
+      this.DataService.getCurrentUserData(localUserVal.uId).subscribe(data => {
+        this.user = data[0];
+        this.subscribeArray.push(this.user.div);
+        this.subscribeArray.push(this.user.div + this.user.batch);
+        this.subscribeArray.push("All");
+        this.subscribe();
+        this.DataService.getNotices().subscribe(d => {
+          this.notices = d;
+          this.notices = this.notices.filter(element => {
+            if (
+              element.batches.indexOf(this.subscribeArray[0]) !== -1 ||
+              element.batches.indexOf(this.subscribeArray[1]) !== -1 ||
+              element.batches.indexOf(this.subscribeArray[2]) !== -1
+            )
+              return true;
+          });
+          // console.log(d);
+        });
+      });
+      this.localStorageService
+        .getIsAdmin(localUserVal.email)
+        .then(isAdminVal => {
+          let localIsAdminVal: any;
+          if (JSON.parse(isAdminVal)) {
+            localIsAdminVal = JSON.parse(isAdminVal).value;
+          }
+          if (localIsAdminVal) {
+            //IS ADMIN
+            this.isAdmin = true;
+            console.log("admin hu me");
+          } else {
+            //IS STUDENT
+            this.isAdmin = false;
+            console.log("student hu  me");
+          }
+        });
+    });
+
+    // console.log("Initializing HomePage");
+
+    // Register with Apple / Google to receive push via APNS/FCM
   }
 
   ionViewDidEnter() {}

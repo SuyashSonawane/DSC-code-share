@@ -39,11 +39,11 @@
           <ion-item no-padding lines="none">
             <ion-label>- {{ notice?.author }}</ion-label>
           </ion-item>
-          <div>
+          <!-- <div *ngIf="isAdmin">
             <ion-chip *ngFor="let batch of notice?.batches">
               <ion-label>{{batch}}</ion-label>
             </ion-chip>
-          </div>
+          </div> -->
         </ion-card-content>
       </div>
     </div>

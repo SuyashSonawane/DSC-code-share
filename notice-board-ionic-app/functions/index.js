@@ -25,30 +25,22 @@ exports.subscribeToTopic = functions.https.onCall(
     console.log(snapshot.data(), snapshot.ref.parent.key)
 
     const notification = {
-      title: 'New Notice Added',
-      body: `Title: ${notice.title}, Notice: ${notice.body}`
+      title: notice.title,
+      body: notice.body
     };
 
-    const payload= {
-        notification,
-        webpush: {
-          notification: {
-            vibrate: [200, 100, 200],
-            icon: 'https://placeimg.com/250/250/people',
-            // actions: [
-            //   {
-            //     action: 'like',
-            //     title: '👍 Yaaay!'
-            //   },
-            //   {
-            //     action: 'dislike',
-            //     title: 'Boooo!'
-            //   }
-            // ]
-          }
-        },
-        topic: 'all'
-      };
-
-    admin.messaging().send(payload).then(res=>console.log(res));
+    notice.batches.forEach(element => {
+      const payload= {
+          notification,
+          webpush: {
+            notification: {
+              vibrate: [200, 100, 200]
+            }
+          },
+          topic: element
+        };
+  
+      admin.messaging().send(payload).then(res=>console.log(res));
+      
+    });
   });
