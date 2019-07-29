@@ -173,4 +173,20 @@ export class DataproviderService {
       })
       .valueChanges();
   }
+
+  getIsAllowAdmin(email: string) {
+    return this.afs
+      .collection("allowAdmins", ref => {
+        return ref.where("email", "==", email);
+      })
+      .valueChanges();
+  }
+
+  getIsAllowStudents(email: string) {
+    return this.afs
+      .collection("allowStudents", ref => {
+        return ref.where("email", "==", email);
+      })
+      .valueChanges();
+  }
 }

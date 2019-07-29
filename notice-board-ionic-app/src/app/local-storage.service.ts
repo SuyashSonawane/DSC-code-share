@@ -39,6 +39,21 @@ export class LocalStorageService {
     return ret.value;
   }
 
+  async setIsStudent(email: string, val: boolean) {
+    await Storage.set({
+      key: `isStudent${email}`,
+      value: JSON.stringify({
+        email: email,
+        value: val
+      })
+    });
+  }
+
+  async getIsStudent(email: string) {
+    const ret = await Storage.get({ key: `isStudent${email}` });
+    return ret.value;
+  }
+
   async setLocalUser(user) {
     await Storage.set({
       key: "user",

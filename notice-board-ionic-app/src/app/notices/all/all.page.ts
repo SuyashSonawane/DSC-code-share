@@ -147,7 +147,7 @@ export class AllPage implements OnInit {
 
     this.DataService.getNotices().subscribe(d => {
       this.notices = d;
-      console.log(d);
+      // console.log(d);
     });
     // console.log("Initializing HomePage");
 
@@ -200,20 +200,6 @@ export class AllPage implements OnInit {
       .catch(err => {
         console.log(err);
       });
-  }
-
-  onAdminTrue() {
-    this.localStorageService.getLocalUser().then(val => {
-      let localUserData: any = JSON.parse(val).user;
-      this.localStorageService.setIsAdmin(localUserData.email, true);
-    });
-  }
-
-  onAdminFalse() {
-    this.localStorageService.getLocalUser().then(val => {
-      let localUserData: any = JSON.parse(val).user;
-      this.localStorageService.setIsAdmin(localUserData.email, false);
-    });
   }
 
   ionViewDidEnter() {}

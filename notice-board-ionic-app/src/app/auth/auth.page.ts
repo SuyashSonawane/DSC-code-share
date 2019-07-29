@@ -121,62 +121,108 @@ export class AuthPage implements OnInit {
 
     if (signInSuccessData.authResult.additionalUserInfo.isNewUser) {
       this.isNewUser = true;
-      localUser = {
-        displayName: user.displayName,
-        email: user.email,
-        uId: user.uid,
-        creationTime: user.metadata.creationTime,
-        lastSignInTime: user.metadata.lastSignInTime,
-        phoneNumber: user.phoneNumber
-      };
 
-      this.localStorageService.setLocalUser(localUser).then(() => {
-        this.authService.checkUserAuth();
-
-        this.localStorageService.setIsUserValidated(
-          signInSuccessData.authResult.user.email,
-          false
-        );
-
-        this.dataProviderService.addUser(localUser).then(docId => {
-          if (docId) {
-            this.dataProviderService
-              .updateUser({ isUserValidated: false }, docId)
-              .then(val => {
-                // console.log("user updated");
-                this.authService.signin();
-              });
+      this.dataProviderService
+        .getIsAllowAdmin(user.email)
+        .subscribe(dataAdmin => {
+          let localAllowAdminData: any = dataAdmin[0];
+          if (localAllowAdminData) {
+            this.localStorageService.setIsAdmin(user.email, true);
+          } else {
+            this.localStorageService.setIsAdmin(user.email, false);
           }
-        });
-      });
-    } else {
-      this.isNewUser = false;
-      localUser = {
-        displayName: user.displayName,
-        email: user.email,
-        uId: user.uid,
-        creationTime: user.metadata.creationTime,
-        lastSignInTime: user.metadata.lastSignInTime,
-        phoneNumber: user.phoneNumber,
-        photoUrl: user.photoURL
-      };
+          this.dataProviderService
+            .getIsAllowStudents(user.email)
+            .subscribe(dataStudent => {
+              let localAllowStudentData: any = dataStudent[0];
+              if (localAllowStudentData) {
+                this.localStorageService.setIsStudent(user.email, true);
+              } else {
+                this.localStorageService.setIsStudent(user.email, false);
+              }
 
-      this.localStorageService.setLocalUser(localUser).then(() => {
-        this.authService.checkUserAuth();
+              localUser = {
+                displayName: user.displayName,
+                email: user.email,
+                uId: user.uid,
+                creationTime: user.metadata.creationTime,
+                lastSignInTime: user.metadata.lastSignInTime,
+                phoneNumber: user.phoneNumber
+              };
 
-        this.dataProviderService
-          .getCurrentUserData(localUser.uId)
-          .subscribe(data => {
-            let localData: any = data[0];
-            // console.log(data[0]);
-            this.localStorageService
-              .setIsUserValidated(localData.email, localData.isUserValidated)
-              .then(() => {
-                // console.log(`not new user ${localData.isUserValidated}`);
-                this.authService.signin();
+              this.localStorageService.setLocalUser(localUser).then(() => {
+                this.authService.checkUserAuth();
+
+                this.localStorageService.setIsUserValidated(
+                  signInSuccessData.authResult.user.email,
+                  false
+                );
+
+                this.dataProviderService.addUser(localUser).then(docId => {
+                  if (docId) {
+                    this.dataProviderService
+                      .updateUser({ isUserValidated: false }, docId)
+                      .then(val => {
+                        // console.log("user updated");
+                        this.authService.signin();
+                      });
+                  }
+                });
               });
-          });
-      });
+            });
+        });
+    } else {
+      this.dataProviderService
+        .getIsAllowAdmin(user.email)
+        .subscribe(dataAdmin => {
+          let localAllowAdminData: any = dataAdmin[0];
+          if (localAllowAdminData) {
+            this.localStorageService.setIsAdmin(user.email, true);
+          } else {
+            this.localStorageService.setIsAdmin(user.email, false);
+          }
+          this.dataProviderService
+            .getIsAllowStudents(user.email)
+            .subscribe(dataStudent => {
+              let localAllowStudentData: any = dataStudent[0];
+              if (localAllowStudentData) {
+                this.localStorageService.setIsStudent(user.email, true);
+              } else {
+                this.localStorageService.setIsStudent(user.email, false);
+              }
+
+              this.isNewUser = false;
+              localUser = {
+                displayName: user.displayName,
+                email: user.email,
+                uId: user.uid,
+                creationTime: user.metadata.creationTime,
+                lastSignInTime: user.metadata.lastSignInTime,
+                phoneNumber: user.phoneNumber,
+                photoUrl: user.photoURL
+              };
+
+              this.localStorageService.setLocalUser(localUser).then(() => {
+                this.authService.checkUserAuth();
+
+                this.dataProviderService
+                  .getCurrentUserData(localUser.uId)
+                  .subscribe(data => {
+                    let localData: any = data[0];
+                    // console.log(data[0]);
+                    this.localStorageService
+                      .setIsUserValidated(
+                        localData.email,
+                        localData.isUserValidated
+                      )
+                      .then(() => {
+                        // console.log(`not new user ${localData.isUserValidated}`);
+                        this.authService.signin();
+                      });
+                  });
+              });
+            });
+        });
     }
   }
 
