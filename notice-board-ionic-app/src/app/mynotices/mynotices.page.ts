@@ -74,7 +74,7 @@ export class MynoticesPage implements OnInit {
   errorMessages = {
     title: [
       { type: "required", message: "Title is required" },
-      { type: "maxLength", message: "Should be less than 30 characters" }
+      { type: "maxlength", message: "Should be less than 30 characters" }
     ],
     body: [{ type: "required", message: "Notice Body is required" }],
     category: [{ type: "required", message: "Category is required" }],
