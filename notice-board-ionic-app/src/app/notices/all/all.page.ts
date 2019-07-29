@@ -147,7 +147,7 @@ export class AllPage implements OnInit {
 
     this.DataService.getNotices().subscribe(d => {
       this.notices = d;
-      console.log(d);
+      // console.log(d);
     });
     // console.log("Initializing HomePage");
 
