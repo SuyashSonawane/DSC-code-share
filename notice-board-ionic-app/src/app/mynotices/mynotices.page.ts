@@ -72,7 +72,10 @@ export class MynoticesPage implements OnInit {
   }
 
   errorMessages = {
-    title: [{ type: "required", message: "Title is required" }],
+    title: [
+      { type: "required", message: "Title is required" },
+      { type: "maxLength", message: "Should be less than 30 characters" }
+    ],
     body: [{ type: "required", message: "Notice Body is required" }],
     category: [{ type: "required", message: "Category is required" }],
     divBatches: [
@@ -81,7 +84,10 @@ export class MynoticesPage implements OnInit {
   };
 
   addNoticeForm = new FormGroup({
-    title: new FormControl("", Validators.required),
+    title: new FormControl(
+      "",
+      Validators.compose([Validators.required, Validators.maxLength(30)])
+    ),
     body: new FormControl("", Validators.required),
     category: new FormControl("", Validators.required),
     // divBatches: new FormControl(""),
