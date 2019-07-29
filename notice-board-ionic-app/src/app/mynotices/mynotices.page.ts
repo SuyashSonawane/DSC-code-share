@@ -156,7 +156,7 @@ export class MynoticesPage implements OnInit {
         this.images.forEach(image => {
           firebase
             .storage()
-            .ref(`images/${this.addNoticeForm.value.div}`)
+            .ref(`noticeImages/${this.addNoticeForm.value.div}`)
             .child(this.afs.createId())
             .putString(image, "data_url")
             .then(snap => {
