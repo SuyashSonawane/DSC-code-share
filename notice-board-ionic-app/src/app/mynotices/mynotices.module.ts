@@ -1,15 +1,15 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { Routes, RouterModule } from "@angular/router";
 
-import { IonicModule } from '@ionic/angular';
+import { IonicModule } from "@ionic/angular";
 
-import { MynoticesPage } from './mynotices.page';
+import { MynoticesPage } from "./mynotices.page";
 
 const routes: Routes = [
   {
-    path: '',
+    path: "",
     component: MynoticesPage
   }
 ];
@@ -17,6 +17,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)

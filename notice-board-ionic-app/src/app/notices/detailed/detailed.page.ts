@@ -9,6 +9,7 @@ import {
 } from "@ionic/angular";
 import { ImageModalPage } from "./image-modal/image-modal.page";
 import { PDFDocumentProxy } from "ng2-pdf-viewer";
+import { LocalStorageService } from "src/app/local-storage.service";
 
 @Component({
   selector: "app-detailed",
@@ -17,6 +18,7 @@ import { PDFDocumentProxy } from "ng2-pdf-viewer";
 })
 export class DetailedPage implements OnInit {
   selectedNotice;
+  loadedUser;
   loading;
   zoom: number = 0.5;
   showPDFOptions: boolean = true;
@@ -37,7 +39,7 @@ export class DetailedPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private navCtrl: NavController,
     private modalCtrl: ModalController,
-
+    private localStorageService: LocalStorageService,
     public loadingController: LoadingController
   ) {}
   callBackFn(pdf: PDFDocumentProxy) {
@@ -61,6 +63,13 @@ export class DetailedPage implements OnInit {
         this.navCtrl.navigateBack("notices/tabs/all");
         return;
       }
+      this.localStorageService.getLocalUser().then(val => {
+        let localUser: any = JSON.parse(val).user;
+        this.dataService.getCurrentUserData(localUser.uId).subscribe(data => {
+          let localData: any = data[0];
+          this.loadedUser = localData;
+        });
+      });
       this.dataService
         .getNoticeByData(ParamMap.get("noticeId"))
         .subscribe(data => {

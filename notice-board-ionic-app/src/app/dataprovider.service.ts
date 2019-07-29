@@ -64,22 +64,18 @@ export class DataproviderService {
     });
   }
   addNotice(
-    body,
     title,
-    division,
-    year,
-    department,
+    body,
+    batches,
     category,
     urls: Array<string>,
     type: string,
     author
   ) {
     let notice = {
-      body,
       title,
-      division,
-      year,
-      department,
+      body,
+      batches,
       urls,
       author,
       category,

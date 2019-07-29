@@ -1,12 +1,20 @@
 import { Component, OnInit } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
+import { LoadingController, MenuController } from "@ionic/angular";
+import {
+  Validators,
+  FormBuilder,
+  FormGroup,
+  FormControl
+} from "@angular/forms";
 
 import { LocalStorageService } from "../local-storage.service";
 import { UserData } from "../user.model";
 import { AuthService } from "../auth/auth.service";
 import { DataproviderService } from "../dataprovider.service";
-import { load } from "@angular/core/src/render3";
-import { LoadingController } from "@ionic/angular";
+
+import { RollNoValidator } from "./validators/rollNo.validator";
+import { PhoneNoValidator } from "./validators/phoneNo.validator";
+import { ErpIdValidator } from "./validators/erpId.validator";
 
 @Component({
   selector: "app-validate-user",
@@ -20,16 +28,67 @@ export class ValidateUserPage implements OnInit {
     private localStorageService: LocalStorageService,
     private authService: AuthService,
     private dataProviderService: DataproviderService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private menuCtrl: MenuController
   ) {}
 
+  ionViewWillEnter() {
+    this.menuCtrl.enable(false);
+  }
+
+  ionViewWillLeave() {
+    this.menuCtrl.enable(true);
+  }
+
   ngOnInit() {}
+
+  errorMessages = {
+    rollNo: [
+      { type: "required", message: "Roll Number is required" },
+      { type: "validRollNo", message: "Invalid Roll No" }
+    ],
+    erpId: [
+      { type: "required", message: "Erp Id is required" },
+      { type: "validErpId", message: "Invalid Erp Id" }
+    ],
+    div: [{ type: "required", message: "Division is required" }],
+    batch: [{ type: "required", message: "Batch is required" }],
+    phoneNumber: [
+      { type: "required", message: "Phone Number is required" },
+      { type: "validPhoneNo", message: "Invalid Phone Number" }
+    ]
+  };
+
+  validateUserForm = new FormGroup({
+    rollNo: new FormControl(
+      "",
+      Validators.compose([
+        Validators.required,
+        Validators.minLength(6),
+        Validators.maxLength(8),
+        RollNoValidator.validRollNo
+      ])
+    ),
+    erpId: new FormControl(
+      "",
+      Validators.compose([Validators.required, ErpIdValidator.validErpId])
+    ),
+    div: new FormControl("", Validators.required),
+    batch: new FormControl("", Validators.required),
+    phoneNumber: new FormControl(
+      "",
+      Validators.compose([Validators.required, PhoneNoValidator.validPhoneNo])
+    )
+  });
+
+  changeAccount() {
+    this.authService.signout();
+  }
 
   async onSubmit() {
     const loader1 = await this.loadingCtrl.create({
       message: "Authenticating User"
     });
-
     loader1
       .present()
       .then(() => {
@@ -48,8 +107,9 @@ export class ValidateUserPage implements OnInit {
               .subscribe(data => {
                 let localData: any = data[0];
                 if (localData) {
+                  this.validateUserForm.value.isUserValidated = true;
                   this.dataProviderService.updateUser(
-                    { isUserValidated: true },
+                    this.validateUserForm.value,
                     localData.docId
                   );
                 }

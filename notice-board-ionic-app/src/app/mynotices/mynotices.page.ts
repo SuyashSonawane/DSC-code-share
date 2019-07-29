@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { PickerController } from "@ionic/angular";
+import { PickerController, ToastController } from "@ionic/angular";
 import { DataproviderService } from "../dataprovider.service";
 import { AlertController } from "@ionic/angular";
 import { Router } from "@angular/router";
@@ -17,6 +17,7 @@ import {
 import * as firebase from "firebase";
 import { BackPressService } from "../back-press.service";
 import { LocalStorageService } from "../local-storage.service";
+import { FormGroup, FormControl, Validators, FormArray } from "@angular/forms";
 
 @Component({
   selector: "app-mynotices",
@@ -24,12 +25,6 @@ import { LocalStorageService } from "../local-storage.service";
   styleUrls: ["./mynotices.page.scss"]
 })
 export class MynoticesPage implements OnInit {
-  public Department = "Department";
-  public Year = "Year";
-  public title = "";
-  public notice = "";
-  public division = "";
-  public category = "All";
   selectedImage: string;
   url;
   public images: Array<string> = [];
@@ -38,6 +33,9 @@ export class MynoticesPage implements OnInit {
   fileContent: any;
   fileType: string = null;
   currentUser;
+
+  divBatches = [];
+  uniqueDivBatches = [];
 
   constructor(
     private pickerController: PickerController,
@@ -48,7 +46,8 @@ export class MynoticesPage implements OnInit {
     public alertController: AlertController,
     public loadingController: LoadingController,
     private backPressService: BackPressService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    public toastController: ToastController
   ) {}
 
   ionViewDidEnter() {
@@ -70,141 +69,139 @@ export class MynoticesPage implements OnInit {
       };
     }
   }
-  async openPicker() {
-    console.log(this.fileType);
-    let opts = {
-      buttons: [
-        // {
-        //   text: "Cancel",
-        //   role: "cancel"
-        // },
-        {
-          text: "Done",
-          role: "dismiss"
-        }
-      ],
-      columns: [
-        {
-          name: "Department",
-          options: [
-            { text: "MECH", value: "MECH" },
-            { text: "COMP", value: "COMP" },
-            { text: "IT", value: "IT" },
-            { text: "ENTC", value: "ENTC" },
-            { text: "CIVIL", value: "CIVIL" },
-            { text: "FE", value: "FE" }
-          ]
-        },
-        {
-          name: "Year",
-          options: [
-            { text: "SE", value: "SE" },
-            { text: "TE", value: "TE" },
-            { text: "BE", value: "BE" }
-          ]
-        },
-        {
-          name: "Category",
-          options: [
-            { text: "Academics", value: "Academics" },
-            { text: "Scholarship", value: "Scholarship" },
-            { text: "All", value: "All" },
-            { text: "News", value: "News" },
-            { text: "Other", value: "Other" }
-          ]
-        }
-      ]
-    };
-    let picker = await this.pickerController.create(opts);
-    picker.present();
-    picker.onDidDismiss().then(() => {
-      picker.getColumn("Year").then(data => {
-        let Data = data.options[data.selectedIndex].text;
-        // console.log(Data);
-        this.Year = Data;
-      });
-      picker.getColumn("Department").then(data => {
-        let Data = data.options[data.selectedIndex].text;
-        this.Department = Data;
-        if (Data == "FE") this.Year = "Not Applicable";
-      });
-      picker.getColumn("Category").then(data => {
-        let Data = data.options[data.selectedIndex].text;
-        this.category = Data;
-      });
-    });
+
+  errorMessages = {
+    title: [{ type: "required", message: "Title is required" }],
+    body: [{ type: "required", message: "Notice Body is required" }],
+    category: [{ type: "required", message: "Category is required" }],
+    divBatches: [
+      { type: "required", message: "Atleast one batch must be selected!" }
+    ]
+  };
+
+  addNoticeForm = new FormGroup({
+    title: new FormControl("", Validators.required),
+    body: new FormControl("", Validators.required),
+    category: new FormControl("", Validators.required),
+    // divBatches: new FormControl(""),
+    fileType: new FormControl("", Validators.required)
+  });
+
+  onFileTypeChange() {
+    this.fileType = this.addNoticeForm.value.fileType;
   }
 
-  async submit() {
-    const loading = await this.loadingController.create({
-      message: "Uploading Notice  .."
+  onDivChange = (event, div1, div2, div3) => {
+    if (event.detail.checked) {
+      div1.checked = true;
+      div2.checked = true;
+      div3.checked = true;
+      this.divBatches.push(div1.el.name, div2.el.name, div3.el.name);
+    } else {
+      div1.checked = false;
+      div2.checked = false;
+      div3.checked = false;
+      this.divBatches = this.divBatches.filter(item => item !== div1.el.name);
+      this.divBatches = this.divBatches.filter(item => item !== div2.el.name);
+      this.divBatches = this.divBatches.filter(item => item !== div3.el.name);
+    }
+  };
+
+  onSubDivChange = (event, div, div1, div2) => {
+    if (!event.detail.checked) {
+      div.checked = false;
+      this.divBatches = this.divBatches.filter(
+        item => item !== event.target.name
+      );
+    } else {
+      if (div1.checked && div2.checked) {
+        div.checked = true;
+      } else {
+        this.divBatches.push(event.target.name);
+      }
+    }
+  };
+
+  async presentToast(msg: string) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 2000
     });
-    await loading.present();
-    if (this.fileType === "i") {
-      this.counter = 0;
-      this.images.forEach(image => {
+    toast.present();
+  }
+
+  getUnique(array) {
+    var uniqueArray = [];
+
+    // Loop through array values
+    for (var value of array) {
+      if (uniqueArray.indexOf(value) === -1) {
+        uniqueArray.push(value);
+      }
+    }
+    this.uniqueDivBatches = uniqueArray;
+  }
+
+  async onSubmit() {
+    if (this.divBatches.length === 0) {
+      this.presentToast(`Atleast one batch must be selected!`);
+    } else {
+      this.getUnique(this.divBatches);
+      const loading = await this.loadingController.create({
+        message: "Uploading Notice  .."
+      });
+      await loading.present();
+      if (this.addNoticeForm.value.fileType === "i") {
+        this.counter = 0;
+        this.images.forEach(image => {
+          firebase
+            .storage()
+            .ref(`images/${this.addNoticeForm.value.div}`)
+            .child(this.afs.createId())
+            .putString(image, "data_url")
+            .then(snap => {
+              snap.ref.getDownloadURL().then(url => {
+                this.urls.push(url);
+                this.counter++;
+                if (this.counter === this.images.length) {
+                  console.log(this.uniqueDivBatches);
+                  this.DataService.addNotice(
+                    this.addNoticeForm.value.title,
+                    this.addNoticeForm.value.body,
+                    this.uniqueDivBatches,
+                    this.addNoticeForm.value.category,
+                    this.urls,
+                    "image",
+                    this.currentUser.displayName
+                  );
+                  loading.dismiss();
+                  this.router.navigate(["/"]);
+                }
+              });
+            });
+        });
+      }
+      if (this.addNoticeForm.value.fileType === "p") {
         firebase
           .storage()
-          .ref(`images/${this.Department}`)
-          .child(this.afs.createId())
-          .putString(image, "data_url")
+          .ref(`pdf/${this.afs.createId()}`)
+          .putString(this.fileContent, "data_url")
           .then(snap => {
             snap.ref.getDownloadURL().then(url => {
-              this.urls.push(url);
-              this.counter++;
-              if (this.counter === this.images.length) {
-                this.DataService.addNotice(
-                  this.notice,
-                  this.title,
-                  this.division,
-                  this.Year,
-                  this.Department,
-                  this.category,
-                  this.urls,
-                  "image",
-                  this.currentUser.displayName
-                );
-                loading.dismiss();
-                this.Department = "Department";
-                this.Year = "Year";
-                this.title = "";
-                this.notice = "";
-                this.division = "";
-                this.category = "All";
-                this.router.navigate(["/"]);
-              }
+              this.DataService.addNotice(
+                this.addNoticeForm.value.title,
+                this.addNoticeForm.value.body,
+                this.uniqueDivBatches,
+                this.addNoticeForm.value.category,
+                url,
+                "pdf",
+                this.currentUser.displayName
+              );
+              loading.dismiss();
+              this.router.navigate(["/"]);
             });
           });
-      });
-    }
-    if (this.fileType === "p") {
-      firebase
-        .storage()
-        .ref(`pdf/${this.afs.createId()}`)
-        .putString(this.fileContent, "data_url")
-        .then(snap => {
-          snap.ref.getDownloadURL().then(url => {
-            this.DataService.addNotice(
-              this.notice,
-              this.title,
-              this.division,
-              this.Year,
-              this.Department,
-              this.category,
-              url,
-              "pdf",
-              this.currentUser.displayName
-            );
-            loading.dismiss();
-            this.Department = "Department";
-            this.Year = "Year";
-            this.title = "";
-            this.notice = "";
-            this.division = "";
-            this.category = "All";
-            this.router.navigate(["/"]);
-          });
-        });
+      }
     }
   }
 
@@ -247,7 +244,6 @@ export class MynoticesPage implements OnInit {
   ngOnInit() {
     this.localStorageService.getLocalUser().then(val => {
       this.currentUser = JSON.parse(val).user;
-      console.log(this.currentUser.displayName);
     });
   }
 }
