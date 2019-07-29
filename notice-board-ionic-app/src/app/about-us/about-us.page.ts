@@ -13,7 +13,34 @@ const { Browser } = Plugins;
 export class AboutUsPage implements OnInit {
   constructor(private backPressService: BackPressService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    Browser.addListener("browserPageLoaded", (info: any) => {
+      console.log(info);
+    });
+    Browser.addListener("browserFinished", (info: any) => {
+      console.log(info);
+    });
+    Browser.prefetch({
+      urls: [
+        "https://github.com/tejasmorkar",
+        "https://github.com/SuyashSonawane"
+      ]
+    });
+  }
+
+  async onClickTejas() {
+    await Browser.open({
+      toolbarColor: "#3880ff",
+      url: "https://github.com/tejasmorkar"
+    });
+  }
+
+  async onClickSuyash() {
+    await Browser.open({
+      toolbarColor: "#3880ff",
+      url: "https://github.com/SuyashSonawane"
+    });
+  }
 
   ionViewDidEnter() {
     this.backPressService.stopBackPressListener();
