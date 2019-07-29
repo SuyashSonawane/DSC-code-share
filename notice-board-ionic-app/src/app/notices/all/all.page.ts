@@ -202,20 +202,6 @@ export class AllPage implements OnInit {
       });
   }
 
-  onAdminTrue() {
-    this.localStorageService.getLocalUser().then(val => {
-      let localUserData: any = JSON.parse(val).user;
-      this.localStorageService.setIsAdmin(localUserData.email, true);
-    });
-  }
-
-  onAdminFalse() {
-    this.localStorageService.getLocalUser().then(val => {
-      let localUserData: any = JSON.parse(val).user;
-      this.localStorageService.setIsAdmin(localUserData.email, false);
-    });
-  }
-
   ionViewDidEnter() {}
 
   ionViewDidLeave() {}
