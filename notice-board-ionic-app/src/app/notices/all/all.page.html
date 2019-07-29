@@ -27,7 +27,8 @@
             <ion-icon name="create" slot="end"
               (click)="openEdit(notice?.noticeId,notice?.title);$event.stopPropagation()" *ngIf="isAdmin"></ion-icon>
             <ion-icon name="trash" slot="end"
-              (click)="delete(notice?.title,notice?.noticeId,notice?.urls);$event.stopPropagation()" *ngIf="isAdmin">
+              (click)="delete(notice?.title,notice?.noticeId,notice?.urls,notice?.type);$event.stopPropagation()"
+              *ngIf="isAdmin">
             </ion-icon>
           </ion-item>
 
@@ -42,6 +43,11 @@
           <ion-item no-padding lines="none">
             <ion-label>- {{ notice?.author }}</ion-label>
           </ion-item>
+          <div>
+            <ion-chip *ngFor="let batch of notice?.batches">
+              <ion-label>{{batch}}</ion-label>
+            </ion-chip>
+          </div>
         </ion-card-content>
       </div>
     </div>

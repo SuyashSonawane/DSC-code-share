@@ -11,7 +11,8 @@
   <ion-card>
     <ion-slides [options]="sliderOpts" *ngIf="selectedNotice?.type==='image'">
       <ion-slide *ngFor="let img of selectedNotice?.urls">
-        <img [src]="img" tappable (click)="openPreview(img)" (load)="loaded()" (loadeddata)="loaded()">
+        <img [src]="img" tappable (click)="openPreview(img)" (loadstart)="_loading()" (load)="loaded()"
+          (loadeddata)="loaded()">
       </ion-slide>
     </ion-slides>
     <ion-card-header>

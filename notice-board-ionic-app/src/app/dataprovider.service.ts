@@ -40,6 +40,18 @@ export class DataproviderService {
       })
       .valueChanges();
   }
+  deletePDF(noticeId, url) {
+    firebase
+      .storage()
+      .refFromURL(url)
+      .delete()
+      .then(() => {
+        this.afs
+          .collection("notices")
+          .doc(noticeId)
+          .delete();
+      });
+  }
   deleteNotice(noticeId, urls: Array<string>) {
     // console.log(noticeId, urls);
     let a = 0;
