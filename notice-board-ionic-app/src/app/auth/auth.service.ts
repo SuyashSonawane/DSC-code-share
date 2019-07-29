@@ -41,10 +41,12 @@ export class AuthService {
       this.localStorageService
         .getIsUserValidated(this.loadedUser.email)
         .then(ret => {
-          if (JSON.parse(ret).value !== true) {
-            this.router.navigateByUrl("/validate-user");
-          } else {
-            this.router.navigateByUrl("/notices/tabs/all");
+          if (JSON.parse(ret)) {
+            if (JSON.parse(ret).value !== true) {
+              this.router.navigateByUrl("/validate-user");
+            } else {
+              this.router.navigateByUrl("/notices/tabs/all");
+            }
           }
         });
     });

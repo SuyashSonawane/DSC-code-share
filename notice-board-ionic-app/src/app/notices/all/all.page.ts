@@ -129,7 +129,10 @@ export class AllPage implements OnInit {
       this.localStorageService
         .getIsAdmin(localUserVal.email)
         .then(isAdminVal => {
-          let localIsAdminVal: any = JSON.parse(isAdminVal).value;
+          let localIsAdminVal: any;
+          if (JSON.parse(isAdminVal)) {
+            localIsAdminVal = JSON.parse(isAdminVal).value;
+          }
           if (localIsAdminVal) {
             //IS ADMIN
             this.isAdmin = true;
