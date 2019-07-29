@@ -36,6 +36,7 @@ export class MynoticesPage implements OnInit {
 
   divBatches = [];
   uniqueDivBatches = [];
+  isAll: boolean;
 
   constructor(
     private pickerController: PickerController,
@@ -91,7 +92,19 @@ export class MynoticesPage implements OnInit {
     this.fileType = this.addNoticeForm.value.fileType;
   }
 
-  onDivChange = (event, div1, div2, div3) => {
+  onAllChange(event, a, b, c, d, e, f, g, h, i, j, k, l) {
+    if (event.detail.checked) {
+      a.checked = b.checked = c.checked = d.checked = e.checked = f.checked = g.checked = h.checked = i.checked = j.checked = k.checked = l.checked = true;
+      this.isAll = true;
+      this.uniqueDivBatches = [`All`];
+    } else {
+      a.checked = b.checked = c.checked = d.checked = e.checked = f.checked = g.checked = h.checked = i.checked = j.checked = k.checked = l.checked = false;
+      this.isAll = false;
+      this.uniqueDivBatches.splice(this.uniqueDivBatches.indexOf(`All`), 1);
+    }
+  }
+
+  onDivChange = (event, div1, div2, div3, all) => {
     if (event.detail.checked) {
       div1.checked = true;
       div2.checked = true;
@@ -101,6 +114,7 @@ export class MynoticesPage implements OnInit {
       div1.checked = false;
       div2.checked = false;
       div3.checked = false;
+      all.checked = false;
       this.divBatches = this.divBatches.filter(item => item !== div1.el.name);
       this.divBatches = this.divBatches.filter(item => item !== div2.el.name);
       this.divBatches = this.divBatches.filter(item => item !== div3.el.name);
@@ -140,6 +154,61 @@ export class MynoticesPage implements OnInit {
       }
     }
     this.uniqueDivBatches = uniqueArray;
+    let localList = [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L"
+    ];
+
+    for (var item of localList) {
+      if (
+        this.uniqueDivBatches.includes(`${item}1`) &&
+        this.uniqueDivBatches.includes(`${item}2`) &&
+        this.uniqueDivBatches.includes(`${item}3`)
+      ) {
+        this.uniqueDivBatches.splice(
+          this.uniqueDivBatches.indexOf(`${item}1`),
+          1
+        );
+        this.uniqueDivBatches.splice(
+          this.uniqueDivBatches.indexOf(`${item}2`),
+          1
+        );
+        this.uniqueDivBatches.splice(
+          this.uniqueDivBatches.indexOf(`${item}3`),
+          1
+        );
+        this.uniqueDivBatches.push(`${item}`);
+      }
+      if (
+        this.uniqueDivBatches.includes(`A`) &&
+        this.uniqueDivBatches.includes(`B`) &&
+        this.uniqueDivBatches.includes(`C`) &&
+        this.uniqueDivBatches.includes(`D`) &&
+        this.uniqueDivBatches.includes(`E`) &&
+        this.uniqueDivBatches.includes(`F`) &&
+        this.uniqueDivBatches.includes(`G`) &&
+        this.uniqueDivBatches.includes(`H`) &&
+        this.uniqueDivBatches.includes(`I`) &&
+        this.uniqueDivBatches.includes(`J`) &&
+        this.uniqueDivBatches.includes(`K`) &&
+        this.uniqueDivBatches.includes(`L`)
+      ) {
+        this.uniqueDivBatches = [`All`];
+      }
+      if (this.isAll) {
+        this.uniqueDivBatches = [`All`];
+      }
+    }
   }
 
   async onSubmit() {
@@ -164,7 +233,7 @@ export class MynoticesPage implements OnInit {
                 this.urls.push(url);
                 this.counter++;
                 if (this.counter === this.images.length) {
-                  console.log(this.uniqueDivBatches);
+                  // console.log(this.uniqueDivBatches);
                   this.DataService.addNotice(
                     this.addNoticeForm.value.title,
                     this.addNoticeForm.value.body,
