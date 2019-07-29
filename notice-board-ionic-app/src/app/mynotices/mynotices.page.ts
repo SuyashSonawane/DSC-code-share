@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { PickerController, ToastController } from "@ionic/angular";
 import { DataproviderService } from "../dataprovider.service";
 import { AlertController } from "@ionic/angular";
@@ -25,6 +25,7 @@ import { FormGroup, FormControl, Validators, FormArray } from "@angular/forms";
   styleUrls: ["./mynotices.page.scss"]
 })
 export class MynoticesPage implements OnInit {
+  @ViewChild("fileInput") fileInput: ElementRef<HTMLElement>;
   selectedImage: string;
   url;
   public images: Array<string> = [];
@@ -58,16 +59,36 @@ export class MynoticesPage implements OnInit {
   ionViewWillLeave() {
     this.backPressService.startBackPressListener();
   }
+  async presentToastWithOptions() {
+    const toast = await this.toastController.create({
+      message: "Should be less than 5Mb",
+      buttons: [
+        {
+          text: "OK",
+          handler: () => {
+            let el: HTMLElement = this.fileInput.nativeElement;
+            el.click();
+          }
+        }
+      ]
+    });
+    toast.present();
+  }
 
   onFileChange(event) {
     let reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
       let file = event.target.files[0];
-      // console.log(file);
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.fileContent = reader.result;
-      };
+      let size = file.size;
+      // console.log(size);
+      if (size > 5000000) {
+        this.presentToastWithOptions();
+      } else {
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          this.fileContent = reader.result;
+        };
+      }
     }
   }
 
