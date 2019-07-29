@@ -46,7 +46,7 @@ export class AuthPage implements OnInit {
     this.backPressService.startBackPressListener();
   }
 
-  ionViewDidLeave() {
+  ionViewWillLeave() {
     this.menuCtrl.enable(true);
   }
 

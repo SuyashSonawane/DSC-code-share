@@ -9,7 +9,7 @@
   <form [formGroup]="validateUserForm" (ngSubmit)="onSubmit()">
     <ion-item>
       <ion-label position="floating">Roll Number</ion-label>
-      <ion-input type="text" formControlName="rollNo"></ion-input>
+      <ion-input type="text" formControlName="rollNo" style="font-weight: bolder"></ion-input>
     </ion-item>
     <div class="validation-errors">
       <ng-container *ngFor="let error of errorMessages?.rollNo">
@@ -26,7 +26,7 @@
 
     <ion-item>
       <ion-label position="floating">Erp Id</ion-label>
-      <ion-input type="text" formControlName="erpId"></ion-input>
+      <ion-input type="text" formControlName="erpId" style="font-weight: bolder"></ion-input>
     </ion-item>
     <div class="validation-errors">
       <ng-container *ngFor="let error of errorMessages?.erpId">
@@ -77,8 +77,7 @@
       <div style="width: 45%">
         <ion-item>
           <ion-label>Batch</ion-label>
-          <ion-select style="font-weight: bolder" formControlName="batch" interface="alert"
-            interface-options="backdrop-dismiss">
+          <ion-select style="font-weight: bolder" formControlName="batch">
             <ion-select-option value="1">1</ion-select-option>
             <ion-select-option value="2">2</ion-select-option>
             <ion-select-option value="3">3</ion-select-option>
@@ -101,12 +100,12 @@
 
     <ion-item>
       <ion-label position="floating">Phone Number</ion-label>
-      <ion-input type="text" formControlName="phoneNo"></ion-input>
+      <ion-input type="text" formControlName="phoneNumber" style="font-weight: bolder"></ion-input>
     </ion-item>
     <div class="validation-errors">
-      <ng-container *ngFor="let error of errorMessages?.phoneNo">
+      <ng-container *ngFor="let error of errorMessages?.phoneNumber">
         <ion-item class="error-message"
-          *ngIf="validateUserForm.get('phoneNo').hasError(error.type) && (validateUserForm.get('phoneNo').dirty || validateUserForm.get('phoneNo').touched)"
+          *ngIf="validateUserForm.get('phoneNumber').hasError(error.type) && (validateUserForm.get('phoneNumber').dirty || validateUserForm.get('phoneNumber').touched)"
           style="padding: 0%; font-size: 0.75em" lines="none" no-padding>
           <ion-icon name="information-circle-outline" color="danger"
             style="padding: 0%; margin-inline-end: 5px; transform: scale(0.75)">
@@ -116,9 +115,16 @@
       </ng-container>
     </div>
 
+    <br>
+
     <div class="flex-container" padding>
       <ion-button type="submit" [disabled]="!validateUserForm.valid">Submit</ion-button>
     </div>
+
+    <div class="flex-container">
+      <ion-button fill="clear" (click)="changeAccount()">USE A DIFFERENT ACCOUNT INSTEAD</ion-button>
+    </div>
+
   </form>
 
 </ion-content>

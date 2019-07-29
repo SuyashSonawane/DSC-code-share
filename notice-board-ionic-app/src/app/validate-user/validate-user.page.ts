@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { LoadingController } from "@ionic/angular";
+import { LoadingController, MenuController } from "@ionic/angular";
 import {
   Validators,
   FormBuilder,
@@ -28,8 +28,17 @@ export class ValidateUserPage implements OnInit {
     private localStorageService: LocalStorageService,
     private authService: AuthService,
     private dataProviderService: DataproviderService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private menuCtrl: MenuController
   ) {}
+
+  ionViewWillEnter() {
+    this.menuCtrl.enable(false);
+  }
+
+  ionViewWillLeave() {
+    this.menuCtrl.enable(true);
+  }
 
   ngOnInit() {}
 
@@ -44,7 +53,7 @@ export class ValidateUserPage implements OnInit {
     ],
     div: [{ type: "required", message: "Division is required" }],
     batch: [{ type: "required", message: "Batch is required" }],
-    phoneNo: [
+    phoneNumber: [
       { type: "required", message: "Phone Number is required" },
       { type: "validPhoneNo", message: "Invalid Phone Number" }
     ]
@@ -66,52 +75,54 @@ export class ValidateUserPage implements OnInit {
     ),
     div: new FormControl("", Validators.required),
     batch: new FormControl("", Validators.required),
-    phoneNo: new FormControl(
+    phoneNumber: new FormControl(
       "",
       Validators.compose([Validators.required, PhoneNoValidator.validPhoneNo])
     )
   });
 
+  changeAccount() {
+    this.authService.signout();
+  }
+
   async onSubmit() {
-    console.log("Submit");
-
-    //   const loader1 = await this.loadingCtrl.create({
-    //     message: "Authenticating User"
-    //   });
-
-    //   loader1
-    //     .present()
-    //     .then(() => {
-    //       this.localStorageService
-    //         .getLocalUser()
-    //         .then(val => {
-    //           this.loadedUser = JSON.parse(val).user;
-    //           this.localStorageService.setIsUserValidated(
-    //             this.loadedUser.email,
-    //             true
-    //           );
-    //         })
-    //         .then(() => {
-    //           this.dataProviderService
-    //             .getCurrentUserData(this.loadedUser.uId)
-    //             .subscribe(data => {
-    //               let localData: any = data[0];
-    //               if (localData) {
-    //                 this.dataProviderService.updateUser(
-    //                   { isUserValidated: true },
-    //                   localData.docId
-    //                 );
-    //               }
-    //             });
-    //         });
-    //     })
-    //     .then(() => {
-    //       loader1.dismiss();
-    //       this.authService.signin();
-    //     })
-    //     .catch(err => {
-    //       loader1.dismiss();
-    //     });
+    const loader1 = await this.loadingCtrl.create({
+      message: "Authenticating User"
+    });
+    loader1
+      .present()
+      .then(() => {
+        this.localStorageService
+          .getLocalUser()
+          .then(val => {
+            this.loadedUser = JSON.parse(val).user;
+            this.localStorageService.setIsUserValidated(
+              this.loadedUser.email,
+              true
+            );
+          })
+          .then(() => {
+            this.dataProviderService
+              .getCurrentUserData(this.loadedUser.uId)
+              .subscribe(data => {
+                let localData: any = data[0];
+                if (localData) {
+                  this.validateUserForm.value.isUserValidated = true;
+                  this.dataProviderService.updateUser(
+                    this.validateUserForm.value,
+                    localData.docId
+                  );
+                }
+              });
+          });
+      })
+      .then(() => {
+        loader1.dismiss();
+        this.authService.signin();
+      })
+      .catch(err => {
+        loader1.dismiss();
+      });
   }
 }
 
