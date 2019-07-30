@@ -93,7 +93,6 @@ export class AuthPage implements OnInit {
                         });
                     } else {
                       loader1.dismiss();
-                      this.authService.signin();
                     }
                   });
               });
@@ -150,25 +149,27 @@ export class AuthPage implements OnInit {
                 phoneNumber: user.phoneNumber
               };
 
-              this.localStorageService.setLocalUser(localUser).then(() => {
-                this.authService.checkUserAuth();
-
-                this.localStorageService.setIsUserValidated(
-                  signInSuccessData.authResult.user.email,
-                  false
-                );
-
-                this.dataProviderService.addUser(localUser).then(docId => {
-                  if (docId) {
-                    this.dataProviderService
-                      .updateUser({ isUserValidated: false }, docId)
-                      .then(val => {
-                        // console.log("user updated");
-                        this.authService.signin();
-                      });
-                  }
+              this.localStorageService
+                .setLocalUser(localUser)
+                .then(() => {
+                  this.authService.checkUserAuth();
+                  this.localStorageService.setIsUserValidated(
+                    signInSuccessData.authResult.user.email,
+                    false
+                  );
+                })
+                .then(() => {
+                  this.dataProviderService.addUser(localUser).then(docId => {
+                    if (docId) {
+                      this.dataProviderService
+                        .updateUser({ isUserValidated: false }, docId)
+                        .then(val => {
+                          // console.log("user updated");
+                          this.authService.signin();
+                        });
+                    }
+                  });
                 });
-              });
             });
         });
     } else {
@@ -202,25 +203,34 @@ export class AuthPage implements OnInit {
                 photoUrl: user.photoURL
               };
 
-              this.localStorageService.setLocalUser(localUser).then(() => {
-                this.authService.checkUserAuth();
+              this.localStorageService
+                .setLocalUser(localUser)
+                .then(() => {
+                  this.authService.checkUserAuth();
 
-                this.dataProviderService
-                  .getCurrentUserData(localUser.uId)
-                  .subscribe(data => {
-                    let localData: any = data[0];
-                    // console.log(data[0]);
-                    this.localStorageService
-                      .setIsUserValidated(
-                        localData.email,
-                        localData.isUserValidated
-                      )
-                      .then(() => {
-                        // console.log(`not new user ${localData.isUserValidated}`);
-                        this.authService.signin();
-                      });
-                  });
-              });
+                  this.dataProviderService
+                    .getCurrentUserData(localUser.uId)
+                    .subscribe(data => {
+                      let localData: any = data[0];
+                      // console.log(data[0]);
+                      if (localData) {
+                        this.localStorageService
+                          .setIsUserValidated(
+                            localData.email,
+                            localData.isUserValidated
+                          )
+                          .then(() => {
+                            // console.log(`not new user ${localData.isUserValidated}`);
+                            this.authService.signin();
+                          });
+                      } else {
+                        console.log("HIII");
+                        this.authService.deleteUser();
+                        this.authService.signout();
+                      }
+                    });
+                })
+                .catch(err => {});
             });
         });
     }

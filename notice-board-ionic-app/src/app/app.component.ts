@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { Platform, ToastController } from "@ionic/angular";
@@ -22,7 +22,7 @@ import { doesNotReject } from "assert";
   selector: "app-root",
   templateUrl: "app.component.html"
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   loadedUser: UserData;
   userPhotoUrl;
 
@@ -52,6 +52,10 @@ export class AppComponent {
       ]
     });
     toast.present();
+  }
+
+  ngOnInit() {
+    // console.log("App ngOnInit");
   }
 
   openMenu() {

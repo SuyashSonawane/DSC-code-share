@@ -15,6 +15,10 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: "invalid-user",
+    loadChildren: "./invalid-user/invalid-user.module#InvalidUserPageModule"
+  },
+  {
     path: "notices",
     loadChildren: "./notices/notices.module#NoticesPageModule",
     canLoad: [AuthGuard]
@@ -56,8 +60,7 @@ const routes: Routes = [
     redirectTo: "/notices/tabs/all",
     pathMatch: "full",
     canLoad: [AuthGuard]
-  },  { path: 'instant-push', loadChildren: './instant-push/instant-push.module#InstantPushPageModule' }
-
+  }
 ];
 
 @NgModule({
