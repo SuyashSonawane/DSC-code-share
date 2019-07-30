@@ -23,6 +23,7 @@ import { ErpIdValidator } from "./validators/erpId.validator";
 })
 export class ValidateUserPage implements OnInit {
   loadedUser: UserData;
+  loadedUserEmail: string;
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -40,7 +41,19 @@ export class ValidateUserPage implements OnInit {
     this.menuCtrl.enable(true);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.localStorageService
+      .getLocalUser()
+      .then(userData => {
+        if (userData) {
+          let localUserData = JSON.parse(userData).user;
+          if (localUserData) {
+            this.loadedUserEmail = localUserData.email;
+          }
+        }
+      })
+      .catch(err => {});
+  }
 
   errorMessages = {
     rollNo: [
