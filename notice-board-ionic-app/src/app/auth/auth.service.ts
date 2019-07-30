@@ -64,8 +64,10 @@ export class AuthService {
                         }
                       })
                       .then(() => {
-                        if (localIsAdmin || localIsStudent) {
+                        if (localIsStudent) {
                           this.router.navigateByUrl("/validate-user");
+                        } else if (localIsAdmin) {
+                          this.router.navigateByUrl("/validate-admin");
                         } else {
                           this.signOutToInvalidatUserPage();
                         }

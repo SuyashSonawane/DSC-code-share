@@ -10,13 +10,19 @@ const routes: Routes = [
     loadChildren: "./auth/auth.module#AuthPageModule"
   },
   {
+    path: "invalid-user",
+    loadChildren: "./invalid-user/invalid-user.module#InvalidUserPageModule"
+  },
+  {
     path: "validate-user",
     loadChildren: "./validate-user/validate-user.module#ValidateUserPageModule",
     canLoad: [AuthGuard]
   },
   {
-    path: "invalid-user",
-    loadChildren: "./invalid-user/invalid-user.module#InvalidUserPageModule"
+    path: "validate-admin",
+    loadChildren:
+      "./validate-admin/validate-admin.module#ValidateAdminPageModule",
+    canLoad: [AuthGuard]
   },
   {
     path: "notices",
