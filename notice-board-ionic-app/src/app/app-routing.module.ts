@@ -15,6 +15,10 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: "invalid-user",
+    loadChildren: "./invalid-user/invalid-user.module#InvalidUserPageModule"
+  },
+  {
     path: "notices",
     loadChildren: "./notices/notices.module#NoticesPageModule",
     canLoad: [AuthGuard]
