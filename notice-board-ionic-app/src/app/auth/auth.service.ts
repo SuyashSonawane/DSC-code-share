@@ -36,11 +36,11 @@ export class AuthService {
     return this.userAuthStatus;
   }
 
-  signin() {
+  async signin() {
     let localIsAdmin: boolean;
     let localIsStudent: boolean;
     this.checkUserAuth();
-    this.localStorageService.getLocalUser().then(val => {
+    await this.localStorageService.getLocalUser().then(val => {
       if (val) {
         this.loadedUser = JSON.parse(val).user;
         this.localStorageService
@@ -69,7 +69,7 @@ export class AuthService {
                         } else if (localIsAdmin) {
                           this.router.navigateByUrl("/validate-admin");
                         } else {
-                          this.signOutToInvalidatUserPage();
+                          this.router.navigateByUrl("/invalid-user");
                         }
                       });
                   })
@@ -83,39 +83,33 @@ export class AuthService {
     });
   }
 
-  signOutToInvalidatUserPage() {
-    this.afAuth.authState.subscribe(user => {
-      if (user) {
-        let localEmail = user.email;
-        let localUid = user.uid;
-        this.afAuth.auth.currentUser
-          .delete()
-          .then(() => {
-            this.dataProviderService
-              .getCurrentUserData(localUid)
-              .subscribe(subData => {
-                let localUserData: any = subData[0];
-                if (localUserData) {
-                  if (localUserData.docId) {
-                    this.dataProviderService.deleteCurrentUserData(
-                      localUserData.docId
+  async signOutFromInvalidatUserPage() {
+    let localUserEmail = this.afAuth.auth.currentUser.email;
+    let localUserUId = this.afAuth.auth.currentUser.uid;
+    await this.afAuth.auth.currentUser.delete().then(() => {
+      this.dataProviderService
+        .getCurrentUserData(localUserUId)
+        .subscribe(subData => {
+          let localUserData: any = subData[0];
+          if (localUserData) {
+            if (localUserData.docId) {
+              this.dataProviderService
+                .deleteCurrentUserData(localUserData.docId)
+                .then(() => {
+                  this.localStorageService.deleteLocalUser().then(() => {
+                    this.localStorageService.deleteAllLocalUserData(
+                      localUserEmail
                     );
-                  }
-                }
-              });
-          })
-          .then(() => {
-            this.router.navigateByUrl("/invalid-user");
-          })
-          .catch(err => {
-            console.log(`Error: ${err}`);
-          });
-      }
+                  });
+                });
+            }
+          }
+        });
     });
   }
 
-  signout() {
-    this.afAuth.auth
+  async signout() {
+    await this.afAuth.auth
       .signOut()
       .then(() => {
         this.localStorageService.deleteLocalUser();
@@ -127,7 +121,7 @@ export class AuthService {
       .catch(err => {});
   }
 
-  deleteUser() {
-    this.afAuth.auth.currentUser.delete();
+  async deleteUser() {
+    await this.afAuth.auth.currentUser.delete();
   }
 }

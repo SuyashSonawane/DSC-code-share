@@ -72,11 +72,13 @@ export class AppComponent implements OnInit {
         this.localStorageService
           .getIsAdmin(this.loadedUser.email)
           .then(isAdminVal => {
-            let localIsAdminVal: any = JSON.parse(isAdminVal).value;
-            if (localIsAdminVal) {
-              this.isLoadedUserAdmin = true;
-            } else {
-              this.isLoadedUserAdmin = false;
+            if (isAdminVal) {
+              let localIsAdminVal: any = JSON.parse(isAdminVal).value;
+              if (localIsAdminVal) {
+                this.isLoadedUserAdmin = true;
+              } else {
+                this.isLoadedUserAdmin = false;
+              }
             }
           });
       })
