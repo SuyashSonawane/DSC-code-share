@@ -126,24 +126,24 @@ export class AllPage implements OnInit {
         });
 
         // Show us the notification payload if the app is open on our device
-        PushNotifications.addListener(
-          "pushNotificationReceived",
-          (notification: PushNotification) => {
-            alert("Push received: " + JSON.stringify(notification));
-          }
-        );
+        // PushNotifications.addListener(
+        //   "pushNotificationReceived",
+        //   (notification: PushNotification) => {
+        //     alert("Push received: " + JSON.stringify(notification));
+        //   }
+        // );
 
-        // Method called when tapping on a notification
-        PushNotifications.addListener(
-          "pushNotificationActionPerformed",
-          (notification: PushNotificationActionPerformed) => {
-            alert("Push action performed: " + JSON.stringify(notification));
-          }
-        );
+        // // Method called when tapping on a notification
+        // PushNotifications.addListener(
+        //   "pushNotificationActionPerformed",
+        //   (notification: PushNotificationActionPerformed) => {
+        //     alert("Push action performed: " + JSON.stringify(notification));
+        //   }
+        // );
         PushNotifications.createChannel({
           description: "Notice Board Notifications",
           id: "46",
-          importance: 5,
+          importance: 1,
           name: "Notice Board",
           visibility: 1
         });

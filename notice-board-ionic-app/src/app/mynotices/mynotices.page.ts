@@ -237,32 +237,43 @@ export class MynoticesPage implements OnInit {
       }
     }
   }
-  uploadImg(image) {
-    firebase
-      .storage()
-      .ref(`noticeImages/${this.addNoticeForm.value.div}`)
-      .child(this.afs.createId())
-      .putString(image, "data_url")
-      .then(snap => {
-        snap.ref.getDownloadURL().then(url => {
-          this.urls.push(url);
-          this.counter++;
-          if (this.counter === this.images.length) {
-            // console.log(this.uniqueDivBatches);
-            this.DataService.addNotice(
-              this.addNoticeForm.value.title,
-              this.addNoticeForm.value.body,
-              this.uniqueDivBatches,
-              this.addNoticeForm.value.category,
-              this.urls,
-              "image",
-              this.currentUser.displayName
-            );
-            this.loading.dismiss();
-            this.router.navigate(["/"]);
-          }
+  imageUpload() {
+    let image = this.images[this.counter];
+    if (this.counter < this.images.length)
+      firebase
+        .storage()
+        .ref(`noticeImages/`)
+        .child(this.afs.createId())
+        .putString(image, "data_url")
+        .then(snap => {
+          snap.ref.getDownloadURL().then(url => {
+            this.urls.push(url);
+            this.counter++;
+            this.toastController
+              .create({
+                message: `Uploaded file ${this.counter} of ${
+                  this.images.length
+                } `,
+                duration: 1000
+              })
+              .then(e => e.present());
+            if (this.counter === this.images.length) {
+              // console.log(this.uniqueDivBatches);
+              this.DataService.addNotice(
+                this.addNoticeForm.value.title,
+                this.addNoticeForm.value.body,
+                this.uniqueDivBatches,
+                this.addNoticeForm.value.category,
+                this.urls,
+                "image",
+                this.currentUser.displayName
+              );
+              this.loading.dismiss();
+              this.router.navigate(["/"]);
+            }
+            this.imageUpload();
+          });
         });
-      });
   }
   loading;
   async onSubmit() {
@@ -276,7 +287,7 @@ export class MynoticesPage implements OnInit {
       await this.loading.present();
       if (this.addNoticeForm.value.fileType === "i") {
         this.counter = 0;
-        this.images.map(image => this.uploadImg(image));
+        this.imageUpload();
       }
       if (this.addNoticeForm.value.fileType === "p") {
         firebase
