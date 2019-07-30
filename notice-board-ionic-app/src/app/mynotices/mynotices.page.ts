@@ -237,45 +237,46 @@ export class MynoticesPage implements OnInit {
       }
     }
   }
-
+  uploadImg(image) {
+    firebase
+      .storage()
+      .ref(`noticeImages/${this.addNoticeForm.value.div}`)
+      .child(this.afs.createId())
+      .putString(image, "data_url")
+      .then(snap => {
+        snap.ref.getDownloadURL().then(url => {
+          this.urls.push(url);
+          this.counter++;
+          if (this.counter === this.images.length) {
+            // console.log(this.uniqueDivBatches);
+            this.DataService.addNotice(
+              this.addNoticeForm.value.title,
+              this.addNoticeForm.value.body,
+              this.uniqueDivBatches,
+              this.addNoticeForm.value.category,
+              this.urls,
+              "image",
+              this.currentUser.displayName
+            );
+            this.loading.dismiss();
+            this.router.navigate(["/"]);
+          }
+        });
+      });
+  }
+  loading;
   async onSubmit() {
     if (this.divBatches.length === 0) {
       this.presentToast(`Atleast one batch must be selected!`);
     } else {
       this.getUnique(this.divBatches);
-      const loading = await this.loadingController.create({
+      this.loading = await this.loadingController.create({
         message: "Uploading Notice  .."
       });
-      await loading.present();
+      await this.loading.present();
       if (this.addNoticeForm.value.fileType === "i") {
         this.counter = 0;
-        this.images.forEach(image => {
-          firebase
-            .storage()
-            .ref(`noticeImages/${this.addNoticeForm.value.div}`)
-            .child(this.afs.createId())
-            .putString(image, "data_url")
-            .then(snap => {
-              snap.ref.getDownloadURL().then(url => {
-                this.urls.push(url);
-                this.counter++;
-                if (this.counter === this.images.length) {
-                  // console.log(this.uniqueDivBatches);
-                  this.DataService.addNotice(
-                    this.addNoticeForm.value.title,
-                    this.addNoticeForm.value.body,
-                    this.uniqueDivBatches,
-                    this.addNoticeForm.value.category,
-                    this.urls,
-                    "image",
-                    this.currentUser.displayName
-                  );
-                  loading.dismiss();
-                  this.router.navigate(["/"]);
-                }
-              });
-            });
-        });
+        this.images.map(image => this.uploadImg(image));
       }
       if (this.addNoticeForm.value.fileType === "p") {
         firebase
@@ -293,7 +294,7 @@ export class MynoticesPage implements OnInit {
                 "pdf",
                 this.currentUser.displayName
               );
-              loading.dismiss();
+              this.loading.dismiss();
               this.router.navigate(["/"]);
             });
           });

@@ -188,14 +188,16 @@ export class AllPage implements OnInit {
         this.subscribe();
         this.DataService.getNotices().subscribe(d => {
           this.notices = d;
-          this.notices = this.notices.filter(element => {
-            if (
-              element.batches.indexOf(this.subscribeArray[0]) !== -1 ||
-              element.batches.indexOf(this.subscribeArray[1]) !== -1 ||
-              element.batches.indexOf(this.subscribeArray[2]) !== -1
-            )
-              return true;
-          });
+          if (!this.isAdmin) {
+            this.notices = this.notices.filter(element => {
+              if (
+                element.batches.indexOf(this.subscribeArray[0]) !== -1 ||
+                element.batches.indexOf(this.subscribeArray[1]) !== -1 ||
+                element.batches.indexOf(this.subscribeArray[2]) !== -1
+              )
+                return true;
+            });
+          }
           // console.log(d);
         });
       });
