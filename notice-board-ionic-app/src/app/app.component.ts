@@ -24,6 +24,7 @@ import { doesNotReject } from "assert";
 })
 export class AppComponent implements OnInit {
   loadedUser: UserData;
+  isLoadedUserAdmin: boolean = false;
   userPhotoUrl;
 
   constructor(
@@ -54,9 +55,7 @@ export class AppComponent implements OnInit {
     toast.present();
   }
 
-  ngOnInit() {
-    // console.log("App ngOnInit");
-  }
+  ngOnInit() {}
 
   openMenu() {
     this.localStorageService
@@ -68,6 +67,18 @@ export class AppComponent implements OnInit {
           // Icon made by https://www.flaticon.com/authors/eucalyp from http://www.flaticon.com/
           this.userPhotoUrl = "../assets/icon/photoUrl0.png";
         }
+      })
+      .then(() => {
+        this.localStorageService
+          .getIsAdmin(this.loadedUser.email)
+          .then(isAdminVal => {
+            let localIsAdminVal: any = JSON.parse(isAdminVal).value;
+            if (localIsAdminVal) {
+              this.isLoadedUserAdmin = true;
+            } else {
+              this.isLoadedUserAdmin = false;
+            }
+          });
       })
       .catch(err => {
         this.loadedUser = {

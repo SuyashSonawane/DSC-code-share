@@ -27,7 +27,7 @@
           <ion-item-divider>
             <ion-label>Notices</ion-label>
           </ion-item-divider>
-          <ion-menu-toggle menu="mainMenu">
+          <ion-menu-toggle menu="mainMenu" *ngIf="isLoadedUserAdmin">
             <ion-item lines="none" routerLink="/mynotices">
               <ion-icon name="add-circle" slot="start"></ion-icon>
               <ion-label>Add Notice</ion-label>

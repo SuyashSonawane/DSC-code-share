@@ -1,5 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
-import { PickerController, ToastController } from "@ionic/angular";
+import {
+  PickerController,
+  ToastController,
+  NavController
+} from "@ionic/angular";
 import { DataproviderService } from "../dataprovider.service";
 import { AlertController } from "@ionic/angular";
 import { Router } from "@angular/router";
@@ -49,7 +53,8 @@ export class MynoticesPage implements OnInit {
     public loadingController: LoadingController,
     private backPressService: BackPressService,
     private localStorageService: LocalStorageService,
-    public toastController: ToastController
+    public toastController: ToastController,
+    private navCtrl: NavController
   ) {}
 
   ionViewDidEnter() {
@@ -350,8 +355,21 @@ export class MynoticesPage implements OnInit {
   }
 
   ngOnInit() {
-    this.localStorageService.getLocalUser().then(val => {
-      this.currentUser = JSON.parse(val).user;
-    });
+    this.localStorageService
+      .getLocalUser()
+      .then(val => {
+        this.currentUser = JSON.parse(val).user;
+        if (this.currentUser) {
+          this.localStorageService
+            .getIsAdmin(this.currentUser.email)
+            .then(adminVal => {
+              let localIsAdmin: any = JSON.parse(adminVal).value;
+              if (localIsAdmin == false) {
+                this.navCtrl.navigateBack("/notices/tabs/all");
+              }
+            });
+        }
+      })
+      .catch(() => {});
   }
 }
