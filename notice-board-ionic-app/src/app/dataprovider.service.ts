@@ -6,6 +6,7 @@ import {
 } from "@angular/fire/firestore";
 import * as firebase from "firebase";
 import { Observable } from "rxjs";
+import { map, filter } from "rxjs/operators";
 import { element } from "@angular/core/src/render3";
 @Injectable({
   providedIn: "root"

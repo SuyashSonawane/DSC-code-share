@@ -37,6 +37,11 @@
       <ion-card-subtitle>
         <ion-label class="custom-text">- {{ selectedNotice?.author }}</ion-label>
       </ion-card-subtitle>
+      <div>
+        <ion-chip *ngFor="let batch of selectedNotice?.batches">
+          <ion-label>{{batch}}</ion-label>
+        </ion-chip>
+      </div>
     </ion-card-content>
   </ion-card>
   <ion-card *ngIf="selectedNotice?.type==='pdf'">

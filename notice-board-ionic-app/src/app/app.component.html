@@ -10,16 +10,18 @@
 
     <ion-content>
       <ion-list>
-        <ion-item-group>
-          <ion-avatar class="ion-margin-start ion-margin-top" slot="icon-only">
-            <ion-img [src]="userPhotoUrl"></ion-img>
-          </ion-avatar>
-          <ion-item lines="none">
-            <ion-label>
-              {{ loadedUser?.email }}
-            </ion-label>
-          </ion-item>
-        </ion-item-group>
+        <ion-menu-toggle menu="mainMenu">
+          <ion-item-group>
+            <ion-avatar class="ion-margin-start ion-margin-top" slot="icon-only" [routerLink]="['/settings']">
+              <ion-img [src]="userPhotoUrl"></ion-img>
+            </ion-avatar>
+            <ion-item lines="none">
+              <ion-label>
+                {{ loadedUser?.email }}
+              </ion-label>
+            </ion-item>
+          </ion-item-group>
+        </ion-menu-toggle>
 
         <ion-item-group>
           <ion-item-divider>
