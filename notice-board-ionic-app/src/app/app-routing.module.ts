@@ -56,7 +56,8 @@ const routes: Routes = [
     redirectTo: "/notices/tabs/all",
     pathMatch: "full",
     canLoad: [AuthGuard]
-  }
+  },  { path: 'instant-push', loadChildren: './instant-push/instant-push.module#InstantPushPageModule' }
+
 ];
 
 @NgModule({
