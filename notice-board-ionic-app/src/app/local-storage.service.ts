@@ -61,6 +61,22 @@ export class LocalStorageService {
     });
   }
 
+  async setGodsEyeData(dataKey: string, data) {
+    await Storage.set({
+      key: dataKey,
+      value: JSON.stringify({ data })
+    });
+  }
+
+  async getGodsEyeData(dataKey: string) {
+    const ret = await Storage.get({ key: dataKey });
+    return ret.value;
+  }
+
+  async deleteGodsEyeData(dataKey: string) {
+    await Storage.remove({ key: dataKey });
+  }
+
   async getLocalUser() {
     const ret = await Storage.get({ key: "user" });
     return ret.value;
