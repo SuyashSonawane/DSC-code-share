@@ -26,11 +26,11 @@
               (click)="delete(notice?.title,notice?.noticeId,notice?.urls,notice?.type);$event.stopPropagation()"
               *ngIf="isAdmin">
             </ion-icon>
-            <ion-badge color="primary" *ngIf="notice?.update_ts" slot="end">edited</ion-badge>
           </ion-item>
 
           <ion-card-subtitle>
-            {{notice?.ts | date}}
+            {{notice?.ts | date}} <br>
+            <b *ngIf="notice?.update_ts">Edited</b>
           </ion-card-subtitle>
 
         </ion-card-header>
