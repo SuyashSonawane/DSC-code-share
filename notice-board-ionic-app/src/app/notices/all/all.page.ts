@@ -22,6 +22,8 @@ import {
 } from "@ionic/angular";
 import { Platform } from "@ionic/angular";
 
+import * as firebase from "firebase";
+
 const { PushNotifications } = Plugins;
 
 @Component({
