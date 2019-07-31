@@ -49,7 +49,7 @@ export class SettingsPage implements OnInit {
       .catch(err => {});
   };
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.backPressService.stopBackPressListener();
   }
 

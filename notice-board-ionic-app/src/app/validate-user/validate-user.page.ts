@@ -1,5 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { LoadingController, MenuController } from "@ionic/angular";
+import {
+  LoadingController,
+  MenuController,
+  ModalController
+} from "@ionic/angular";
 import {
   Validators,
   FormBuilder,
@@ -15,6 +19,7 @@ import { DataproviderService } from "../dataprovider.service";
 import { RollNoValidator } from "./validators/rollNo.validator";
 import { PhoneNoValidator } from "./validators/phoneNo.validator";
 import { ErpIdValidator } from "./validators/erpId.validator";
+import { SlidesComponent } from "../auth/slides/slides.component";
 
 @Component({
   selector: "app-validate-user",
@@ -30,7 +35,8 @@ export class ValidateUserPage implements OnInit {
     private authService: AuthService,
     private dataProviderService: DataproviderService,
     private loadingCtrl: LoadingController,
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
+    private modalController: ModalController
   ) {}
 
   ionViewWillEnter() {
@@ -53,6 +59,23 @@ export class ValidateUserPage implements OnInit {
         }
       })
       .catch(err => {});
+  }
+
+  onClickHelp() {
+    this.modalController
+      .create({
+        component: SlidesComponent
+      })
+      .then(modalEl => {
+        modalEl.present();
+        return modalEl.onDidDismiss();
+      })
+      .then(resultData => {
+        this.localStorageService.setDidSeeSlides(
+          resultData.role,
+          resultData.data
+        );
+      });
   }
 
   errorMessages = {

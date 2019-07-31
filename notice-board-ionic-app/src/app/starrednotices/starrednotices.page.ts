@@ -12,7 +12,7 @@ export class StarrednoticesPage implements OnInit {
 
   ngOnInit() {}
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.backPressService.stopBackPressListener();
   }
 

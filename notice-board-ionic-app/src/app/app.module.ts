@@ -20,6 +20,7 @@ import { AngularFireStorageModule } from "@angular/fire/storage";
 import { AngularFireFunctionsModule } from "@angular/fire/functions";
 
 import { FirebaseUIModule, firebase, firebaseui } from "firebaseui-angular";
+import { SlidesComponent } from "./auth/slides/slides.component";
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: "popup",
@@ -30,8 +31,8 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
 };
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent, SlidesComponent],
+  entryComponents: [SlidesComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),

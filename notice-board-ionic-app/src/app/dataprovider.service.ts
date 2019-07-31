@@ -17,12 +17,9 @@ export class DataproviderService {
   fcmToken;
 
   constructor(private afs: AngularFirestore) {
-    this.afs.firestore
-      .enablePersistence()
-      .then(() => console.log(`Zalaaaaaaa`))
-      .catch(err => {
-        console.log(err);
-      });
+    this.afs.firestore.enablePersistence().catch(err => {
+      // console.log(err);
+    });
   }
 
   getCurrentUserData(uid) {

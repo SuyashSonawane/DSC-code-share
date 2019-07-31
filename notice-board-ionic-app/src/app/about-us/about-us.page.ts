@@ -42,7 +42,7 @@ export class AboutUsPage implements OnInit {
     });
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.backPressService.stopBackPressListener();
   }
 

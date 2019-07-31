@@ -45,6 +45,11 @@
       </ng-container>
     </div>
 
+    <ion-item>
+      <ion-label position="floating">Link</ion-label>
+      <ion-textarea formControlName="link" style="font-weight: bolder" placeholder="Optional"></ion-textarea>
+    </ion-item>
+
     <ion-grid>
       <ion-item lines="none">
         <ion-label>Batches</ion-label>
@@ -57,24 +62,10 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <ion-item>
-      <ion-label position="floating">Link</ion-label>
-      <ion-textarea formControlName="link" style="font-weight: bolder" placeholder="Optional"></ion-textarea>
-    </ion-item>
+
 
 
     <ion-grid>
-      <ion-item lines="none">
-        <ion-label>Batches</ion-label>
-      </ion-item>
-      <ion-row>
-        <ion-col style="font-weight: bolder">
-          <ion-label style="margin-right: 5px">Select all</ion-label>
-          <ion-checkbox name="all" #all (ionChange)="onAllChange($event, A, B, C, D, E, F, G, H, I, J, K, L)">
-          </ion-checkbox>
-        </ion-col>
-
-      </ion-row>
 
       <ion-row>
         <ion-col style="font-weight: bolder">
@@ -375,32 +366,7 @@
       </ng-container>
     </div>
 
-    <ion-item>
-      <ion-label>File Type</ion-label>
-      <ion-select placeholder="Select type" formControlName="fileType" (ionChange)="onFileTypeChange()">
-        <ion-select-option value="p">PDF</ion-select-option>
-        <ion-select-option value="i">Image</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item *ngIf="fileType && fileType==='i'">
-      <ion-label>Take a photo</ion-label>
-      <ion-button (click)="takePhoto()">
-        Open Photo
-      </ion-button>
-    </ion-item>
-    <div *ngIf="fileType && fileType==='i'">
-      <ion-item *ngFor="let image of images ;let i = index">
-        <ion-img [src]="image" (click)="remove(i)"></ion-img>
-      </ion-item>
-    </div>
-    <ion-item *ngIf="fileType && fileType==='p'">
-      <input type="file" id="avatar" (change)="onFileChange($event)" #fileInput accept="application/pdf">
-    </ion-item>
-    <div *ngIf="fileType && fileType==='p'">
-      <ion-item *ngFor="let image of images ;let i = index">
-        <ion-img [src]="image" (click)="remove(i)"></ion-img>
-      </ion-item>
-    </div>
+
     <ion-item>
       <ion-label>File Type</ion-label>
       <ion-select placeholder="Select type" formControlName="fileType" (ionChange)="onFileTypeChange()">

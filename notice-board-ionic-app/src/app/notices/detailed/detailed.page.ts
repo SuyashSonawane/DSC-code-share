@@ -93,7 +93,7 @@ export class DetailedPage implements OnInit {
   onError(error: any) {
     // do anything
   }
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.backPressService.stopBackPressListener();
   }
 

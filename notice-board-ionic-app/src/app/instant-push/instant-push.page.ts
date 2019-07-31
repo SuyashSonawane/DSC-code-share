@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ToastController } from "@ionic/angular";
 import { Router } from "@angular/router";
+import { BackPressService } from "../back-press.service";
 
 @Component({
   selector: "app-instant-push",
@@ -15,7 +16,8 @@ export class InstantPushPage implements OnInit {
   constructor(
     private func: AngularFireFunctions,
     public toastController: ToastController,
-    private router: Router
+    private router: Router,
+    private backPressService: BackPressService
   ) {}
   async submit() {
     if (this.title === "" || this.body === "") this.error = true;
@@ -33,4 +35,12 @@ export class InstantPushPage implements OnInit {
     }
   }
   ngOnInit() {}
+
+  ionViewWillEnter() {
+    this.backPressService.stopBackPressListener();
+  }
+
+  ionViewWillLeave() {
+    this.backPressService.startBackPressListener();
+  }
 }

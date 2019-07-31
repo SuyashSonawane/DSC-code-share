@@ -59,7 +59,7 @@ export class EditnoticePage implements OnInit {
     });
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.backPressService.stopBackPressListener();
   }
 
