@@ -218,9 +218,11 @@ export class DataproviderService {
       .catch(err => {});
   }
 
-  getGodsEyeObject() {
-    return this.afs.collection(`god's-eye`, ref => {
-      return ref.orderBy(``);
-    });
+  getGodsEyeObject(name: string) {
+    return this.afs
+      .collection(`god's-eye`, ref => {
+        return ref.where("name", "==", name);
+      })
+      .valueChanges();
   }
 }
