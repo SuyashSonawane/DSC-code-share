@@ -29,7 +29,8 @@
           </ion-item>
 
           <ion-card-subtitle>
-            {{notice?.ts | date}}
+            {{notice?.ts | date}} <br>
+            <b *ngIf="notice?.update_ts">Edited</b>
           </ion-card-subtitle>
 
         </ion-card-header>

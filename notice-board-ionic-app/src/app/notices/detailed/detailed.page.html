@@ -42,6 +42,9 @@
           <ion-label>{{batch}}</ion-label>
         </ion-chip>
       </div>
+      <div class="update" *ngIf="selectedNotice?.update_ts">
+        Updated on <br> {{ selectedNotice?.update_ts | date:"medium" }}
+      </div>
     </ion-card-content>
   </ion-card>
   <ion-card *ngIf="selectedNotice?.type==='pdf'">
