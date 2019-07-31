@@ -64,7 +64,8 @@ export class EditnoticePage implements OnInit {
   }
 
   onSubmit() {
-    // console.log(this.editNoticeForm.value);
+    this.editNoticeForm.value.update_ts = Date.now();
+    console.log(this.editNoticeForm.value);
     this.dataProviderService
       .updateNotice(this.editNoticeForm.value, this.selectedNotice.noticeId)
       .then(() => {
