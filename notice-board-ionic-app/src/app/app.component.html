@@ -33,6 +33,12 @@
               <ion-label>Add Notice</ion-label>
             </ion-item>
           </ion-menu-toggle>
+          <ion-menu-toggle menu="mainMenu" *ngIf="isLoadedUserAdmin">
+            <ion-item lines="none" routerLink="/instantPush">
+              <ion-icon name="flash" slot="start"></ion-icon>
+              <ion-label>Instant Push</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
           <!-- <ion-menu-toggle menu="mainMenu"> -->
           <ion-item lines="none" (click)="disabledPressed()" class="custom-disabled-class">
             <ion-icon name="star" slot="start"></ion-icon>

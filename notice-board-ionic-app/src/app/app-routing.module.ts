@@ -62,6 +62,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: "instantPush",
+    loadChildren: "./instant-push/instant-push.module#InstantPushPageModule",
+    canLoad: [AuthGuard]
+  },
+  {
     path: "**",
     redirectTo: "/notices/tabs/all",
     pathMatch: "full",

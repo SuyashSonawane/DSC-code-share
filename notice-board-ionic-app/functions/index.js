@@ -8,7 +8,26 @@ exports.subscribeToTopic = functions.https.onCall(
       return `subscribed to ${data.topic}`;
     }
   );
-  let flag=1;
+exports.instantpush = functions.https.onCall(
+    async (data, context) => {
+      console.log(data)
+      const notification = {
+        title: data.title,
+        body: data.body
+      };
+      const payload= {
+        notification,
+        webpush: {
+          notification: {
+            vibrate: [200, 100, 200]
+          }
+        },
+        topic: 'All'
+      };
+
+    return admin.messaging().send(payload).then(res=>console.log(res));
+    }
+  );
   exports.unsubscribeFromTopic = functions.https.onCall(
     async (data, context) => {
       await admin.messaging().unsubscribeFromTopic(data.token, data.topic);
@@ -27,7 +46,7 @@ exports.subscribeToTopic = functions.https.onCall(
 
     const notification = {
       title: notice.title,
-      body: notice.body
+      body: notice.body+`\n\n-${notice.author}`
     };
 
     notice.batches.forEach(element => {

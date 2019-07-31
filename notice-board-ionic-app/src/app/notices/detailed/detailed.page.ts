@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { BackPressService } from "../../back-press.service";
 import { DataproviderService } from "../../dataprovider.service";
+import { Plugins } from "@capacitor/core";
+
+const { Browser } = Plugins;
 import {
   NavController,
   ModalController,
@@ -79,6 +82,12 @@ export class DetailedPage implements OnInit {
           this.selectedNotice = data[0];
           // console.log(this.selectedNotice);
         });
+    });
+  }
+  async onLinkClick(e) {
+    await Browser.open({
+      toolbarColor: "#3880ff",
+      url: e
     });
   }
   onError(error: any) {
