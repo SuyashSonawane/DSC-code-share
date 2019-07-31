@@ -7,7 +7,8 @@ import {
   Plugins,
   PushNotification,
   PushNotificationToken,
-  PushNotificationActionPerformed
+  PushNotificationActionPerformed,
+  Browser
 } from "@capacitor/core";
 
 import { DataproviderService } from "../../dataprovider.service";
@@ -34,6 +35,7 @@ export class AllPage implements OnInit {
   isAdmin: boolean = false;
   user;
   subscribeArray: Array<string> = [];
+  alertIsEnabled: boolean = false;
 
   constructor(
     public plt: Platform,
@@ -152,7 +154,69 @@ export class AllPage implements OnInit {
         console.log(err);
       });
   }
+
+  async showGodsEyeAlert(alertData: any) {
+    const alert1 = await this.alertController.create({
+      header: alertData.title,
+      message: alertData.message,
+      buttons: [
+        {
+          text: alertData.cancelText,
+          role: "cancel",
+          cssClass: "secondary"
+        },
+        {
+          text: alertData.okText,
+          handler: () => {
+            if (alertData.okRoute) {
+              this.router.navigateByUrl(`${alertData.okRoute}`);
+            } else if (alertData.okLink) {
+              this.onClickOkLink(alertData.okLink);
+            }
+          }
+        }
+      ]
+    });
+
+    await alert1.present();
+  }
+
+  async onClickOkLink(okLink) {
+    await Browser.open({
+      toolbarColor: "#3880ff",
+      url: okLink
+    });
+  }
+
   ngOnInit() {
+    let passingAlertData: any;
+    this.localStorageService
+      .getGodsEyeData(`alert`)
+      .then((alertData: any) => {
+        if (alertData) {
+          passingAlertData = JSON.parse(alertData).data;
+          if (passingAlertData.isEnabled) {
+            this.alertIsEnabled = true;
+          } else {
+            this.alertIsEnabled = false;
+          }
+        }
+      })
+      .then(() => {
+        if (passingAlertData.isEnabled == true) {
+          Browser.addListener("browserPageLoaded", (info: any) => {
+            console.log(info);
+          });
+          Browser.addListener("browserFinished", (info: any) => {
+            console.log(info);
+          });
+          Browser.prefetch({
+            urls: [passingAlertData.okLink]
+          });
+          this.showGodsEyeAlert(passingAlertData);
+        }
+      });
+
     // const loader1 = await this.loadingCtrl.create({
     //   message: "Checking if User is Validated"
     // });

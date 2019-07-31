@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
   loadedUser: UserData;
   isLoadedUserAdmin: boolean = false;
   userPhotoUrl;
+  isFeedbackEnabled: boolean = false;
 
   constructor(
     private platform: Platform,
@@ -57,7 +58,15 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // console.log(`ngOnInit App`);
-    // this.DataService.
+    this.DataService.getGodsEyeObject(`feedback`).subscribe(feedBackData => {
+      let localFeedbackData: any = feedBackData[0];
+      this.localStorageService.setGodsEyeData(`feedback`, localFeedbackData);
+    });
+
+    this.DataService.getGodsEyeObject(`alert`).subscribe(alertData => {
+      let localAlertData: any = alertData[0];
+      this.localStorageService.setGodsEyeData("alert", localAlertData);
+    });
   }
 
   openMenu() {
@@ -81,6 +90,21 @@ export class AppComponent implements OnInit {
                 this.isLoadedUserAdmin = true;
               } else {
                 this.isLoadedUserAdmin = false;
+              }
+            }
+          });
+      })
+      .then(() => {
+        this.localStorageService
+          .getGodsEyeData(`feedback`)
+          .then(feedBackData => {
+            let localGodsEyeDataVal: any = JSON.parse(feedBackData);
+            if (localGodsEyeDataVal) {
+              let isEnabled: boolean = localGodsEyeDataVal.data.isEnabled;
+              if (isEnabled) {
+                this.isFeedbackEnabled = true;
+              } else {
+                this.isFeedbackEnabled = false;
               }
             }
           });
