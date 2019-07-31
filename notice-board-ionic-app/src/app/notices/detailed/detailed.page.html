@@ -34,6 +34,14 @@
     <ion-card-content class="custom-text">
       {{ selectedNotice?.body }}
       <br>
+      <br>
+      <div class="update" *ngIf="selectedNotice?.link">
+        <ion-label color="primary" (click)="onLinkClick(selectedNotice?.link)">
+          {{ (selectedNotice.link.length>6)? (selectedNotice.link | slice:0:35)+'...':(selectedNotice.link) }}
+        </ion-label>
+      </div>
+      <br>
+      <br>
       <ion-card-subtitle>
         <ion-label class="custom-text">- {{ selectedNotice?.author }}</ion-label>
       </ion-card-subtitle>
