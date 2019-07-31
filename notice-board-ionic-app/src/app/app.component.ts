@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { Platform, ToastController } from "@ionic/angular";
@@ -22,8 +22,9 @@ import { doesNotReject } from "assert";
   selector: "app-root",
   templateUrl: "app.component.html"
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   loadedUser: UserData;
+  isLoadedUserAdmin: boolean = false;
   userPhotoUrl;
 
   constructor(
@@ -54,6 +55,8 @@ export class AppComponent {
     toast.present();
   }
 
+  ngOnInit() {}
+
   openMenu() {
     this.localStorageService
       .getLocalUser()
@@ -64,6 +67,20 @@ export class AppComponent {
           // Icon made by https://www.flaticon.com/authors/eucalyp from http://www.flaticon.com/
           this.userPhotoUrl = "../assets/icon/photoUrl0.png";
         }
+      })
+      .then(() => {
+        this.localStorageService
+          .getIsAdmin(this.loadedUser.email)
+          .then(isAdminVal => {
+            if (isAdminVal) {
+              let localIsAdminVal: any = JSON.parse(isAdminVal).value;
+              if (localIsAdminVal) {
+                this.isLoadedUserAdmin = true;
+              } else {
+                this.isLoadedUserAdmin = false;
+              }
+            }
+          });
       })
       .catch(err => {
         this.loadedUser = {

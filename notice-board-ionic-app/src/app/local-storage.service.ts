@@ -69,4 +69,26 @@ export class LocalStorageService {
   async deleteLocalUser() {
     await Storage.remove({ key: "user" });
   }
+
+  async deleteIsAdmin(email: string) {
+    await Storage.remove({ key: `isAdmin${email}` });
+  }
+
+  async deleteIsStudent(email: string) {
+    await Storage.remove({ key: `isStudent${email}` });
+  }
+
+  async deleteIsUserValidated(email: string) {
+    await Storage.remove({ key: `isUserValidated${email}` });
+  }
+
+  async deleteAllLocalUserData(email: string) {
+    await this.deleteIsAdmin(email)
+      .then(() => {
+        this.deleteIsStudent(email).then(() => {
+          this.deleteIsUserValidated(email);
+        });
+      })
+      .catch(err => {});
+  }
 }

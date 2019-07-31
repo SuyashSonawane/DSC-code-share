@@ -182,8 +182,10 @@ export class AllPage implements OnInit {
       let localUserVal: any = JSON.parse(userVal).user;
       this.DataService.getCurrentUserData(localUserVal.uId).subscribe(data => {
         this.user = data[0];
-        this.subscribeArray.push(this.user.div);
-        this.subscribeArray.push(this.user.div + this.user.batch);
+        if (!this.isAdmin) {
+          this.subscribeArray.push(this.user.div);
+          this.subscribeArray.push(this.user.div + this.user.batch);
+        }
         this.subscribeArray.push("All");
         this.subscribe();
         this.DataService.getNotices().subscribe(d => {

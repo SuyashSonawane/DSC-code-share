@@ -134,10 +134,11 @@ export class DataproviderService {
         this.afs
           .collection("users")
           .doc(localDocId)
-          .update({ docId: localDocId });
-      })
-      .then(() => {
-        return localDocId;
+          .update({ docId: localDocId })
+          .then(() => {
+            // console.log(localDocId);
+            return localDocId;
+          });
       })
       .catch(err => {
         console.log(err);
@@ -189,5 +190,21 @@ export class DataproviderService {
         return ref.where("email", "==", email);
       })
       .valueChanges();
+  }
+
+  async deleteCurrentUserData(docId: string) {
+    await this.afs
+      .collection("users")
+      .doc(docId)
+      .delete()
+      .catch(err => {});
+  }
+
+  async updateNotice(newData, noticeId: string) {
+    await this.afs
+      .collection("notices")
+      .doc(noticeId)
+      .update(newData)
+      .catch(err => {});
   }
 }
