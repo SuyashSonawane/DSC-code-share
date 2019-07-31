@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Router } from "@angular/router";
+import { Platform } from "@ionic/angular";
 
 import { LocalStorageService } from "../local-storage.service";
 import { UserService } from "../user.service";
@@ -29,7 +30,8 @@ export class AuthService {
     private router: Router,
     private localStorageService: LocalStorageService,
     private userService: UserService,
-    private dataProviderService: DataproviderService
+    private dataProviderService: DataproviderService,
+    private platform: Platform
   ) {}
 
   get isAuthenticated(): boolean {
@@ -104,9 +106,7 @@ export class AuthService {
                       );
                     })
                     .then(() => {
-                      if (navigator) {
-                        navigator["app"].exitApp();
-                      }
+                      this.signout();
                     });
                 });
             }

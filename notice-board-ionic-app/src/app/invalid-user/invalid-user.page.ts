@@ -36,11 +36,13 @@ export class InvalidUserPage implements OnInit {
     this.menuCtrl.enable(true);
   }
 
+  ionViewDidLeave() {
+    this.authService.signout();
+  }
+
   changeAccount() {
-    this.authService.signOutFromInvalidatUserPage().then(() => {
-      this.authService.signout().catch(() => {
-        this.authService.signout();
-      });
+    this.authService.signOutFromInvalidatUserPage().catch(() => {
+      this.authService.signout();
     });
   }
 }
