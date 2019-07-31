@@ -115,6 +115,7 @@ export class MynoticesPage implements OnInit {
       Validators.compose([Validators.required, Validators.maxLength(30)])
     ),
     body: new FormControl("", Validators.required),
+    link: new FormControl(""),
     category: new FormControl("", Validators.required),
     // divBatches: new FormControl(""),
     fileType: new FormControl("", Validators.required)
@@ -123,6 +124,8 @@ export class MynoticesPage implements OnInit {
   onFileTypeChange() {
     this.fileType = this.addNoticeForm.value.fileType;
   }
+
+  link = this.addNoticeForm.value.link;
 
   onAllChange(event, a, b, c, d, e, f, g, h, i, j, k, l) {
     if (event.detail.checked) {
@@ -271,7 +274,8 @@ export class MynoticesPage implements OnInit {
                 this.addNoticeForm.value.category,
                 this.urls,
                 "image",
-                this.currentUser.displayName
+                this.currentUser.displayName,
+                this.addNoticeForm.value.link
               );
               this.loading.dismiss();
               this.router.navigate(["/"]);
@@ -282,6 +286,7 @@ export class MynoticesPage implements OnInit {
   }
   loading;
   async onSubmit() {
+    console.log(this.addNoticeForm.value.link);
     if (this.divBatches.length === 0) {
       this.presentToast(`Atleast one batch must be selected!`);
     } else {
@@ -293,6 +298,20 @@ export class MynoticesPage implements OnInit {
       if (this.addNoticeForm.value.fileType === "i") {
         this.counter = 0;
         this.imageUpload();
+      }
+      if (this.addNoticeForm.value.fileType === "t") {
+        this.DataService.addNotice(
+          this.addNoticeForm.value.title,
+          this.addNoticeForm.value.body,
+          this.uniqueDivBatches,
+          this.addNoticeForm.value.category,
+          null,
+          "text",
+          this.currentUser.displayName,
+          this.addNoticeForm.value.link
+        );
+        this.loading.dismiss();
+        this.router.navigate(["/"]);
       }
       if (this.addNoticeForm.value.fileType === "p") {
         firebase
@@ -308,7 +327,8 @@ export class MynoticesPage implements OnInit {
                 this.addNoticeForm.value.category,
                 url,
                 "pdf",
-                this.currentUser.displayName
+                this.currentUser.displayName,
+                this.addNoticeForm.value.link
               );
               this.loading.dismiss();
               this.router.navigate(["/"]);

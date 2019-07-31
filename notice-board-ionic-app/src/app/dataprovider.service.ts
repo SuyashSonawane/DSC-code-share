@@ -56,25 +56,33 @@ export class DataproviderService {
   deleteNotice(noticeId, urls: Array<string>) {
     // console.log(noticeId, urls);
     let a = 0;
-    urls.forEach(element => {
-      // console.log(element);
-      firebase
-        .storage()
-        .refFromURL(element)
+    if (urls === null) {
+      this.afs
+        .collection("notices")
+        .doc(noticeId)
         .delete()
-        .then(() => {
-          console.log("deleted file");
-          this.afs
-            .collection("notices")
-            .doc(noticeId)
-            .delete()
-            .then(() => (a = 1));
-        })
-        .catch(e => console.log(e));
-      if (a) {
-        return true;
-      }
-    });
+        .then(() => (a = 1));
+    } else {
+      urls.forEach(element => {
+        // console.log(element);
+        firebase
+          .storage()
+          .refFromURL(element)
+          .delete()
+          .then(() => {
+            console.log("deleted file");
+            this.afs
+              .collection("notices")
+              .doc(noticeId)
+              .delete()
+              .then(() => (a = 1));
+          })
+          .catch(e => console.log(e));
+        if (a) {
+          return true;
+        }
+      });
+    }
   }
   addNotice(
     title,
@@ -83,7 +91,8 @@ export class DataproviderService {
     category,
     urls: Array<string>,
     type: string,
-    author
+    author,
+    link
   ) {
     let notice = {
       title,
@@ -93,7 +102,8 @@ export class DataproviderService {
       author,
       category,
       ts: Date.now(),
-      type
+      type,
+      link: link
     };
     let localNoticeId;
     this.afs

@@ -285,7 +285,7 @@ export class AuthPage implements OnInit {
                               this.authService.signin();
                             });
                         } else {
-                          console.log("How?");
+                          // console.log("How?");
                           loader3.dismiss();
                           // this.authService.deleteUser();
                           this.authService.signout();

@@ -96,11 +96,18 @@ export class AuthService {
               this.dataProviderService
                 .deleteCurrentUserData(localUserData.docId)
                 .then(() => {
-                  this.localStorageService.deleteLocalUser().then(() => {
-                    this.localStorageService.deleteAllLocalUserData(
-                      localUserEmail
-                    );
-                  });
+                  this.localStorageService
+                    .deleteLocalUser()
+                    .then(() => {
+                      this.localStorageService.deleteAllLocalUserData(
+                        localUserEmail
+                      );
+                    })
+                    .then(() => {
+                      if (navigator) {
+                        navigator["app"].exitApp();
+                      }
+                    });
                 });
             }
           }
