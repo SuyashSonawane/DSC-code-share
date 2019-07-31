@@ -13,7 +13,8 @@
 
     <ion-item>
       <ion-label position="floating">Roll Number</ion-label>
-      <ion-input type="text" formControlName="rollNo" style="font-weight: bolder"></ion-input>
+      <ion-input type="text" formControlName="rollNo" style="font-weight: bolder; text-transform: uppercase">
+      </ion-input>
     </ion-item>
     <div class="validation-errors">
       <ng-container *ngFor="let error of errorMessages?.rollNo">
@@ -32,7 +33,7 @@
 
     <ion-item>
       <ion-label position="floating">Erp Id</ion-label>
-      <ion-input type="text" formControlName="erpId" style="font-weight: bolder"></ion-input>
+      <ion-input type="text" formControlName="erpId" style="font-weight: bolder; text-transform: uppercase"></ion-input>
     </ion-item>
     <div class="validation-errors">
       <ng-container *ngFor="let error of errorMessages?.erpId">
@@ -112,7 +113,8 @@
 
     <ion-item>
       <ion-label position="floating">Phone Number</ion-label>
-      <ion-input type="text" formControlName="phoneNumber" style="font-weight: bolder"></ion-input>
+      <ion-input type="text" formControlName="phoneNumber" style="font-weight: bolder; text-transform: uppercase">
+      </ion-input>
     </ion-item>
     <div class="validation-errors">
       <ng-container *ngFor="let error of errorMessages?.phoneNumber">
