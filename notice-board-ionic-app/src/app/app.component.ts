@@ -57,7 +57,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // console.log(`ngOnInit App`);
-    this.DataService.
+    // this.DataService.
   }
 
   openMenu() {
