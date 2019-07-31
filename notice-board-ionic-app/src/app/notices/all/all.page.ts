@@ -153,7 +153,7 @@ export class AllPage implements OnInit {
         });
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
       });
   }
 
@@ -207,10 +207,10 @@ export class AllPage implements OnInit {
       .then(() => {
         if (passingAlertData.isEnabled == true) {
           Browser.addListener("browserPageLoaded", (info: any) => {
-            console.log(info);
+            // console.log(info);
           });
           Browser.addListener("browserFinished", (info: any) => {
-            console.log(info);
+            // console.log(info);
           });
           Browser.prefetch({
             urls: [passingAlertData.okLink]
@@ -279,11 +279,11 @@ export class AllPage implements OnInit {
           if (localIsAdminVal) {
             //IS ADMIN
             this.isAdmin = true;
-            console.log("admin hu me");
+            // console.log("admin hu me");
           } else {
             //IS STUDENT
             this.isAdmin = false;
-            console.log("student hu  me");
+            // console.log("student hu  me");
           }
         });
     });

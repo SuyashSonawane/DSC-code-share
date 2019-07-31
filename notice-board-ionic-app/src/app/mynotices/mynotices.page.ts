@@ -57,13 +57,15 @@ export class MynoticesPage implements OnInit {
     private navCtrl: NavController
   ) {}
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
+    console.log("mynoice");
     this.backPressService.stopBackPressListener();
   }
 
   ionViewWillLeave() {
     this.backPressService.startBackPressListener();
   }
+
   async presentToastWithOptions() {
     const toast = await this.toastController.create({
       message: "Should be less than 5Mb",

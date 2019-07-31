@@ -2,12 +2,18 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Plugins } from "@capacitor/core";
 
-import { MenuController, LoadingController } from "@ionic/angular";
+import {
+  MenuController,
+  LoadingController,
+  ModalController
+} from "@ionic/angular";
 import { AngularFireAuth } from "@angular/fire/auth";
 import {
   FirebaseUISignInSuccessWithAuthResult,
   FirebaseUISignInFailure
 } from "firebaseui-angular";
+
+import { Subscription } from "rxjs";
 
 import { BackPressService } from "../back-press.service";
 import { AuthService } from "./auth.service";
@@ -15,7 +21,7 @@ import { UserData } from "../user.model";
 import { UserService } from "../user.service";
 import { LocalStorageService } from "../local-storage.service";
 import { DataproviderService } from "../dataprovider.service";
-import { Subscription } from "rxjs";
+import { SlidesComponent } from "./slides/slides.component";
 
 const { Storage } = Plugins;
 
@@ -43,11 +49,51 @@ export class AuthPage implements OnInit {
     private localStorageService: LocalStorageService,
     private afAuth: AngularFireAuth,
     private loadingCtrl: LoadingController,
-    private dataProviderService: DataproviderService
+    private dataProviderService: DataproviderService,
+    private modalController: ModalController
   ) {}
 
   ionViewWillEnter() {
     this.menuCtrl.enable(false);
+
+    this.localStorageService.getDidSeeSlides().then(val => {
+      let localDidSeeSlidesData: any = JSON.parse(val);
+      if (localDidSeeSlidesData) {
+        if (localDidSeeSlidesData.value == true) {
+          //Do Nothing
+        } else {
+          this.modalController
+            .create({
+              component: SlidesComponent
+            })
+            .then(modalEl => {
+              modalEl.present();
+              return modalEl.onDidDismiss();
+            })
+            .then(resultData => {
+              this.localStorageService.setDidSeeSlides(
+                resultData.role,
+                resultData.data
+              );
+            });
+        }
+      } else {
+        this.modalController
+          .create({
+            component: SlidesComponent
+          })
+          .then(modalEl => {
+            modalEl.present();
+            return modalEl.onDidDismiss();
+          })
+          .then(resultData => {
+            this.localStorageService.setDidSeeSlides(
+              resultData.role,
+              resultData.data
+            );
+          });
+      }
+    });
   }
 
   ionViewDidEnter() {

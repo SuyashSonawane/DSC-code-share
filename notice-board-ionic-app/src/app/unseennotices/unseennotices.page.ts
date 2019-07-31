@@ -11,7 +11,7 @@ export class UnseennoticesPage implements OnInit {
 
   ngOnInit() {}
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.backPressService.stopBackPressListener();
   }
 

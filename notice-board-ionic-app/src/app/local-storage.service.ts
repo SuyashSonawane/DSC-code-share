@@ -9,6 +9,21 @@ const { Storage } = Plugins;
 export class LocalStorageService {
   constructor() {}
 
+  async setDidSeeSlides(passedAction, passedValue) {
+    await Storage.set({
+      key: `didSeeSlides`,
+      value: JSON.stringify({
+        action: passedAction,
+        value: passedValue
+      })
+    });
+  }
+
+  async getDidSeeSlides() {
+    const ret = await Storage.get({ key: `didSeeSlides` });
+    return ret.value;
+  }
+
   async setIsUserValidated(email: string, val: boolean) {
     await Storage.set({
       key: `isUserValidated${email}`,
