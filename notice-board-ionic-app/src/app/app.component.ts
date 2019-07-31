@@ -55,7 +55,10 @@ export class AppComponent implements OnInit {
     toast.present();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    // console.log(`ngOnInit App`);
+    this.DataService.
+  }
 
   openMenu() {
     this.localStorageService

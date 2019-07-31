@@ -207,4 +207,10 @@ export class DataproviderService {
       .update(newData)
       .catch(err => {});
   }
+
+  getGodsEyeObject() {
+    return this.afs.collection(`god's-eye`, ref => {
+      return ref.orderBy(``);
+    });
+  }
 }
