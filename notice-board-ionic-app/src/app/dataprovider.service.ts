@@ -199,4 +199,12 @@ export class DataproviderService {
       .delete()
       .catch(err => {});
   }
+
+  async updateNotice(newData, noticeId: string) {
+    await this.afs
+      .collection("notices")
+      .doc(noticeId)
+      .update(newData)
+      .catch(err => {});
+  }
 }
