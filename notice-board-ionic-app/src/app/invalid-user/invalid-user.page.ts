@@ -37,17 +37,10 @@ export class InvalidUserPage implements OnInit {
   }
 
   changeAccount() {
-    this.localStorageService
-      .deleteLocalUser()
-      .then(() => {
-        this.localStorageService
-          .deleteAllLocalUserData(this.loadedUserEmail)
-          .then(() => {
-            this.authService.signout();
-          });
-      })
-      .catch(err => {
+    this.authService.signOutFromInvalidatUserPage().then(() => {
+      this.authService.signout().catch(() => {
         this.authService.signout();
       });
+    });
   }
 }

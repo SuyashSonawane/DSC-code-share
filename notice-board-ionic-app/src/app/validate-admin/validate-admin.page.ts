@@ -1,27 +1,22 @@
 import { Component, OnInit } from "@angular/core";
 import { LoadingController, MenuController } from "@ionic/angular";
-import {
-  Validators,
-  FormBuilder,
-  FormGroup,
-  FormControl
-} from "@angular/forms";
+
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 
 import { LocalStorageService } from "../local-storage.service";
-import { UserData } from "../user.model";
 import { AuthService } from "../auth/auth.service";
 import { DataproviderService } from "../dataprovider.service";
+import { UserData } from "../user.model";
 
-import { RollNoValidator } from "./validators/rollNo.validator";
 import { PhoneNoValidator } from "./validators/phoneNo.validator";
 import { ErpIdValidator } from "./validators/erpId.validator";
 
 @Component({
-  selector: "app-validate-user",
-  templateUrl: "./validate-user.page.html",
-  styleUrls: ["./validate-user.page.scss"]
+  selector: "app-validate-admin",
+  templateUrl: "./validate-admin.page.html",
+  styleUrls: ["./validate-admin.page.scss"]
 })
-export class ValidateUserPage implements OnInit {
+export class ValidateAdminPage implements OnInit {
   loadedUser: UserData;
   loadedUserEmail: string;
 
@@ -56,16 +51,10 @@ export class ValidateUserPage implements OnInit {
   }
 
   errorMessages = {
-    rollNo: [
-      { type: "required", message: "Roll Number is required" },
-      { type: "validRollNo", message: "Invalid Roll No" }
-    ],
     erpId: [
       { type: "required", message: "Erp Id is required" },
       { type: "validErpId", message: "Invalid Erp Id" }
     ],
-    div: [{ type: "required", message: "Division is required" }],
-    batch: [{ type: "required", message: "Batch is required" }],
     phoneNumber: [
       { type: "required", message: "Phone Number is required" },
       { type: "validPhoneNo", message: "Invalid Phone Number" }
@@ -73,21 +62,10 @@ export class ValidateUserPage implements OnInit {
   };
 
   validateUserForm = new FormGroup({
-    rollNo: new FormControl(
-      "",
-      Validators.compose([
-        Validators.required,
-        Validators.minLength(6),
-        Validators.maxLength(8),
-        RollNoValidator.validRollNo
-      ])
-    ),
     erpId: new FormControl(
       "",
       Validators.compose([Validators.required, ErpIdValidator.validErpId])
     ),
-    div: new FormControl("", Validators.required),
-    batch: new FormControl("", Validators.required),
     phoneNumber: new FormControl(
       "",
       Validators.compose([Validators.required, PhoneNoValidator.validPhoneNo])

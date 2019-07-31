@@ -192,11 +192,19 @@ export class DataproviderService {
       .valueChanges();
   }
 
-  deleteCurrentUserData(docId: string) {
-    this.afs
+  async deleteCurrentUserData(docId: string) {
+    await this.afs
       .collection("users")
       .doc(docId)
       .delete()
+      .catch(err => {});
+  }
+
+  async updateNotice(newData, noticeId: string) {
+    await this.afs
+      .collection("notices")
+      .doc(noticeId)
+      .update(newData)
       .catch(err => {});
   }
 }
