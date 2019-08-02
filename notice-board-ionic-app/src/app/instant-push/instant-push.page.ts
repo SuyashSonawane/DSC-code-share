@@ -3,6 +3,7 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { ToastController } from "@ionic/angular";
 import { Router } from "@angular/router";
 import { BackPressService } from "../back-press.service";
+import { LocalStorageService } from "../local-storage.service";
 
 @Component({
   selector: "app-instant-push",
@@ -13,17 +14,21 @@ export class InstantPushPage implements OnInit {
   title = "";
   body = "";
   error: boolean = false;
+  userData: any;
   constructor(
     private func: AngularFireFunctions,
     public toastController: ToastController,
     private router: Router,
-    private backPressService: BackPressService
+    private backPressService: BackPressService,
+    private localStorageService: LocalStorageService
   ) {}
   async submit() {
     if (this.title === "" || this.body === "") this.error = true;
     else {
       this.func.httpsCallable("instantpush")({
-        body: this.body,
+        body: `${this.body}\n\n-${
+          this.userData.displayName
+        } (Push Notification)`,
         title: this.title
       });
       const toast = await this.toastController.create({
@@ -34,7 +39,14 @@ export class InstantPushPage implements OnInit {
       this.router.navigate(["/all"]);
     }
   }
-  ngOnInit() {}
+  ngOnInit() {
+    this.localStorageService.getLocalUser().then(val => {
+      let localUserData: any = JSON.parse(val).user;
+      if (localUserData) {
+        this.userData = localUserData;
+      }
+    });
+  }
 
   ionViewWillEnter() {
     this.backPressService.stopBackPressListener();

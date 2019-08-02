@@ -2,9 +2,14 @@
   <ion-menu side="start" menuId="mainMenu" (ionWillOpen)="openMenu()">
     <ion-header>
       <ion-toolbar>
-        <ion-title>
-          Notice Board App
-        </ion-title>
+        <ion-item lines="none">
+          <ion-avatar slot="start">
+            <ion-img src="../assets/icon/small-icon.png"></ion-img>
+          </ion-avatar>
+          <ion-title>
+            Knowtify
+          </ion-title>
+        </ion-item>
       </ion-toolbar>
     </ion-header>
 
@@ -17,7 +22,7 @@
             </ion-avatar>
             <ion-item lines="none">
               <ion-label>
-                {{ loadedUser?.email }}
+                {{ loadedUser?.displayName }}
               </ion-label>
             </ion-item>
           </ion-item-group>

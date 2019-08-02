@@ -368,11 +368,11 @@
 
 
     <ion-item>
-      <ion-label>File Type</ion-label>
+      <ion-label>Attachment Type</ion-label>
       <ion-select placeholder="Select type" formControlName="fileType" (ionChange)="onFileTypeChange()">
         <ion-select-option value="p">PDF</ion-select-option>
-        <ion-select-option value="t">Text Only</ion-select-option>
         <ion-select-option value="i">Image</ion-select-option>
+        <ion-select-option value="t">No Attachments</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item *ngIf="fileType && fileType==='i'">
