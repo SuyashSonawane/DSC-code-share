@@ -88,31 +88,36 @@ export class AuthService {
   async signOutFromInvalidatUserPage() {
     let localUserEmail = this.afAuth.auth.currentUser.email;
     let localUserUId = this.afAuth.auth.currentUser.uid;
-    await this.afAuth.auth.currentUser.delete().then(() => {
-      this.dataProviderService
-        .getCurrentUserData(localUserUId)
-        .subscribe(subData => {
-          let localUserData: any = subData[0];
-          if (localUserData) {
-            if (localUserData.docId) {
-              this.dataProviderService
-                .deleteCurrentUserData(localUserData.docId)
-                .then(() => {
-                  this.localStorageService
-                    .deleteLocalUser()
-                    .then(() => {
-                      this.localStorageService.deleteAllLocalUserData(
-                        localUserEmail
-                      );
-                    })
-                    .then(() => {
-                      this.signout();
-                    });
-                });
+    await this.afAuth.auth.currentUser
+      .delete()
+      .then(() => {
+        this.dataProviderService
+          .getCurrentUserData(localUserUId)
+          .subscribe(subData => {
+            let localUserData: any = subData[0];
+            if (localUserData) {
+              if (localUserData.docId) {
+                this.dataProviderService
+                  .deleteCurrentUserData(localUserData.docId)
+                  .then(() => {
+                    this.localStorageService
+                      .deleteLocalUser()
+                      .then(() => {
+                        this.localStorageService.deleteAllLocalUserData(
+                          localUserEmail
+                        );
+                      })
+                      .then(() => {
+                        this.signout();
+                      });
+                  });
+              }
             }
-          }
-        });
-    });
+          });
+      })
+      .catch(() => {
+        this.signout();
+      });
   }
 
   async signout() {

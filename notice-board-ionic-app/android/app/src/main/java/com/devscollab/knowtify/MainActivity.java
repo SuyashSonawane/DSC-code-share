@@ -1,4 +1,4 @@
-package com.devscollab.noticeboard;
+package com.devscollab.knowtify;
 
 import android.os.Bundle;
 

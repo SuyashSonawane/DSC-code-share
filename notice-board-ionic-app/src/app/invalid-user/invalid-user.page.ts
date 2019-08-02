@@ -1,5 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { MenuController, NavController } from "@ionic/angular";
+import {
+  MenuController,
+  NavController,
+  LoadingController
+} from "@ionic/angular";
 import { LocalStorageService } from "../local-storage.service";
 import { AuthService } from "../auth/auth.service";
 
@@ -15,7 +19,8 @@ export class InvalidUserPage implements OnInit {
     private menuCtrl: MenuController,
     private navCtrl: NavController,
     private localStorageService: LocalStorageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private loadingCtrl: LoadingController
   ) {}
 
   ngOnInit() {
@@ -40,9 +45,21 @@ export class InvalidUserPage implements OnInit {
     this.authService.signout();
   }
 
-  changeAccount() {
-    this.authService.signOutFromInvalidatUserPage().catch(() => {
-      this.authService.signout();
+  async changeAccount() {
+    const loader1 = await this.loadingCtrl.create({
+      message: "Deleting your data"
     });
+
+    loader1
+      .present()
+      .then(() => {
+        this.authService.signOutFromInvalidatUserPage();
+      })
+      .then(() => {
+        loader1.dismiss();
+      })
+      .catch(() => {
+        this.authService.signout();
+      });
   }
 }

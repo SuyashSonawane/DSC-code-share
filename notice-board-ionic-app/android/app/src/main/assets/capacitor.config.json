@@ -1,6 +1,6 @@
 {
-  "appId": "com.devscollab.noticeboard",
-  "appName": "Notice Board",
+  "appId": "com.devscollab.knowtify",
+  "appName": "Knowtify",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www"
