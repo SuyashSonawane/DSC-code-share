@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "site": "knowtify-allow-users",
+    "public": "www",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

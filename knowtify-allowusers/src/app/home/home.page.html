@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Knowtify Add Memebers
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <firebase-ui (signInSuccessWithAuthResult)="successCallback($event)" (signInFailure)="errorCallback($event)">
+  </firebase-ui>
+  <ion-grid *ngIf="shouldShow">
+    <ion-row>
+      <ion-col size="9" offset="1">
+        <ion-item lines="none">
+          <b>Student email</b>
+          <ion-toggle [(ngModel)]="emailToggle"></ion-toggle>
+          <b>Faculty email</b>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="emailToggle">
+      <ion-col size="9" offset="1">
+        <ion-item margin>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input type="email" [(ngModel)]="facultyEmail" placeholder="Faculty Email"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="!emailToggle">
+      <ion-col size="9" offset="1">
+        <ion-item margin>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input type="email" [(ngModel)]="studentEmail" placeholder="Student Email"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" offset="3">
+        <ion-button expand="block" (click)="addEmail()">Add</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
